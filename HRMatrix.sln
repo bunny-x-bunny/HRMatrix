@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35122.118
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRMatrix.Api", "src\HRMatrix.Api\HRMatrix.Api.csproj", "{E88DDEEC-BA35-4894-941E-8303245B94A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRMatrix.Application", "src\HRMatrix.Application\HRMatrix.Application.csproj", "{740E633D-6605-4EF5-A046-9B3C88A58AEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRMatrix.Domain", "src\HRMatrix.Domain\HRMatrix.Domain.csproj", "{FD579050-61A6-4C93-8944-EB32B71ADC70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRMatrix.IdentityService", "src\HRMatrix.IdentityService\HRMatrix.IdentityService.csproj", "{68E07CC0-BC11-4960-876D-83640FD130CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRMatrix.Infrastructure", "src\HRMatrix.Infrastructure\HRMatrix.Infrastructure.csproj", "{2445A66A-C78F-4FDC-B8C1-4C2A1FC9FF79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRMatrix.Persistence", "src\HRMatrix.Persistence\HRMatrix.Persistence.csproj", "{1953B31B-0AD8-474E-8D5D-D4D7A72C7D78}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E88DDEEC-BA35-4894-941E-8303245B94A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E88DDEEC-BA35-4894-941E-8303245B94A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E88DDEEC-BA35-4894-941E-8303245B94A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E88DDEEC-BA35-4894-941E-8303245B94A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{740E633D-6605-4EF5-A046-9B3C88A58AEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{740E633D-6605-4EF5-A046-9B3C88A58AEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{740E633D-6605-4EF5-A046-9B3C88A58AEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{740E633D-6605-4EF5-A046-9B3C88A58AEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD579050-61A6-4C93-8944-EB32B71ADC70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD579050-61A6-4C93-8944-EB32B71ADC70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD579050-61A6-4C93-8944-EB32B71ADC70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD579050-61A6-4C93-8944-EB32B71ADC70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68E07CC0-BC11-4960-876D-83640FD130CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68E07CC0-BC11-4960-876D-83640FD130CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68E07CC0-BC11-4960-876D-83640FD130CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68E07CC0-BC11-4960-876D-83640FD130CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2445A66A-C78F-4FDC-B8C1-4C2A1FC9FF79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2445A66A-C78F-4FDC-B8C1-4C2A1FC9FF79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2445A66A-C78F-4FDC-B8C1-4C2A1FC9FF79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2445A66A-C78F-4FDC-B8C1-4C2A1FC9FF79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1953B31B-0AD8-474E-8D5D-D4D7A72C7D78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1953B31B-0AD8-474E-8D5D-D4D7A72C7D78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1953B31B-0AD8-474E-8D5D-D4D7A72C7D78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1953B31B-0AD8-474E-8D5D-D4D7A72C7D78}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6359B1F5-F909-44A5-8506-295F862A521F}
+	EndGlobalSection
+EndGlobal
