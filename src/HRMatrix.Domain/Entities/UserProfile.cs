@@ -11,7 +11,9 @@ public class UserProfile
     public DateTime DateOfBirth { get; set; }
 
     public ICollection<UserProfileEducation> UserEducations { get; set; }
-    
+
+    public ICollection<UserProfileSkill> UserProfileSkills { get; set; }
+
     //public ICollection<WorkExperience> WorkExperiences { get; set; }
 
     public FamilyStatus FamilyStatus { get; set; }

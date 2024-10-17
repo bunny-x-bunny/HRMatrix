@@ -5,9 +5,8 @@ using HRMatrix.Application.DTOs.MaterialStatus;
 using HRMatrix.Application.DTOs.Skill;
 using HRMatrix.Application.DTOs.UserProfile;
 using HRMatrix.Application.DTOs.UserProfileEducation;
+using HRMatrix.Application.DTOs.UserProfileSkills;
 using HRMatrix.Domain.Entities;
-
-namespace HRMatrix.Application.Mappings;
 
 public class MappingProfile : Profile
 {
@@ -110,7 +109,20 @@ public class MappingProfile : Profile
 
         // Маппинг для создания перевода скилла
         CreateMap<CreateSkillTranslationDto, SkillTranslation>()
-            .ForMember(dest => dest.SkillId, opt => opt.Ignore()) // Игнорируем, так как будет заполнено позже
+            .ForMember(dest => dest.SkillId, opt => opt.Ignore())
+            .ReverseMap();
+
+        // Маппинг для UserProfileSkill
+        CreateMap<UserProfileSkill, UserProfileSkillResponse>()
+            .ForMember(dest => dest.SkillId, opt => opt.MapFrom(src => src.SkillId))
+            .ForMember(dest => dest.ProficiencyLevel, opt => opt.MapFrom(src => src.ProficiencyLevel));
+
+        CreateMap<CreateUserProfileSkillsRequest, UserProfileSkill>()
+            .ForMember(dest => dest.UserProfileId, opt => opt.Ignore())
+            .ReverseMap();
+
+        CreateMap<UpdateUserProfileSkillsRequest, UserProfileSkill>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ReverseMap();
     }
 }

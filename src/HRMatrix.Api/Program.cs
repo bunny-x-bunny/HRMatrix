@@ -1,5 +1,4 @@
-﻿using HRMatrix.Application.Mappings;
-using HRMatrix.Application.Services;
+﻿using HRMatrix.Application.Services;
 using HRMatrix.Application.Services.Directions;
 using HRMatrix.Application.Services.Interfaces;
 using HRMatrix.Application.Services.Interfaces.Directions;
@@ -63,6 +62,7 @@ builder.Services.AddScoped<IMaritalStatusService, MaritalStatusService>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IUserProfileEducationService, UserProfileEducationService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
+builder.Services.AddScoped<IUserProfileSkillService, UserProfileSkillService>();
 
 
 #endregion
