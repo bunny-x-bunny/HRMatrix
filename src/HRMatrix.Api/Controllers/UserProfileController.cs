@@ -47,8 +47,8 @@ public class UserProfileController : ControllerBase
         }
 
         var userProfileDto = _mapper.Map<CreateUserProfileDto>(createUserProfileDto);
-        var createdProfile = await _userProfileService.CreateUserProfileAsync(userProfileDto);
-        return CreatedAtAction(nameof(GetUserProfileById), new { id = createdProfile.Id }, createdProfile);
+        var createdProfileId = await _userProfileService.CreateUserProfileAsync(userProfileDto);
+        return Ok(createdProfileId);
     }
 
     [HttpPost("UploadDocuments")]

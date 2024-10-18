@@ -15,7 +15,8 @@ public class MappingProfile : Profile
         // Маппинг для создания UserProfile
         CreateMap<CreateUserProfileDto, UserProfile>()
             .ForMember(dest => dest.UserEducations, opt => opt.Ignore())
-            .ForMember(dest => dest.FamilyStatus, opt => opt.MapFrom(src => src.FamilyStatus));
+            .ForMember(dest => dest.FamilyStatus, opt => opt.MapFrom(src => src.FamilyStatus))
+            .ForMember(dest => dest.UserProfileSkills, opt => opt.MapFrom(src => src.UserProfileSkills));
 
         // Маппинг для обновления UserProfile
         CreateMap<UpdateUserProfileDto, UserProfile>().ReverseMap();
@@ -115,7 +116,9 @@ public class MappingProfile : Profile
         // Маппинг для UserProfileSkill
         CreateMap<UserProfileSkill, UserProfileSkillResponse>()
             .ForMember(dest => dest.SkillId, opt => opt.MapFrom(src => src.SkillId))
-            .ForMember(dest => dest.ProficiencyLevel, opt => opt.MapFrom(src => src.ProficiencyLevel));
+            .ForMember(dest => dest.ProficiencyLevel, opt => opt.MapFrom(src => src.ProficiencyLevel))
+            .ForMember(dest => dest.SkillName, opt => opt.MapFrom(src => src.Skill.Name))
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Skill.Translations));
 
         CreateMap<CreateUserProfileSkillsRequest, UserProfileSkill>()
             .ForMember(dest => dest.UserProfileId, opt => opt.Ignore())
@@ -123,6 +126,14 @@ public class MappingProfile : Profile
 
         CreateMap<UpdateUserProfileSkillsRequest, UserProfileSkill>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ReverseMap();
+
+        CreateMap<CreateUserProfileSkillRequest, UserProfileSkill>()
+            .ForMember(dest => dest.UserProfileId, opt => opt.Ignore())
+            .ReverseMap();
+
+        CreateMap<UpdateUserProfileSkillRequest, UserProfileSkill>()
+            .ForMember(dest => dest.UserProfileId, opt => opt.Ignore())
             .ReverseMap();
     }
 }

@@ -6,7 +6,7 @@ public interface IUserProfileService
 {
     Task<List<UserProfileDto>> GetAllUserProfilesAsync();
     Task<UserProfileDto> GetUserProfileByIdAsync(int id);
-    Task<UserProfileDto> CreateUserProfileAsync(CreateUserProfileDto userProfileDto);
+    Task<int> CreateUserProfileAsync(CreateUserProfileDto userProfileDto);
     Task<UserProfileDto> UpdateUserProfileAsync(UpdateUserProfileDto userProfileDto);
     Task<bool> DeleteUserProfileAsync(int id);
     Task UpdateProfileDocuments(int profileId, string photoFileName, string videoFileName);

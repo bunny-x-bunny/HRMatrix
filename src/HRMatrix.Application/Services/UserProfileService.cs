@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using HRMatrix.Application.DTOs.EducationLevel;
+using HRMatrix.Application.DTOs.Skill;
 using HRMatrix.Application.DTOs.UserProfile;
 using HRMatrix.Application.DTOs.UserProfileEducation;
+using HRMatrix.Application.DTOs.UserProfileSkills;
 using HRMatrix.Application.Services.Interfaces;
 using HRMatrix.Domain.Entities;
 using HRMatrix.Persistence.Contexts;
@@ -58,6 +60,9 @@ public class UserProfileService : IUserProfileService
             .Include(up => up.UserEducations)
             .ThenInclude(ue => ue.EducationLevel)
             .ThenInclude(el => el.Translations)
+            .Include(x => x.UserProfileSkills)
+            .ThenInclude(x => x.Skill)
+            .ThenInclude(x => x.Translations)
             .FirstOrDefaultAsync(up => up.Id == id);
 
         if (profile == null) return null;
@@ -71,11 +76,19 @@ public class UserProfileService : IUserProfileService
             Quantity = ue.Quantity,
             Translations = _mapper.Map<List<EducationLevelTranslationDto>>(ue.EducationLevel.Translations)
         }).ToList();
+        
+        userProfileDto.UserProfileSkills = profile.UserProfileSkills.Select(s => new UserProfileSkillResponse
+        {
+            SkillId = s.SkillId,
+            SkillName = s.Skill.Name,
+            ProficiencyLevel = s.ProficiencyLevel,
+            Translations = _mapper.Map<List<SkillTranslationDto>>(s.Skill.Translations)
+        }).ToList();
 
         return userProfileDto;
     }
 
-    public async Task<UserProfileDto> CreateUserProfileAsync(CreateUserProfileDto userProfileDto)
+    public async Task<int> CreateUserProfileAsync(CreateUserProfileDto userProfileDto)
     {
         var userProfile = _mapper.Map<UserProfile>(userProfileDto);
         
@@ -98,10 +111,23 @@ public class UserProfileService : IUserProfileService
             }
         }
 
+        if(userProfileDto.UserProfileSkills != null)
+        {
+            foreach(var skill in userProfileDto.UserProfileSkills)
+            {
+                var userProfileSkill = new UserProfileSkill
+                {
+                    UserProfile = userProfile,
+                    SkillId = skill.SkillId,
+                    ProficiencyLevel = skill.ProficiencyLevel
+                };
+                _context.UserProfileSkills.Add(userProfileSkill);
+            }
+        }
+
         _context.UserProfiles.Add(userProfile);
         await _context.SaveChangesAsync();
-        var updateUserProfileDto = await GetUserProfileByIdAsync(userProfile.Id);
-        return updateUserProfileDto;
+        return userProfile.Id;
     }
 
     public async Task<UserProfileDto> UpdateUserProfileAsync(UpdateUserProfileDto userProfileDto)
@@ -111,6 +137,8 @@ public class UserProfileService : IUserProfileService
             .ThenInclude(fs => fs.MaritalStatus)
         .Include(up => up.UserEducations)
             .ThenInclude(ue => ue.EducationLevel)
+        .Include(x=>x.UserProfileSkills)
+            .ThenInclude(x=>x.Skill)
         .FirstOrDefaultAsync(up => up.Id == userProfileDto.Id);
 
         if (userProfile == null)
@@ -138,6 +166,27 @@ public class UserProfileService : IUserProfileService
             };
             _context.UserProfileEducations.Add(userEducation);
         }
+
+        var oldSkills = await _context.UserProfileSkills
+            .Where(ue => ue.UserProfileId == userProfile.Id)
+            .ToListAsync();
+
+        if (oldSkills.Any())
+        {
+            _context.UserProfileSkills.RemoveRange(oldSkills);  
+            await _context.SaveChangesAsync();
+        }
+
+        foreach(var skills in userProfileDto.UserProfileSkills)
+        {
+            var userProfileSkill = new UserProfileSkill
+            {
+                UserProfileId = userProfile.Id,
+                SkillId = skills.SkillId,
+                ProficiencyLevel = skills.ProficiencyLevel
+            };
+            _context.UserProfileSkills.Add(userProfileSkill);
+        }   
 
         await _context.SaveChangesAsync();
 
