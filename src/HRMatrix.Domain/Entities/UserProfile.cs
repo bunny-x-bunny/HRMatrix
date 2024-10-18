@@ -14,7 +14,7 @@ public class UserProfile
 
     public ICollection<UserProfileSkill> UserProfileSkills { get; set; }
 
-    //public ICollection<WorkExperience> WorkExperiences { get; set; }
+    public ICollection<WorkExperience> WorkExperiences { get; set; }
 
     public FamilyStatus FamilyStatus { get; set; }
 

@@ -6,6 +6,8 @@ using HRMatrix.Application.DTOs.Skill;
 using HRMatrix.Application.DTOs.UserProfile;
 using HRMatrix.Application.DTOs.UserProfileEducation;
 using HRMatrix.Application.DTOs.UserProfileSkills;
+using HRMatrix.Application.DTOs.WorkExperiences;
+using HRMatrix.Application.Services.Interfaces;
 using HRMatrix.Domain.Entities;
 
 public class MappingProfile : Profile
@@ -135,5 +137,8 @@ public class MappingProfile : Profile
         CreateMap<UpdateUserProfileSkillRequest, UserProfileSkill>()
             .ForMember(dest => dest.UserProfileId, opt => opt.Ignore())
             .ReverseMap();
+
+        CreateMap<CreateWorkExperienceDto, WorkExperience>().ReverseMap();
+        CreateMap<WorkExperience, WorkExperienceResponseDto>().ReverseMap();
     }
 }

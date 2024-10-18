@@ -22,7 +22,7 @@ namespace HRMatrix.Persistence.Contexts
 
         public DbSet<UserProfileSkill> UserProfileSkills { get; set; }
 
-        //public DbSet<WorkExperience> WorkExperiences { get; set; }
+        public DbSet<WorkExperience> WorkExperiences { get; set; }
 
         public DbSet<FamilyStatus> FamilyStatuses { get; set; }
 
