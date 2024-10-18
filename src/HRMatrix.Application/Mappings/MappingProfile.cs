@@ -7,7 +7,6 @@ using HRMatrix.Application.DTOs.UserProfile;
 using HRMatrix.Application.DTOs.UserProfileEducation;
 using HRMatrix.Application.DTOs.UserProfileSkills;
 using HRMatrix.Application.DTOs.WorkExperiences;
-using HRMatrix.Application.Services.Interfaces;
 using HRMatrix.Domain.Entities;
 
 public class MappingProfile : Profile
@@ -18,16 +17,24 @@ public class MappingProfile : Profile
         CreateMap<CreateUserProfileDto, UserProfile>()
             .ForMember(dest => dest.UserEducations, opt => opt.Ignore())
             .ForMember(dest => dest.FamilyStatus, opt => opt.MapFrom(src => src.FamilyStatus))
-            .ForMember(dest => dest.UserProfileSkills, opt => opt.MapFrom(src => src.UserProfileSkills));
+            .ForMember(dest => dest.UserProfileSkills, opt => opt.MapFrom(src => src.UserProfileSkills))
+            .ForMember(dest => dest.WorkExperiences, opt => opt.MapFrom(src => src.WorkExperiences));
 
         // Маппинг для обновления UserProfile
-        CreateMap<UpdateUserProfileDto, UserProfile>().ReverseMap();
+        CreateMap<UpdateUserProfileDto, UserProfile>()
+            .ForMember(dest => dest.UserEducations, opt => opt.Ignore())
+            .ForMember(dest => dest.FamilyStatus, opt => opt.MapFrom(src => src.FamilyStatus))
+            .ForMember(dest => dest.UserProfileSkills, opt => opt.MapFrom(src => src.UserProfileSkills))
+            .ForMember(dest => dest.WorkExperiences, opt => opt.MapFrom(src => src.WorkExperiences))
+            .ReverseMap();
 
         // Маппинг для UserProfile и FamilyStatus
         CreateMap<UserProfile, UserProfileDto>()
             .ForMember(dest => dest.FamilyStatus, opt => opt.MapFrom(src => src.FamilyStatus))
+            .ForMember(dest => dest.WorkExperiences, opt => opt.MapFrom(src => src.WorkExperiences))
             .ReverseMap();
 
+        // Маппинг для FamilyStatus
         CreateMap<FamilyStatus, FamilyStatusDto>()
             .ForMember(dest => dest.MaritalStatusDescription, opt => opt.MapFrom(src => src.MaritalStatus.Name))
             .ForMember(dest => dest.MaritalStatusTranslations, opt => opt.MapFrom(src => src.MaritalStatus.Translations))
@@ -52,13 +59,11 @@ public class MappingProfile : Profile
 
         CreateMap<EducationLevelTranslation, EducationLevelTranslationDto>().ReverseMap();
 
-        // Маппинг для создания EducationLevel
         CreateMap<CreateEducationLevelDto, EducationLevel>()
             .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
 
         CreateMap<CreateEducationLevelTranslationDto, EducationLevelTranslation>().ReverseMap();
 
-        // Маппинг для обновления EducationLevel
         CreateMap<UpdateEducationLevelDto, EducationLevel>()
             .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
 
@@ -71,14 +76,12 @@ public class MappingProfile : Profile
 
         CreateMap<EducationLevelTranslation, EducationLevelTranslationDto>().ReverseMap();
 
-        // Маппинг для создания уровня образования пользователя
         CreateMap<CreateUserProfileEducationRequest, UserProfileEducation>()
             .ForMember(dest => dest.UserProfileId, opt => opt.MapFrom(src => src.UserProfileId))
             .ForMember(dest => dest.EducationLevelId, opt => opt.MapFrom(src => src.EducationLevelId))
             .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
             .ReverseMap();
 
-        // Маппинг для списка уровней образования пользователя
         CreateMap<UserEducationEntryRequest, UserProfileEducation>()
             .ForMember(dest => dest.EducationLevelId, opt => opt.MapFrom(src => src.EducationLevelId))
             .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
@@ -89,28 +92,22 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
             .ReverseMap();
 
-        // Маппинг для SkillTranslation и SkillTranslationDto
         CreateMap<SkillTranslation, SkillTranslationDto>().ReverseMap();
 
-        // Маппинг для создания скилла
         CreateMap<CreateSkillDto, Skill>()
             .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
             .ReverseMap();
 
-        // Маппинг для обновления скилла
         CreateMap<UpdateSkillDto, Skill>()
             .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
             .ReverseMap();
 
-        // Маппинг для перевода скилла
         CreateMap<SkillTranslation, SkillTranslationDto>().ReverseMap();
 
-        // Маппинг для обновления перевода скилла
         CreateMap<UpdateSkillTranslationDto, SkillTranslation>()
             .ForMember(dest => dest.SkillId, opt => opt.Ignore())
             .ReverseMap();
 
-        // Маппинг для создания перевода скилла
         CreateMap<CreateSkillTranslationDto, SkillTranslation>()
             .ForMember(dest => dest.SkillId, opt => opt.Ignore())
             .ReverseMap();
@@ -138,7 +135,9 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.UserProfileId, opt => opt.Ignore())
             .ReverseMap();
 
+        // Маппинг для WorkExperience
         CreateMap<CreateWorkExperienceDto, WorkExperience>().ReverseMap();
         CreateMap<WorkExperience, WorkExperienceResponseDto>().ReverseMap();
+        CreateMap<CreateWorkExperienceNoIdDto, WorkExperience>().ReverseMap();
     }
 }

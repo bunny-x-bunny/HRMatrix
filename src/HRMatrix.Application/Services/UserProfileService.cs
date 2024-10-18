@@ -63,6 +63,7 @@ public class UserProfileService : IUserProfileService
             .Include(x => x.UserProfileSkills)
             .ThenInclude(x => x.Skill)
             .ThenInclude(x => x.Translations)
+            .Include(x=>x.WorkExperiences)            
             .FirstOrDefaultAsync(up => up.Id == id);
 
         if (profile == null) return null;
@@ -125,6 +126,23 @@ public class UserProfileService : IUserProfileService
             }
         }
 
+        if (userProfileDto.WorkExperiences != null)
+        {
+            foreach (var workExperience in userProfileDto.WorkExperiences)
+            {
+                var userWorkExperience = new WorkExperience
+                {
+                    UserProfile = userProfile,
+                    CompanyName = workExperience.CompanyName,
+                    Position = workExperience.Position,
+                    StartDate = workExperience.StartDate,
+                    EndDate = workExperience.EndDate,
+                    Achievements = workExperience.Achievements
+                };
+                _context.WorkExperiences.Add(userWorkExperience);
+            }
+        }
+
         _context.UserProfiles.Add(userProfile);
         await _context.SaveChangesAsync();
         return userProfile.Id;
@@ -137,8 +155,9 @@ public class UserProfileService : IUserProfileService
             .ThenInclude(fs => fs.MaritalStatus)
         .Include(up => up.UserEducations)
             .ThenInclude(ue => ue.EducationLevel)
-        .Include(x=>x.UserProfileSkills)
-            .ThenInclude(x=>x.Skill)
+        .Include(x => x.UserProfileSkills)
+            .ThenInclude(x => x.Skill)
+        .Include(x => x.WorkExperiences)
         .FirstOrDefaultAsync(up => up.Id == userProfileDto.Id);
 
         if (userProfile == null)
@@ -187,6 +206,30 @@ public class UserProfileService : IUserProfileService
             };
             _context.UserProfileSkills.Add(userProfileSkill);
         }   
+
+        var oldWorkExpiriences = _context.WorkExperiences
+            .Where(we => we.UserProfileId == userProfile.Id)
+            .ToList();
+
+        if (oldWorkExpiriences.Any())
+        {
+            _context.WorkExperiences.RemoveRange(oldWorkExpiriences);   
+            await _context.SaveChangesAsync();
+        }
+
+        foreach (var workExperience in userProfileDto.WorkExperiences)
+        {
+            var userWorkExperience = new WorkExperience
+            {
+                UserProfile = userProfile,
+                CompanyName = workExperience.CompanyName,
+                Position = workExperience.Position,
+                StartDate = workExperience.StartDate,
+                EndDate = workExperience.EndDate,
+                Achievements = workExperience.Achievements
+            };
+            _context.WorkExperiences.Add(userWorkExperience);
+        }
 
         await _context.SaveChangesAsync();
 
