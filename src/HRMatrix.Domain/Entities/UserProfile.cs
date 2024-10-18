@@ -18,7 +18,7 @@ public class UserProfile
 
     public FamilyStatus FamilyStatus { get; set; }
 
-    //public ICollection<Language> UserLanguages { get; set; }
+    public ICollection<UserProfileLanguage> UserProfileLanguages { get; set; } // New relationship for languages
 
     public string AdditionalSkills { get; set; }
 

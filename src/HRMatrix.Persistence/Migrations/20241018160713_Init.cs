@@ -371,6 +371,84 @@ namespace HRMatrix.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserProfileLanguages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserProfileId = table.Column<int>(type: "int", nullable: false),
+                    LanguageId = table.Column<int>(type: "int", nullable: false),
+                    ProficiencyLevel = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserProfileLanguages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserProfileLanguages_Languages_LanguageId",
+                        column: x => x.LanguageId,
+                        principalTable: "Languages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserProfileLanguages_UserProfiles_UserProfileId",
+                        column: x => x.UserProfileId,
+                        principalTable: "UserProfiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserProfileSkills",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserProfileId = table.Column<int>(type: "int", nullable: false),
+                    SkillId = table.Column<int>(type: "int", nullable: false),
+                    ProficiencyLevel = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserProfileSkills", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserProfileSkills_Skills_SkillId",
+                        column: x => x.SkillId,
+                        principalTable: "Skills",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserProfileSkills_UserProfiles_UserProfileId",
+                        column: x => x.UserProfileId,
+                        principalTable: "UserProfiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkExperiences",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserProfileId = table.Column<int>(type: "int", nullable: false),
+                    CompanyName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Position = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Achievements = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkExperiences", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WorkExperiences_UserProfiles_UserProfileId",
+                        column: x => x.UserProfileId,
+                        principalTable: "UserProfiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
@@ -387,10 +465,10 @@ namespace HRMatrix.Persistence.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "027ea263-1a38-4f6c-8ef3-d11ef4fbc57c", "user@mail.com", false, false, null, "USER@MAIL.COM", "USER", "AQAAAAIAAYagAAAAEFpGD4LwTxPD7T8nUj/ephe/k9qROVKsRIvl/gZKBxvFedwaLg7fXPMGJQG38Pl6dQ==", null, false, "65dc8b61-6f8b-4d10-a80e-99dadc3b34ae", false, "user" },
-                    { 2, 0, "a9235297-ed59-4b40-a07d-d07844357094", "superuser@mail.com", false, false, null, "SUPERUSER@MAIL.COM", "SUPERUSER", "AQAAAAIAAYagAAAAEJ2bFrfEVlQS4v6o8gsOOhkxi1M7QXrppovIonlgl/gYLLVPSl/JHN6IAPjZFnuEfA==", null, false, "b81ac451-2ba5-4f39-8e4a-cfd297e0b267", false, "superuser" },
-                    { 3, 0, "6e57f989-1a64-4610-9a55-aabb35a077b4", "hr@mail.com", false, false, null, "HR@MAIL.COM", "HR", "AQAAAAIAAYagAAAAEDlSoqh63bmVxemPcA3OcjsIrnBxVoJ+TEeZ2AVmcM6TaF9DkC41gMM0geAPhNe9cg==", null, false, "c51e6b9c-7eda-4a89-b9f8-e8f922b3e5c5", false, "hr" },
-                    { 4, 0, "c7b6fde4-744c-4028-9bcd-b7577ab82c43", "admin@mail.com", false, false, null, "ADMIN@MAIL.COM", "ADMIN", "AQAAAAIAAYagAAAAEGZ6n4h6zRcQuITKznU91xhrn4g5clcIntHYoHqbNsJqFS+Mr5Ar+Fxs7Z5f0LLe2Q==", null, false, "d472f82a-599b-49f9-8ece-9815f940d18f", false, "admin" }
+                    { 1, 0, "c2e564d5-1690-430e-b523-3bf0fb7cce88", "user@mail.com", false, false, null, "USER@MAIL.COM", "USER", "AQAAAAIAAYagAAAAEGPnCm9NsKGtd7tnte6LRbkhQIioWz1mUE1pUQxuEBFfSGoE2sTex75KDCxlC1ra8w==", null, false, "cce93891-f06d-4efc-a2f0-36350ba20a5c", false, "user" },
+                    { 2, 0, "420e1f6f-4090-48f5-b52e-50ac9f2081fb", "superuser@mail.com", false, false, null, "SUPERUSER@MAIL.COM", "SUPERUSER", "AQAAAAIAAYagAAAAEOu2DdkjkK9z+slQsg1GB50ivJA4DJOabj8hTfEeLTzj9EQDZ1GvpDapH3jrpyKQZA==", null, false, "81f25803-2e90-4f28-9fd5-38ece42fac23", false, "superuser" },
+                    { 3, 0, "70cd7a4e-e7a8-44e6-99c5-ee5a44ed523f", "hr@mail.com", false, false, null, "HR@MAIL.COM", "HR", "AQAAAAIAAYagAAAAEA/XK/hZ8c4+ycTQlyY3V2SgSNer2F4HbFPJCDvRoNjrtpofpBDJGlO8LyvT/bnyFw==", null, false, "ed455a1e-a3c6-4db3-9fc8-fb244e9ca8f7", false, "hr" },
+                    { 4, 0, "db00d3be-e47d-496d-975d-ff820eaf718e", "admin@mail.com", false, false, null, "ADMIN@MAIL.COM", "ADMIN", "AQAAAAIAAYagAAAAEEoP3wE70mrEjdY6X54PyWwPKnIFY1qiVFhckfu2YMJQadG8M/bxGwpZwRZpuK99qw==", null, false, "d017d803-fc8e-4498-b6df-354f2cd6ca29", false, "admin" }
                 });
 
             migrationBuilder.InsertData(
@@ -413,7 +491,36 @@ namespace HRMatrix.Persistence.Migrations
                     { 1, "Английский" },
                     { 2, "Турецкий" },
                     { 3, "Немецкий" },
-                    { 4, "Китайский" }
+                    { 4, "Китайский" },
+                    { 5, "Испанский" },
+                    { 6, "Французский" },
+                    { 7, "Итальянский" },
+                    { 8, "Португальский" },
+                    { 9, "Русский" },
+                    { 10, "Японский" },
+                    { 11, "Корейский" },
+                    { 12, "Арабский" },
+                    { 13, "Голландский" },
+                    { 14, "Греческий" },
+                    { 15, "Хинди" },
+                    { 16, "Шведский" },
+                    { 17, "Норвежский" },
+                    { 18, "Датский" },
+                    { 19, "Финский" },
+                    { 20, "Польский" },
+                    { 21, "Чешский" },
+                    { 22, "Словацкий" },
+                    { 23, "Украинский" },
+                    { 24, "Белорусский" },
+                    { 25, "Венгерский" },
+                    { 26, "Румынский" },
+                    { 27, "Болгарский" },
+                    { 28, "Сербский" },
+                    { 29, "Хорватский" },
+                    { 30, "Словенский" },
+                    { 31, "Литовский" },
+                    { 32, "Латышский" },
+                    { 33, "Эстонский" }
                 });
 
             migrationBuilder.InsertData(
@@ -564,14 +671,105 @@ namespace HRMatrix.Persistence.Migrations
                 columns: new[] { "Id", "LanguageCode", "LanguageId", "Name" },
                 values: new object[,]
                 {
-                    { 1, "en-US", 1, "English" },
-                    { 2, "ru-RU", 1, "Английский" },
-                    { 3, "en-US", 2, "Turkish" },
+                    { 1, "ru-RU", 1, "Английский" },
+                    { 2, "en-US", 1, "English" },
+                    { 3, "kg-KG", 1, "Англисче" },
                     { 4, "ru-RU", 2, "Турецкий" },
-                    { 5, "en-US", 3, "German" },
-                    { 6, "ru-RU", 3, "Немецкий" },
-                    { 7, "en-US", 4, "Chinese" },
-                    { 8, "ru-RU", 4, "Китайский" }
+                    { 5, "en-US", 2, "Turkish" },
+                    { 6, "kg-KG", 2, "Түркчө" },
+                    { 7, "ru-RU", 3, "Немецкий" },
+                    { 8, "en-US", 3, "German" },
+                    { 9, "kg-KG", 3, "Немисче" },
+                    { 10, "ru-RU", 4, "Китайский" },
+                    { 11, "en-US", 4, "Chinese" },
+                    { 12, "kg-KG", 4, "Кытайча" },
+                    { 13, "ru-RU", 5, "Испанский" },
+                    { 14, "en-US", 5, "Spanish" },
+                    { 15, "kg-KG", 5, "Испанча" },
+                    { 16, "ru-RU", 6, "Французский" },
+                    { 17, "en-US", 6, "French" },
+                    { 18, "kg-KG", 6, "Французча" },
+                    { 19, "ru-RU", 7, "Итальянский" },
+                    { 20, "en-US", 7, "Italian" },
+                    { 21, "kg-KG", 7, "Итальяныча" },
+                    { 22, "ru-RU", 8, "Португальский" },
+                    { 23, "en-US", 8, "Portuguese" },
+                    { 24, "kg-KG", 8, "Португалча" },
+                    { 25, "ru-RU", 9, "Русский" },
+                    { 26, "en-US", 9, "Russian" },
+                    { 27, "kg-KG", 9, "Орусча" },
+                    { 28, "ru-RU", 10, "Японский" },
+                    { 29, "en-US", 10, "Japanese" },
+                    { 30, "kg-KG", 10, "Жапонча" },
+                    { 31, "ru-RU", 11, "Корейский" },
+                    { 32, "en-US", 11, "Korean" },
+                    { 33, "kg-KG", 11, "Кореяча" },
+                    { 34, "ru-RU", 12, "Арабский" },
+                    { 35, "en-US", 12, "Arabic" },
+                    { 36, "kg-KG", 12, "Арабча" },
+                    { 37, "ru-RU", 13, "Голландский" },
+                    { 38, "en-US", 13, "Dutch" },
+                    { 39, "kg-KG", 13, "Голландча" },
+                    { 40, "ru-RU", 14, "Греческий" },
+                    { 41, "en-US", 14, "Greek" },
+                    { 42, "kg-KG", 14, "Грекче" },
+                    { 43, "ru-RU", 15, "Хинди" },
+                    { 44, "en-US", 15, "Hindi" },
+                    { 45, "kg-KG", 15, "Хиндиче" },
+                    { 46, "ru-RU", 16, "Шведский" },
+                    { 47, "en-US", 16, "Swedish" },
+                    { 48, "kg-KG", 16, "Шведче" },
+                    { 49, "ru-RU", 17, "Норвежский" },
+                    { 50, "en-US", 17, "Norwegian" },
+                    { 51, "kg-KG", 17, "Норвегче" },
+                    { 52, "ru-RU", 18, "Датский" },
+                    { 53, "en-US", 18, "Danish" },
+                    { 54, "kg-KG", 18, "Данияча" },
+                    { 55, "ru-RU", 19, "Финский" },
+                    { 56, "en-US", 19, "Finnish" },
+                    { 57, "kg-KG", 19, "Финче" },
+                    { 58, "ru-RU", 20, "Польский" },
+                    { 59, "en-US", 20, "Polish" },
+                    { 60, "kg-KG", 20, "Полякча" },
+                    { 61, "ru-RU", 21, "Чешский" },
+                    { 62, "en-US", 21, "Czech" },
+                    { 63, "kg-KG", 21, "Чехче" },
+                    { 64, "ru-RU", 22, "Словацкий" },
+                    { 65, "en-US", 22, "Slovak" },
+                    { 66, "kg-KG", 22, "Словакча" },
+                    { 67, "ru-RU", 23, "Украинский" },
+                    { 68, "en-US", 23, "Ukrainian" },
+                    { 69, "kg-KG", 23, "Украинча" },
+                    { 70, "ru-RU", 24, "Белорусский" },
+                    { 71, "en-US", 24, "Belarusian" },
+                    { 72, "kg-KG", 24, "Белорусча" },
+                    { 73, "ru-RU", 25, "Венгерский" },
+                    { 74, "en-US", 25, "Hungarian" },
+                    { 75, "kg-KG", 25, "Венгриче" },
+                    { 76, "ru-RU", 26, "Румынский" },
+                    { 77, "en-US", 26, "Romanian" },
+                    { 78, "kg-KG", 26, "Румынияча" },
+                    { 79, "ru-RU", 27, "Болгарский" },
+                    { 80, "en-US", 27, "Bulgarian" },
+                    { 81, "kg-KG", 27, "Болгарча" },
+                    { 82, "ru-RU", 28, "Сербский" },
+                    { 83, "en-US", 28, "Serbian" },
+                    { 84, "kg-KG", 28, "Сербче" },
+                    { 85, "ru-RU", 29, "Хорватский" },
+                    { 86, "en-US", 29, "Croatian" },
+                    { 87, "kg-KG", 29, "Хорватча" },
+                    { 88, "ru-RU", 30, "Словенский" },
+                    { 89, "en-US", 30, "Slovenian" },
+                    { 90, "kg-KG", 30, "Словенча" },
+                    { 91, "ru-RU", 31, "Литовский" },
+                    { 92, "en-US", 31, "Lithuanian" },
+                    { 93, "kg-KG", 31, "Литвача" },
+                    { 94, "ru-RU", 32, "Латышский" },
+                    { 95, "en-US", 32, "Latvian" },
+                    { 96, "kg-KG", 32, "Латышча" },
+                    { 97, "ru-RU", 33, "Эстонский" },
+                    { 98, "en-US", 33, "Estonian" },
+                    { 99, "kg-KG", 33, "Эстонча" }
                 });
 
             migrationBuilder.InsertData(
@@ -955,6 +1153,31 @@ namespace HRMatrix.Persistence.Migrations
                 name: "IX_UserProfileEducations_UserProfileId",
                 table: "UserProfileEducations",
                 column: "UserProfileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserProfileLanguages_LanguageId",
+                table: "UserProfileLanguages",
+                column: "LanguageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserProfileLanguages_UserProfileId",
+                table: "UserProfileLanguages",
+                column: "UserProfileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserProfileSkills_SkillId",
+                table: "UserProfileSkills",
+                column: "SkillId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserProfileSkills_UserProfileId",
+                table: "UserProfileSkills",
+                column: "UserProfileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkExperiences_UserProfileId",
+                table: "WorkExperiences",
+                column: "UserProfileId");
         }
 
         /// <inheritdoc />
@@ -994,22 +1217,31 @@ namespace HRMatrix.Persistence.Migrations
                 name: "UserProfileEducations");
 
             migrationBuilder.DropTable(
+                name: "UserProfileLanguages");
+
+            migrationBuilder.DropTable(
+                name: "UserProfileSkills");
+
+            migrationBuilder.DropTable(
+                name: "WorkExperiences");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Languages");
-
-            migrationBuilder.DropTable(
                 name: "MaritalStatuses");
 
             migrationBuilder.DropTable(
-                name: "Skills");
+                name: "EducationLevels");
 
             migrationBuilder.DropTable(
-                name: "EducationLevels");
+                name: "Languages");
+
+            migrationBuilder.DropTable(
+                name: "Skills");
 
             migrationBuilder.DropTable(
                 name: "UserProfiles");

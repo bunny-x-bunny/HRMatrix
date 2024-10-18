@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HRMatrix.Persistence.Migrations
 {
     [DbContext(typeof(HRMatrixDbContext))]
-    [Migration("20241017133433_AddedUSerProfilesSkills")]
-    partial class AddedUSerProfilesSkills
+    [Migration("20241018160713_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -276,6 +276,151 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 4,
                             Name = "Китайский"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Испанский"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Французский"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Итальянский"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Португальский"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Русский"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Японский"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Корейский"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "Арабский"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "Голландский"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "Греческий"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Name = "Хинди"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Name = "Шведский"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Name = "Норвежский"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Name = "Датский"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Name = "Финский"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Name = "Польский"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Name = "Чешский"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Name = "Словацкий"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Name = "Украинский"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Name = "Белорусский"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Name = "Венгерский"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Name = "Румынский"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Name = "Болгарский"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Name = "Сербский"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Name = "Хорватский"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Name = "Словенский"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Name = "Литовский"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Name = "Латышский"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Name = "Эстонский"
                         });
                 });
 
@@ -310,23 +455,23 @@ namespace HRMatrix.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            LanguageCode = "en-US",
-                            LanguageId = 1,
-                            Name = "English"
-                        },
-                        new
-                        {
-                            Id = 2,
                             LanguageCode = "ru-RU",
                             LanguageId = 1,
                             Name = "Английский"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = 2,
                             LanguageCode = "en-US",
-                            LanguageId = 2,
-                            Name = "Turkish"
+                            LanguageId = 1,
+                            Name = "English"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 1,
+                            Name = "Англисче"
                         },
                         new
                         {
@@ -339,29 +484,666 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 5,
                             LanguageCode = "en-US",
-                            LanguageId = 3,
-                            Name = "German"
+                            LanguageId = 2,
+                            Name = "Turkish"
                         },
                         new
                         {
                             Id = 6,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 2,
+                            Name = "Түркчө"
+                        },
+                        new
+                        {
+                            Id = 7,
                             LanguageCode = "ru-RU",
                             LanguageId = 3,
                             Name = "Немецкий"
                         },
                         new
                         {
-                            Id = 7,
+                            Id = 8,
+                            LanguageCode = "en-US",
+                            LanguageId = 3,
+                            Name = "German"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 3,
+                            Name = "Немисче"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 4,
+                            Name = "Китайский"
+                        },
+                        new
+                        {
+                            Id = 11,
                             LanguageCode = "en-US",
                             LanguageId = 4,
                             Name = "Chinese"
                         },
                         new
                         {
-                            Id = 8,
-                            LanguageCode = "ru-RU",
+                            Id = 12,
+                            LanguageCode = "kg-KG",
                             LanguageId = 4,
-                            Name = "Китайский"
+                            Name = "Кытайча"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 5,
+                            Name = "Испанский"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            LanguageCode = "en-US",
+                            LanguageId = 5,
+                            Name = "Spanish"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 5,
+                            Name = "Испанча"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 6,
+                            Name = "Французский"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            LanguageCode = "en-US",
+                            LanguageId = 6,
+                            Name = "French"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 6,
+                            Name = "Французча"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 7,
+                            Name = "Итальянский"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            LanguageCode = "en-US",
+                            LanguageId = 7,
+                            Name = "Italian"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 7,
+                            Name = "Итальяныча"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 8,
+                            Name = "Португальский"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            LanguageCode = "en-US",
+                            LanguageId = 8,
+                            Name = "Portuguese"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 8,
+                            Name = "Португалча"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 9,
+                            Name = "Русский"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            LanguageCode = "en-US",
+                            LanguageId = 9,
+                            Name = "Russian"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 9,
+                            Name = "Орусча"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 10,
+                            Name = "Японский"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            LanguageCode = "en-US",
+                            LanguageId = 10,
+                            Name = "Japanese"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 10,
+                            Name = "Жапонча"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 11,
+                            Name = "Корейский"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            LanguageCode = "en-US",
+                            LanguageId = 11,
+                            Name = "Korean"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 11,
+                            Name = "Кореяча"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 12,
+                            Name = "Арабский"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            LanguageCode = "en-US",
+                            LanguageId = 12,
+                            Name = "Arabic"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 12,
+                            Name = "Арабча"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 13,
+                            Name = "Голландский"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            LanguageCode = "en-US",
+                            LanguageId = 13,
+                            Name = "Dutch"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 13,
+                            Name = "Голландча"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 14,
+                            Name = "Греческий"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            LanguageCode = "en-US",
+                            LanguageId = 14,
+                            Name = "Greek"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 14,
+                            Name = "Грекче"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 15,
+                            Name = "Хинди"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            LanguageCode = "en-US",
+                            LanguageId = 15,
+                            Name = "Hindi"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 15,
+                            Name = "Хиндиче"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 16,
+                            Name = "Шведский"
+                        },
+                        new
+                        {
+                            Id = 47,
+                            LanguageCode = "en-US",
+                            LanguageId = 16,
+                            Name = "Swedish"
+                        },
+                        new
+                        {
+                            Id = 48,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 16,
+                            Name = "Шведче"
+                        },
+                        new
+                        {
+                            Id = 49,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 17,
+                            Name = "Норвежский"
+                        },
+                        new
+                        {
+                            Id = 50,
+                            LanguageCode = "en-US",
+                            LanguageId = 17,
+                            Name = "Norwegian"
+                        },
+                        new
+                        {
+                            Id = 51,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 17,
+                            Name = "Норвегче"
+                        },
+                        new
+                        {
+                            Id = 52,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 18,
+                            Name = "Датский"
+                        },
+                        new
+                        {
+                            Id = 53,
+                            LanguageCode = "en-US",
+                            LanguageId = 18,
+                            Name = "Danish"
+                        },
+                        new
+                        {
+                            Id = 54,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 18,
+                            Name = "Данияча"
+                        },
+                        new
+                        {
+                            Id = 55,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 19,
+                            Name = "Финский"
+                        },
+                        new
+                        {
+                            Id = 56,
+                            LanguageCode = "en-US",
+                            LanguageId = 19,
+                            Name = "Finnish"
+                        },
+                        new
+                        {
+                            Id = 57,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 19,
+                            Name = "Финче"
+                        },
+                        new
+                        {
+                            Id = 58,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 20,
+                            Name = "Польский"
+                        },
+                        new
+                        {
+                            Id = 59,
+                            LanguageCode = "en-US",
+                            LanguageId = 20,
+                            Name = "Polish"
+                        },
+                        new
+                        {
+                            Id = 60,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 20,
+                            Name = "Полякча"
+                        },
+                        new
+                        {
+                            Id = 61,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 21,
+                            Name = "Чешский"
+                        },
+                        new
+                        {
+                            Id = 62,
+                            LanguageCode = "en-US",
+                            LanguageId = 21,
+                            Name = "Czech"
+                        },
+                        new
+                        {
+                            Id = 63,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 21,
+                            Name = "Чехче"
+                        },
+                        new
+                        {
+                            Id = 64,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 22,
+                            Name = "Словацкий"
+                        },
+                        new
+                        {
+                            Id = 65,
+                            LanguageCode = "en-US",
+                            LanguageId = 22,
+                            Name = "Slovak"
+                        },
+                        new
+                        {
+                            Id = 66,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 22,
+                            Name = "Словакча"
+                        },
+                        new
+                        {
+                            Id = 67,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 23,
+                            Name = "Украинский"
+                        },
+                        new
+                        {
+                            Id = 68,
+                            LanguageCode = "en-US",
+                            LanguageId = 23,
+                            Name = "Ukrainian"
+                        },
+                        new
+                        {
+                            Id = 69,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 23,
+                            Name = "Украинча"
+                        },
+                        new
+                        {
+                            Id = 70,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 24,
+                            Name = "Белорусский"
+                        },
+                        new
+                        {
+                            Id = 71,
+                            LanguageCode = "en-US",
+                            LanguageId = 24,
+                            Name = "Belarusian"
+                        },
+                        new
+                        {
+                            Id = 72,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 24,
+                            Name = "Белорусча"
+                        },
+                        new
+                        {
+                            Id = 73,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 25,
+                            Name = "Венгерский"
+                        },
+                        new
+                        {
+                            Id = 74,
+                            LanguageCode = "en-US",
+                            LanguageId = 25,
+                            Name = "Hungarian"
+                        },
+                        new
+                        {
+                            Id = 75,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 25,
+                            Name = "Венгриче"
+                        },
+                        new
+                        {
+                            Id = 76,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 26,
+                            Name = "Румынский"
+                        },
+                        new
+                        {
+                            Id = 77,
+                            LanguageCode = "en-US",
+                            LanguageId = 26,
+                            Name = "Romanian"
+                        },
+                        new
+                        {
+                            Id = 78,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 26,
+                            Name = "Румынияча"
+                        },
+                        new
+                        {
+                            Id = 79,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 27,
+                            Name = "Болгарский"
+                        },
+                        new
+                        {
+                            Id = 80,
+                            LanguageCode = "en-US",
+                            LanguageId = 27,
+                            Name = "Bulgarian"
+                        },
+                        new
+                        {
+                            Id = 81,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 27,
+                            Name = "Болгарча"
+                        },
+                        new
+                        {
+                            Id = 82,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 28,
+                            Name = "Сербский"
+                        },
+                        new
+                        {
+                            Id = 83,
+                            LanguageCode = "en-US",
+                            LanguageId = 28,
+                            Name = "Serbian"
+                        },
+                        new
+                        {
+                            Id = 84,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 28,
+                            Name = "Сербче"
+                        },
+                        new
+                        {
+                            Id = 85,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 29,
+                            Name = "Хорватский"
+                        },
+                        new
+                        {
+                            Id = 86,
+                            LanguageCode = "en-US",
+                            LanguageId = 29,
+                            Name = "Croatian"
+                        },
+                        new
+                        {
+                            Id = 87,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 29,
+                            Name = "Хорватча"
+                        },
+                        new
+                        {
+                            Id = 88,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 30,
+                            Name = "Словенский"
+                        },
+                        new
+                        {
+                            Id = 89,
+                            LanguageCode = "en-US",
+                            LanguageId = 30,
+                            Name = "Slovenian"
+                        },
+                        new
+                        {
+                            Id = 90,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 30,
+                            Name = "Словенча"
+                        },
+                        new
+                        {
+                            Id = 91,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 31,
+                            Name = "Литовский"
+                        },
+                        new
+                        {
+                            Id = 92,
+                            LanguageCode = "en-US",
+                            LanguageId = 31,
+                            Name = "Lithuanian"
+                        },
+                        new
+                        {
+                            Id = 93,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 31,
+                            Name = "Литвача"
+                        },
+                        new
+                        {
+                            Id = 94,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 32,
+                            Name = "Латышский"
+                        },
+                        new
+                        {
+                            Id = 95,
+                            LanguageCode = "en-US",
+                            LanguageId = 32,
+                            Name = "Latvian"
+                        },
+                        new
+                        {
+                            Id = 96,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 32,
+                            Name = "Латышча"
+                        },
+                        new
+                        {
+                            Id = 97,
+                            LanguageCode = "ru-RU",
+                            LanguageId = 33,
+                            Name = "Эстонский"
+                        },
+                        new
+                        {
+                            Id = 98,
+                            LanguageCode = "en-US",
+                            LanguageId = 33,
+                            Name = "Estonian"
+                        },
+                        new
+                        {
+                            Id = 99,
+                            LanguageCode = "kg-KG",
+                            LanguageId = 33,
+                            Name = "Эстонча"
                         });
                 });
 
@@ -3033,6 +3815,32 @@ namespace HRMatrix.Persistence.Migrations
                     b.ToTable("UserProfileEducations");
                 });
 
+            modelBuilder.Entity("HRMatrix.Domain.Entities.UserProfileLanguage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProficiencyLevel")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserProfileId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("UserProfileId");
+
+                    b.ToTable("UserProfileLanguages");
+                });
+
             modelBuilder.Entity("HRMatrix.Domain.Entities.UserProfileSkill", b =>
                 {
                     b.Property<int>("Id")
@@ -3057,6 +3865,45 @@ namespace HRMatrix.Persistence.Migrations
                     b.HasIndex("UserProfileId");
 
                     b.ToTable("UserProfileSkills");
+                });
+
+            modelBuilder.Entity("HRMatrix.Domain.Entities.WorkExperience", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Achievements")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("CompanyName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserProfileId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserProfileId");
+
+                    b.ToTable("WorkExperiences");
                 });
 
             modelBuilder.Entity("HRMatrix.IdentityService.Models.ApplicationRole", b =>
@@ -3211,15 +4058,15 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a40cdd53-7b9e-494b-8590-57eead485ada",
+                            ConcurrencyStamp = "c2e564d5-1690-430e-b523-3bf0fb7cce88",
                             Email = "user@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@MAIL.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEC4yCkAJazEqTRtCMfPpQ7iLKRfLnisvyolkQAbHzW1gwx9YwNjxDaVXztnV5Ck+gA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGPnCm9NsKGtd7tnte6LRbkhQIioWz1mUE1pUQxuEBFfSGoE2sTex75KDCxlC1ra8w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "228d7250-a68b-4b29-98a6-e3f02584ea53",
+                            SecurityStamp = "cce93891-f06d-4efc-a2f0-36350ba20a5c",
                             TwoFactorEnabled = false,
                             UserName = "user"
                         },
@@ -3227,15 +4074,15 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e12823c0-12a2-4f83-848b-05986c5de488",
+                            ConcurrencyStamp = "420e1f6f-4090-48f5-b52e-50ac9f2081fb",
                             Email = "superuser@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERUSER@MAIL.COM",
                             NormalizedUserName = "SUPERUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAYYf727dOofCfu2xvEb7rYk6YKO/GUlySWtyZ7oHmwdv0X4Bsg4+w3D7MBPtFyhLg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOu2DdkjkK9z+slQsg1GB50ivJA4DJOabj8hTfEeLTzj9EQDZ1GvpDapH3jrpyKQZA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "140a5205-ce32-4412-beac-8ad9690a8a1d",
+                            SecurityStamp = "81f25803-2e90-4f28-9fd5-38ece42fac23",
                             TwoFactorEnabled = false,
                             UserName = "superuser"
                         },
@@ -3243,15 +4090,15 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ae0d526f-6cbc-4ea7-8c55-1bdefce4a07e",
+                            ConcurrencyStamp = "70cd7a4e-e7a8-44e6-99c5-ee5a44ed523f",
                             Email = "hr@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "HR@MAIL.COM",
                             NormalizedUserName = "HR",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE4jpil6Zq08Xm8/g9nyWRxLuIgVXZLJ2Xc7pyItfsqA8Rwr5ZAXVCwXyU+YlOqAjg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEA/XK/hZ8c4+ycTQlyY3V2SgSNer2F4HbFPJCDvRoNjrtpofpBDJGlO8LyvT/bnyFw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0c88a5f1-b64a-4dcf-acc9-1e18758c141a",
+                            SecurityStamp = "ed455a1e-a3c6-4db3-9fc8-fb244e9ca8f7",
                             TwoFactorEnabled = false,
                             UserName = "hr"
                         },
@@ -3259,15 +4106,15 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 4,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1b4082b5-780b-40eb-8899-ddee553f0843",
+                            ConcurrencyStamp = "db00d3be-e47d-496d-975d-ff820eaf718e",
                             Email = "admin@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEG0xGrw/DDcGeYgfgfHHAZ9NkmOJasdmy4JhPRUjaiWATZmsd5501/MDwIy5XxeGDw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEoP3wE70mrEjdY6X54PyWwPKnIFY1qiVFhckfu2YMJQadG8M/bxGwpZwRZpuK99qw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "69bbc581-54c5-4930-94cb-3260cdf70501",
+                            SecurityStamp = "d017d803-fc8e-4498-b6df-354f2cd6ca29",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -3456,6 +4303,25 @@ namespace HRMatrix.Persistence.Migrations
                     b.Navigation("UserProfile");
                 });
 
+            modelBuilder.Entity("HRMatrix.Domain.Entities.UserProfileLanguage", b =>
+                {
+                    b.HasOne("HRMatrix.Domain.Entities.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HRMatrix.Domain.Entities.UserProfile", "UserProfile")
+                        .WithMany("UserProfileLanguages")
+                        .HasForeignKey("UserProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Language");
+
+                    b.Navigation("UserProfile");
+                });
+
             modelBuilder.Entity("HRMatrix.Domain.Entities.UserProfileSkill", b =>
                 {
                     b.HasOne("HRMatrix.Domain.Entities.Skill", "Skill")
@@ -3471,6 +4337,17 @@ namespace HRMatrix.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Skill");
+
+                    b.Navigation("UserProfile");
+                });
+
+            modelBuilder.Entity("HRMatrix.Domain.Entities.WorkExperience", b =>
+                {
+                    b.HasOne("HRMatrix.Domain.Entities.UserProfile", "UserProfile")
+                        .WithMany("WorkExperiences")
+                        .HasForeignKey("UserProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("UserProfile");
                 });
@@ -3555,7 +4432,11 @@ namespace HRMatrix.Persistence.Migrations
 
                     b.Navigation("UserEducations");
 
+                    b.Navigation("UserProfileLanguages");
+
                     b.Navigation("UserProfileSkills");
+
+                    b.Navigation("WorkExperiences");
                 });
 #pragma warning restore 612, 618
         }

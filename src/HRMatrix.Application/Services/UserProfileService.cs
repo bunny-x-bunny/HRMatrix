@@ -63,7 +63,10 @@ public class UserProfileService : IUserProfileService
             .Include(x => x.UserProfileSkills)
             .ThenInclude(x => x.Skill)
             .ThenInclude(x => x.Translations)
-            .Include(x=>x.WorkExperiences)            
+            .Include(x=>x.WorkExperiences)
+            .Include(x=>x.UserProfileLanguages)
+            .ThenInclude(x=>x.Language)
+            .ThenInclude(x=>x.Translations)
             .FirstOrDefaultAsync(up => up.Id == id);
 
         if (profile == null) return null;

@@ -9,6 +9,7 @@ using HRMatrix.Application.DTOs.UserProfileEducation;
 using HRMatrix.Application.DTOs.UserProfileSkills;
 using HRMatrix.Application.DTOs.WorkExperiences;
 using HRMatrix.Domain.Entities;
+using HRMatrix.Application.DTOs.UserProfilesLanguages;
 
 public class MappingProfile : Profile
 {
@@ -19,7 +20,8 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.UserEducations, opt => opt.Ignore())
             .ForMember(dest => dest.FamilyStatus, opt => opt.MapFrom(src => src.FamilyStatus))
             .ForMember(dest => dest.UserProfileSkills, opt => opt.MapFrom(src => src.UserProfileSkills))
-            .ForMember(dest => dest.WorkExperiences, opt => opt.MapFrom(src => src.WorkExperiences));
+            .ForMember(dest => dest.WorkExperiences, opt => opt.MapFrom(src => src.WorkExperiences))
+            .ForMember(dest => dest.UserProfileLanguages, opt => opt.MapFrom(src => src.Languages));
 
         // Маппинг для обновления UserProfile
         CreateMap<UpdateUserProfileDto, UserProfile>()
@@ -27,12 +29,25 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.FamilyStatus, opt => opt.MapFrom(src => src.FamilyStatus))
             .ForMember(dest => dest.UserProfileSkills, opt => opt.MapFrom(src => src.UserProfileSkills))
             .ForMember(dest => dest.WorkExperiences, opt => opt.MapFrom(src => src.WorkExperiences))
+            .ForMember(dest => dest.UserProfileLanguages, opt => opt.MapFrom(src => src.Languages))
             .ReverseMap();
 
         // Маппинг для UserProfile и FamilyStatus
         CreateMap<UserProfile, UserProfileDto>()
             .ForMember(dest => dest.FamilyStatus, opt => opt.MapFrom(src => src.FamilyStatus))
             .ForMember(dest => dest.WorkExperiences, opt => opt.MapFrom(src => src.WorkExperiences))
+            .ForMember(dest => dest.Languages, opt => opt.MapFrom(src => src.UserProfileLanguages))
+            .ReverseMap();
+
+        // Маппинг для UserProfileLanguage
+        CreateMap<UserProfileLanguage, UserProfileLanguageResponse>()
+            .ForMember(dest => dest.LanguageId, opt => opt.MapFrom(src => src.LanguageId))
+            .ForMember(dest => dest.LanguageName, opt => opt.MapFrom(src => src.Language.Name))
+            .ForMember(dest => dest.ProficiencyLevel, opt => opt.MapFrom(src => src.ProficiencyLevel))
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Language.Translations));
+
+        CreateMap<CreateUserProfileLanguageRequest, UserProfileLanguage>()
+            .ForMember(dest => dest.UserProfileId, opt => opt.Ignore())
             .ReverseMap();
 
         // Маппинг для FamilyStatus
