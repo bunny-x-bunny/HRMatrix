@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HRMatrix.Application.DTOs.EducationLevel;
 using HRMatrix.Application.DTOs.FamilyStatus;
+using HRMatrix.Application.DTOs.Languages;
 using HRMatrix.Application.DTOs.MaterialStatus;
 using HRMatrix.Application.DTOs.Skill;
 using HRMatrix.Application.DTOs.UserProfile;
@@ -139,5 +140,28 @@ public class MappingProfile : Profile
         CreateMap<CreateWorkExperienceDto, WorkExperience>().ReverseMap();
         CreateMap<WorkExperience, WorkExperienceResponseDto>().ReverseMap();
         CreateMap<CreateWorkExperienceNoIdDto, WorkExperience>().ReverseMap();
+
+        // Маппинг для Language и LanguageDto
+        CreateMap<Language, LanguageDto>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+            .ReverseMap();
+
+        CreateMap<LanguageTranslation, LanguageTranslationDto>().ReverseMap();
+
+        CreateMap<CreateLanguageDto, Language>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+            .ReverseMap();
+
+        CreateMap<UpdateLanguageDto, Language>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+            .ReverseMap();
+
+        CreateMap<CreateLanguageTranslationDto, LanguageTranslation>()
+            .ForMember(dest => dest.LanguageId, opt => opt.Ignore())
+            .ReverseMap();
+
+        CreateMap<UpdateLanguageTranslationDto, LanguageTranslation>()
+            .ForMember(dest => dest.LanguageId, opt => opt.Ignore())
+            .ReverseMap();
     }
 }
