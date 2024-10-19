@@ -17,15 +17,15 @@ public class MappingProfile : Profile
     {
         // Маппинг для создания UserProfile
         CreateMap<CreateUserProfileDto, UserProfile>()
-            .ForMember(dest => dest.UserEducations, opt => opt.Ignore())
             .ForMember(dest => dest.FamilyStatus, opt => opt.MapFrom(src => src.FamilyStatus))
+            .ForMember(dest => dest.UserEducations, opt => opt.MapFrom(src => src.UserEducations))
             .ForMember(dest => dest.UserProfileSkills, opt => opt.MapFrom(src => src.UserProfileSkills))
             .ForMember(dest => dest.WorkExperiences, opt => opt.MapFrom(src => src.WorkExperiences))
             .ForMember(dest => dest.UserProfileLanguages, opt => opt.MapFrom(src => src.Languages));
 
         // Маппинг для обновления UserProfile
         CreateMap<UpdateUserProfileDto, UserProfile>()
-            .ForMember(dest => dest.UserEducations, opt => opt.Ignore())
+            .ForMember(dest => dest.UserEducations, opt => opt.MapFrom(src => src.UserEducations))
             .ForMember(dest => dest.FamilyStatus, opt => opt.MapFrom(src => src.FamilyStatus))
             .ForMember(dest => dest.UserProfileSkills, opt => opt.MapFrom(src => src.UserProfileSkills))
             .ForMember(dest => dest.WorkExperiences, opt => opt.MapFrom(src => src.WorkExperiences))

@@ -14,4 +14,6 @@ public class UserProfileDto : UserProfileBaseDto
     public List<UserProfileSkillResponse> UserProfileSkills { get; set; }
     public List<WorkExperienceResponseDto> WorkExperiences { get; set; }
     public List<UserProfileLanguageResponse> Languages { get; set; }
+    public string ProfilePhotoPath { get; set; }
+    public string VideoPath { get; set; }
 }

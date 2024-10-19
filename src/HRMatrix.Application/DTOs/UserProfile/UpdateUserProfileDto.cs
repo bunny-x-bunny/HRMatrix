@@ -13,5 +13,5 @@ public class UpdateUserProfileDto : UserProfileBaseDto
     public List<UserEducationEntryRequest> UserEducations { get; set; }
     public List<CreateUserProfileSkillRequest> UserProfileSkills { get; set; }
     public List<CreateWorkExperienceNoIdDto> WorkExperiences { get; set; }
-    public List<UserProfileLanguageResponse> Languages { get; set; }
+    public List<CreateUserProfileLanguageRequest> Languages { get; set; }
 }

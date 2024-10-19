@@ -4,6 +4,7 @@ using HRMatrix.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HRMatrix.Persistence.Migrations
 {
     [DbContext(typeof(HRMatrixDbContext))]
-    partial class HRMatrixDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241019102857_RemoveAdditionalDataFromUserProfile")]
+    partial class RemoveAdditionalDataFromUserProfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3762,10 +3765,12 @@ namespace HRMatrix.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ProfilePhotoPath")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("VideoPath")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -4043,15 +4048,15 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "54958ca9-85b7-4ed0-8ed0-7761121248a8",
+                            ConcurrencyStamp = "97082b23-0c0a-4e6e-839a-f2a35721daa7",
                             Email = "user@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@MAIL.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEsxrB2sI4SIMcQPsXRjdpGLczKiYNEdyhf9GYovkJIQohpMBbaWtyjHokiwIT8hNw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDG/jydIJadNkrxRcnaNEThp0ifgv0KvBBb7a8MGC6SU8OHe+5OOH1S47eMsRLf8TQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5f0b0691-9b21-485e-bf33-036b5446120f",
+                            SecurityStamp = "39ffb000-9a4e-45af-b8b6-c49d351f0267",
                             TwoFactorEnabled = false,
                             UserName = "user"
                         },
@@ -4059,15 +4064,15 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "aac2310b-c958-40c6-a667-9c24ea57d3c3",
+                            ConcurrencyStamp = "09ad85b1-2444-4089-9cc0-811f1d84cee0",
                             Email = "superuser@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERUSER@MAIL.COM",
                             NormalizedUserName = "SUPERUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAELb2aze2ACETLEyICfOZvAZtx37GchmUUoT8QRVKzbP8FS/HdnYqEECMbPj2XlvFgw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEK129H5wJ/DsYCZP6VnAZdU+BLxvoUK5VqIBFJaO9p82ebFNLGgQEoKoVkXLh/fdPQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d4f41a25-33c2-4fea-8800-916334313b89",
+                            SecurityStamp = "ca104a18-e4a7-4f8f-adbf-93b5b4bd8618",
                             TwoFactorEnabled = false,
                             UserName = "superuser"
                         },
@@ -4075,15 +4080,15 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "05a079b1-84ef-41ff-99c0-85e3355a2f4b",
+                            ConcurrencyStamp = "21960ebb-9a55-4e52-b5dd-f9e0fc711ded",
                             Email = "hr@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "HR@MAIL.COM",
                             NormalizedUserName = "HR",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJW8ShAY3vPsFWq6rPgKhjs0ph88iQDnX6tyAwlBVYt+WgTCc/Z1jNyUXyRRoI1C3Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGpT8vsVPuCxlXl75S3nenCvkpeXwjN1H4yBMdjrl9GQ0cdl3+OCgs1XOqXx8ZOm9w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "57688798-908e-48f4-aa2a-70fa2b4511df",
+                            SecurityStamp = "b9c96d83-8a8f-4863-982f-d4d6d48de8e3",
                             TwoFactorEnabled = false,
                             UserName = "hr"
                         },
@@ -4091,15 +4096,15 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 4,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "066cc268-77af-455c-9a61-08966067f1d1",
+                            ConcurrencyStamp = "23f27184-1846-4427-8076-4a6cadb1c769",
                             Email = "admin@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAELOWwYKiyGt9plxT7zsMk4ThcDAepw8b0B1/DjygP5y3XAKktdibJ/VQNrXXxUzYog==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHi3SsBby13YyRSVpwhYrhB+Sr1mkW3fQKCMZzoLCbhiI1PLgiLijaT03qqcJQoC+A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "39cb98c1-35c4-496f-bd45-fa377f188c56",
+                            SecurityStamp = "5bcb7f3c-87c4-41c8-9121-d01b8e2b27c1",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });

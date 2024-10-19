@@ -18,14 +18,10 @@ public class UserProfile
 
     public FamilyStatus FamilyStatus { get; set; }
 
-    public ICollection<UserProfileLanguage> UserProfileLanguages { get; set; } // New relationship for languages
+    public ICollection<UserProfileLanguage> UserProfileLanguages { get; set; }
 
-    public string AdditionalSkills { get; set; }
+    public string? ProfilePhotoPath { get; set; }
 
-    public string AdditionalCompetences { get; set; }
-
-    public string ProfilePhotoPath { get; set; }
-
-    public string VideoPath { get; set; }
+    public string? VideoPath { get; set; }
 }
 
