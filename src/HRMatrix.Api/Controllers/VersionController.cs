@@ -9,7 +9,7 @@ namespace HRMatrix.Api.Controllers
         [HttpGet]
         public IActionResult GetVersion()
         {
-            var version = "1.0.5";
+            var version = "1.0.6";
             return Ok(version);
         }
     }

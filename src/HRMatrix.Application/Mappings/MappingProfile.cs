@@ -4,12 +4,14 @@ using HRMatrix.Application.DTOs.FamilyStatus;
 using HRMatrix.Application.DTOs.Languages;
 using HRMatrix.Application.DTOs.MaterialStatus;
 using HRMatrix.Application.DTOs.Skill;
+using HRMatrix.Application.DTOs.UserAccount;
 using HRMatrix.Application.DTOs.UserProfile;
 using HRMatrix.Application.DTOs.UserProfileEducation;
 using HRMatrix.Application.DTOs.UserProfileSkills;
 using HRMatrix.Application.DTOs.WorkExperiences;
 using HRMatrix.Domain.Entities;
 using HRMatrix.Application.DTOs.UserProfilesLanguages;
+using HRMatrix.IdentityService.Models;
 
 public class MappingProfile : Profile
 {
@@ -177,6 +179,12 @@ public class MappingProfile : Profile
 
         CreateMap<UpdateLanguageTranslationDto, LanguageTranslation>()
             .ForMember(dest => dest.LanguageId, opt => opt.Ignore())
+            .ReverseMap();
+
+        CreateMap<PatchUserAccountRequest, ApplicationUser>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+        CreateMap<UpdateUserAccountRequest, ApplicationUser>()
             .ReverseMap();
     }
 }

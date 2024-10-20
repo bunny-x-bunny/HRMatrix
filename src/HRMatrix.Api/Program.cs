@@ -52,10 +52,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 #region Services
-builder.Services.AddAutoMapper(
-    typeof(MappingProfile)
-);
 
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IEducationLevelService, EducationLevelService>();
 builder.Services.AddScoped<IFileStorageService, FileStorageService>();
 builder.Services.AddScoped<IMaritalStatusService, MaritalStatusService>();
@@ -67,7 +65,7 @@ builder.Services.AddScoped<IWorkExperienceService, WorkExperienceService>();
 builder.Services.AddScoped<ILanguageService, LanguageService>();
 builder.Services.AddScoped<IUserProfileLanguageService, UserProfileLanguageService>();
 
-#endregion
+#endregion Services
 
 var app = builder.Build();
 
