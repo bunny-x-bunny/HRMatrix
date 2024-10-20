@@ -1,6 +1,12 @@
 ﻿using HRMatrix.Application.Interfaces;
+using HRMatrix.Application.Services;
 using HRMatrix.IdentityService.DTOs;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace HRMatrix.Api.Controllers;
 
@@ -18,10 +24,14 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto loginDto)
     {
-        var token = await _authService.LoginAsync(loginDto);
-        if (token != null)
+        var loginResult = await _authService.LoginAsync(loginDto);
+        if (loginResult != null)
         {
-            return Ok(new { Token = token });
+            return Ok(new
+            {
+                AccessToken = loginResult.AccessToken,
+                RefreshToken = loginResult.RefreshToken
+            });
         }
 
         return Unauthorized(new { Message = "Invalid login attempt." });
@@ -37,5 +47,22 @@ public class AuthController : ControllerBase
         }
 
         return BadRequest(new { Message = "Registration failed." });
+    }
+
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken(RefreshTokenRequest request)
+    {
+        var refreshTokenResult = await _authService.RefreshTokenAsync(request);
+
+        if (refreshTokenResult != null)
+        {
+            return Ok(new
+            {
+                AccessToken = refreshTokenResult.AccessToken,
+                RefreshToken = refreshTokenResult.RefreshToken
+            });
+        }
+
+        return Unauthorized(new { Message = "Invalid refresh token." });
     }
 }

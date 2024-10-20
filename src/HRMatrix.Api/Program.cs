@@ -1,7 +1,7 @@
 ﻿using HRMatrix.Application.Services;
 using HRMatrix.Application.Services.Directions;
-using HRMatrix.Application.Services.Interfaces;
 using HRMatrix.Application.Services.Interfaces.Directions;
+using HRMatrix.Application.Services.Interfaces;
 using HRMatrix.IdentityService;
 using HRMatrix.Persistence;
 using HRMatrix.Persistence.Contexts;
@@ -20,6 +20,7 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
     });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -65,7 +66,7 @@ builder.Services.AddScoped<IWorkExperienceService, WorkExperienceService>();
 builder.Services.AddScoped<ILanguageService, LanguageService>();
 builder.Services.AddScoped<IUserProfileLanguageService, UserProfileLanguageService>();
 
-#endregion Services
+#endregion
 
 var app = builder.Build();
 
@@ -82,16 +83,11 @@ app.UseCors(b =>
     b.AllowAnyMethod();
 });
 
-//if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

@@ -6,6 +6,7 @@ namespace HRMatrix.Application.Interfaces
     public interface IAuthService
     {
         Task<IdentityResult> RegisterAsync(RegisterDto registerDto);
-        Task<string?> LoginAsync(LoginDto loginDto);
+        Task<AuthResultDto> LoginAsync(LoginDto loginDto);
+        Task<AuthResultDto> RefreshTokenAsync(RefreshTokenRequest request);
     }
 }

@@ -20,9 +20,6 @@ public static class AddServices
 
         services
             .AddIdentity<ApplicationUser, ApplicationRole>()
-            .AddUserManager<UserManager<ApplicationUser>>()
-            .AddSignInManager<SignInManager<ApplicationUser>>()
-            .AddRoleManager<RoleManager<ApplicationRole>>()
             .AddEntityFrameworkStores<HRMatrixDbContext>()
             .AddDefaultTokenProviders();
 

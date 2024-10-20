@@ -2,6 +2,10 @@
 using HRMatrix.IdentityService.DTOs;
 using HRMatrix.IdentityService.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace HRMatrix.Application.Services;
 
@@ -35,17 +39,74 @@ public class AuthService : IAuthService
         return result;
     }
 
-    public async Task<string?> LoginAsync(LoginDto loginDto)
+    public async Task<AuthResultDto> LoginAsync(LoginDto loginDto)
     {
-        var result = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, false, lockoutOnFailure: false);
-        if (result.Succeeded)
+        var user = await _userManager.FindByNameAsync(loginDto.Username);
+        if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
         {
-            var user = (await _userManager.FindByNameAsync(loginDto.Username))!;
-            var roles = await _userManager.GetRolesAsync(user);
-
-            return _jwtTokenGenerator.GenerateToken(user, roles);
+            return null;
         }
 
-        return null;
+        var userRoles = await _userManager.GetRolesAsync(user);
+        var tokens = _jwtTokenGenerator.GenerateTokens(user, userRoles);
+
+        return tokens;
+    }
+
+    public async Task<AuthResultDto> RefreshTokenAsync(RefreshTokenRequest request)
+    {
+        var principal = GetPrincipalFromExpiredToken(request.AccessToken);
+        var userName = principal.Identity?.Name;
+
+        if (string.IsNullOrEmpty(userName) || request.RefreshToken == null)
+        {
+            return null;
+        }
+
+        var user = await _userManager.FindByNameAsync(userName);
+        if (user == null)
+        {
+            return null;
+        }
+
+        var isValid = await _userManager.VerifyUserTokenAsync(user, "Default", "RefreshToken", request.RefreshToken);
+        if (!isValid)
+        {
+            return null;
+        }
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+        var tokens = _jwtTokenGenerator.GenerateTokens(user, userRoles);
+        
+        var newRefreshToken = await _userManager.GenerateUserTokenAsync(user, "Default", "RefreshToken");
+
+        return new AuthResultDto
+        {
+            AccessToken = tokens.AccessToken,
+            RefreshToken = newRefreshToken
+        };
+    }
+
+    private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+    {
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false,
+            ValidateIssuer = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtTokenGenerator.Key)),
+            ValidateLifetime = false
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var validatedToken);
+
+        if (validatedToken is not JwtSecurityToken jwtSecurityToken ||
+            !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+        {
+            throw new SecurityTokenException("Invalid token");
+        }
+
+        return principal;
     }
 }
