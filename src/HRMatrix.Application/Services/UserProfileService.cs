@@ -164,4 +164,21 @@ public class UserProfileService : IUserProfileService
         profile.VideoPath = videoFileName;
         await _context.SaveChangesAsync();
     }
+
+    public async Task<List<UserProfileSuggestionDto>> SearchUserProfilesAsync(string query, int limit)
+    {
+        query = query.ToLower();
+
+        var profiles = await _context.UserProfiles.AsNoTracking()
+            .Where(up => up.FirstName.ToLower().Contains(query) || up.LastName.ToLower().Contains(query))
+            .Select(up => new UserProfileSuggestionDto
+            {
+                Id = up.Id,
+                FullName = $"{up.FirstName} {up.LastName}"
+            })
+            .Take(limit)
+            .ToListAsync();
+
+        return profiles;
+    }
 }

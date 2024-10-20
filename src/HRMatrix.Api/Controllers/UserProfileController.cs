@@ -92,4 +92,16 @@ public class UserProfileController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchUserProfiles([FromQuery] string query, int limit = 10)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            return BadRequest("Query parameter cannot be empty.");
+        }
+
+        var profiles = await _userProfileService.SearchUserProfilesAsync(query, limit);
+        return Ok(profiles);
+    }
 }
