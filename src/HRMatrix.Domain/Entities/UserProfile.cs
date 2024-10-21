@@ -1,4 +1,6 @@
-﻿namespace HRMatrix.Domain.Entities;
+﻿using HRMatrix.IdentityService.Models;
+
+namespace HRMatrix.Domain.Entities;
 
 public class UserProfile
 {
@@ -25,5 +27,7 @@ public class UserProfile
     public string? ProfilePhotoPath { get; set; }
 
     public string? VideoPath { get; set; }
+
+    public int? AspNetUserId { get; set; }
 }
 

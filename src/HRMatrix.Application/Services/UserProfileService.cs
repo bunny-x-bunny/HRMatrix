@@ -135,15 +135,16 @@ public class UserProfileService : IUserProfileService
         return userProfileDto;
     }
 
-    public async Task<int> CreateUserProfileAsync(CreateUserProfileDto userProfileDto)
+    public async Task<int> CreateUserProfileAsync(CreateUserProfileDto userProfileDto, int userId)
     {
         var userProfile = _mapper.Map<UserProfile>(userProfileDto);
+        userProfile.AspNetUserId = userId;
         _context.UserProfiles.Add(userProfile);
         await _context.SaveChangesAsync();
         return userProfile.Id;
     }
 
-    public async Task<UserProfileDto> UpdateUserProfileAsync(UpdateUserProfileDto userProfileDto)
+    public async Task<UserProfileDto> UpdateUserProfileAsync(UpdateUserProfileDto userProfileDto, int userId)
     {
         var userProfile = await _context.UserProfiles
             .Include(up => up.FamilyStatus)
@@ -175,7 +176,7 @@ public class UserProfileService : IUserProfileService
         _mapper.Map(userProfileDto.WorkExperiences, userProfile.WorkExperiences);
         _mapper.Map(userProfileDto.Languages, userProfile.UserProfileLanguages);
         _mapper.Map(userProfileDto.Competencies, userProfile.UserProfileCompetencies);
-
+        
         await _context.SaveChangesAsync();
 
         var updatedProfile = await GetUserProfileByIdAsync(userProfile.Id);
@@ -220,5 +221,65 @@ public class UserProfileService : IUserProfileService
             .ToListAsync();
 
         return profiles;
+    }
+
+    public async Task<List<UserProfileDto>> GetUserProfileByAspNetUserId(int id)
+    {
+        var profiles = await _context.UserProfiles
+            .Include(up => up.FamilyStatus)
+                .ThenInclude(fs => fs.MaritalStatus)
+                .ThenInclude(ms => ms.Translations)
+            .Include(up => up.UserEducations)
+                .ThenInclude(ue => ue.EducationLevel)
+                .ThenInclude(el => el.Translations)
+            .Include(x => x.UserProfileSkills)
+                .ThenInclude(x => x.Skill)
+                .ThenInclude(x => x.Translations)
+            .Include(x => x.WorkExperiences)
+            .Include(x => x.UserProfileLanguages)
+                .ThenInclude(x => x.Language)
+                .ThenInclude(x => x.Translations)
+            .Include(x => x.UserProfileCompetencies)
+                .ThenInclude(x => x.Competency)
+                .ThenInclude(x => x.Translations)
+            .Where(x=>x.AspNetUserId == id)
+            .ToListAsync();
+
+        var userProfilesDto = _mapper.Map<List<UserProfileDto>>(profiles);
+
+        foreach (var userProfile in userProfilesDto)
+        {
+            userProfile.UserEducations = profiles
+                .First(p => p.Id == userProfile.Id)
+                .UserEducations.Select(ue => new UserProfileEducationResponse
+                {
+                    EducationLevelId = ue.EducationLevelId,
+                    EducationLevelName = ue.EducationLevel.Name,
+                    Quantity = ue.Quantity,
+                    Translations = _mapper.Map<List<EducationLevelTranslationDto>>(ue.EducationLevel.Translations)
+                }).ToList();
+
+            userProfile.UserProfileSkills = profiles
+                .First(p => p.Id == userProfile.Id)
+                .UserProfileSkills.Select(s => new UserProfileSkillResponse
+                {
+                    SkillId = s.SkillId,
+                    SkillName = s.Skill.Name,
+                    ProficiencyLevel = s.ProficiencyLevel,
+                    Translations = _mapper.Map<List<SkillTranslationDto>>(s.Skill.Translations)
+                }).ToList();
+
+            userProfile.Competencies = profiles
+                .First(p => p.Id == userProfile.Id)
+                .UserProfileCompetencies.Select(c => new UserProfileCompetencyResponse
+                {
+                    CompetencyId = c.CompetencyId,
+                    CompetencyName = c.Competency.Name,
+                    ProficiencyLevel = c.ProficiencyLevel,
+                    Translations = _mapper.Map<List<CompetencyTranslationDto>>(c.Competency.Translations)
+                }).ToList();
+        }
+
+        return userProfilesDto;
     }
 }
