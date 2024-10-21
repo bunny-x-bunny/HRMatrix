@@ -14,6 +14,7 @@ using HRMatrix.Application.DTOs.UserProfilesLanguages;
 using HRMatrix.IdentityService.Models;
 using HRMatrix.Application.DTOs.Competency;
 using HRMatrix.Application.DTOs.UserProfileCompetency;
+using HRMatrix.Application.DTOs.Order;
 
 public class MappingProfile : Profile
 {
@@ -225,5 +226,23 @@ public class MappingProfile : Profile
         CreateMap<CreateUserProfileCompetenciesRequest, UserProfileCompetency>()
             .ForMember(dest => dest.UserProfileId, opt => opt.MapFrom(src => src.UserProfileId))
             .ReverseMap();
+
+        // Маппинг для Order и OrderDto
+        CreateMap<Order, OrderDto>();
+
+        CreateMap<OrderDto, Order>();
+
+        // Маппинг для создания Order
+        CreateMap<CreateOrderDto, Order>()
+            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.Status, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedByUserId, opt => opt.Ignore())
+            .ForMember(dest => dest.AssignedUserProfile, opt => opt.Ignore());
+
+        // Маппинг для обновления Order
+        CreateMap<UpdateOrderDto, Order>()
+            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedByUserId, opt => opt.Ignore())
+            .ForMember(dest => dest.AssignedUserProfile, opt => opt.Ignore());
     }
 }
