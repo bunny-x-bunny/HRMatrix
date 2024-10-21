@@ -32,7 +32,11 @@ namespace HRMatrix.Persistence.Contexts
 
         public DbSet<LanguageTranslation> LanguageTranslations { get; set; }
 
-        public DbSet<UserProfileLanguage> UserProfileLanguages { get; set; } // Added DbSet for UserProfileLanguage
+        public DbSet<UserProfileLanguage> UserProfileLanguages { get; set; }
+
+        public DbSet<Competency> Competencies { get; set; }
+
+        public DbSet<CompetencyTranslation> CompetencyTranslations { get; set; }
 
         public HRMatrixDbContext(DbContextOptions<HRMatrixDbContext> options) : base(options)
         {
