@@ -12,6 +12,7 @@ using HRMatrix.Application.DTOs.WorkExperiences;
 using HRMatrix.Domain.Entities;
 using HRMatrix.Application.DTOs.UserProfilesLanguages;
 using HRMatrix.IdentityService.Models;
+using HRMatrix.Application.DTOs.Competency;
 
 public class MappingProfile : Profile
 {
@@ -185,6 +186,29 @@ public class MappingProfile : Profile
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
         CreateMap<UpdateUserAccountRequest, ApplicationUser>()
+            .ReverseMap();
+
+        // Маппинг для Competency и CompetencyDto
+        CreateMap<Competency, CompetencyDto>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+            .ReverseMap();
+
+        CreateMap<CompetencyTranslation, CompetencyTranslationDto>().ReverseMap();
+
+        CreateMap<CreateCompetencyDto, Competency>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+            .ReverseMap();
+
+        CreateMap<UpdateCompetencyDto, Competency>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+            .ReverseMap();
+
+        CreateMap<CreateCompetencyTranslationDto, CompetencyTranslation>()
+            .ForMember(dest => dest.CompetencyId, opt => opt.Ignore())
+            .ReverseMap();
+
+        CreateMap<UpdateCompetencyTranslationDto, CompetencyTranslation>()
+            .ForMember(dest => dest.CompetencyId, opt => opt.Ignore())
             .ReverseMap();
     }
 }
