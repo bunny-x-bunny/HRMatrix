@@ -1,4 +1,5 @@
 ﻿using HRMatrix.Application.DTOs.FamilyStatus;
+using HRMatrix.Application.DTOs.UserProfileCompetency;
 using HRMatrix.Application.DTOs.UserProfileEducation;
 using HRMatrix.Application.DTOs.UserProfileSkills;
 using HRMatrix.Application.DTOs.UserProfilesLanguages;
@@ -14,4 +15,5 @@ public class UpdateUserProfileDto : UserProfileBaseDto
     public List<CreateUserProfileSkillRequest> UserProfileSkills { get; set; }
     public List<CreateWorkExperienceNoIdDto> WorkExperiences { get; set; }
     public List<CreateUserProfileLanguageRequest> Languages { get; set; }
+    public List<CreateUserProfileCompetencyRequest> Competencies { get; set; }
 }

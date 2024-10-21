@@ -1,4 +1,5 @@
 ﻿using HRMatrix.Application.DTOs.FamilyStatus;
+using HRMatrix.Application.DTOs.UserProfileCompetency;
 using HRMatrix.Application.DTOs.UserProfileEducation;
 using HRMatrix.Application.DTOs.UserProfileSkills;
 using HRMatrix.Application.DTOs.UserProfilesLanguages;
@@ -14,6 +15,7 @@ public class UserProfileDto : UserProfileBaseDto
     public List<UserProfileSkillResponse> UserProfileSkills { get; set; }
     public List<WorkExperienceResponseDto> WorkExperiences { get; set; }
     public List<UserProfileLanguageResponse> Languages { get; set; }
+    public List<UserProfileCompetencyResponse> Competencies { get; set; }
     public string ProfilePhotoPath { get; set; }
     public string VideoPath { get; set; }
 }

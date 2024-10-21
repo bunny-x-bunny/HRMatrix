@@ -8,6 +8,8 @@ using HRMatrix.Application.Services.Interfaces;
 using HRMatrix.Domain.Entities;
 using HRMatrix.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
+using HRMatrix.Application.DTOs.Competency;
+using HRMatrix.Application.DTOs.UserProfileCompetency;
 
 namespace HRMatrix.Application.Services;
 
@@ -26,18 +28,21 @@ public class UserProfileService : IUserProfileService
     {
         var profiles = await _context.UserProfiles
             .Include(up => up.FamilyStatus)
-            .ThenInclude(fs => fs.MaritalStatus)
-            .ThenInclude(ms => ms.Translations)
+                .ThenInclude(fs => fs.MaritalStatus)
+                .ThenInclude(ms => ms.Translations)
             .Include(up => up.UserEducations)
-            .ThenInclude(ue => ue.EducationLevel)
-            .ThenInclude(el => el.Translations)
+                .ThenInclude(ue => ue.EducationLevel)
+                .ThenInclude(el => el.Translations)
             .Include(x => x.UserProfileSkills)
-            .ThenInclude(x => x.Skill)
-            .ThenInclude(x => x.Translations)
+                .ThenInclude(x => x.Skill)
+                .ThenInclude(x => x.Translations)
             .Include(x => x.WorkExperiences)
             .Include(x => x.UserProfileLanguages)
-            .ThenInclude(x => x.Language)
-            .ThenInclude(x => x.Translations)
+                .ThenInclude(x => x.Language)
+                .ThenInclude(x => x.Translations)
+            .Include(x => x.UserProfileCompetencies)
+                .ThenInclude(x => x.Competency)
+                .ThenInclude(x => x.Translations)
             .ToListAsync();
 
         var userProfilesDto = _mapper.Map<List<UserProfileDto>>(profiles);
@@ -52,6 +57,26 @@ public class UserProfileService : IUserProfileService
                     EducationLevelName = ue.EducationLevel.Name,
                     Quantity = ue.Quantity,
                     Translations = _mapper.Map<List<EducationLevelTranslationDto>>(ue.EducationLevel.Translations)
+                }).ToList();
+
+            userProfile.UserProfileSkills = profiles
+                .First(p => p.Id == userProfile.Id)
+                .UserProfileSkills.Select(s => new UserProfileSkillResponse
+                {
+                    SkillId = s.SkillId,
+                    SkillName = s.Skill.Name,
+                    ProficiencyLevel = s.ProficiencyLevel,
+                    Translations = _mapper.Map<List<SkillTranslationDto>>(s.Skill.Translations)
+                }).ToList();
+
+            userProfile.Competencies = profiles
+                .First(p => p.Id == userProfile.Id)
+                .UserProfileCompetencies.Select(c => new UserProfileCompetencyResponse
+                {
+                    CompetencyId = c.CompetencyId,
+                    CompetencyName = c.Competency.Name,
+                    ProficiencyLevel = c.ProficiencyLevel,
+                    Translations = _mapper.Map<List<CompetencyTranslationDto>>(c.Competency.Translations)
                 }).ToList();
         }
 
@@ -73,6 +98,9 @@ public class UserProfileService : IUserProfileService
             .Include(x => x.WorkExperiences)
             .Include(x => x.UserProfileLanguages)
                 .ThenInclude(x => x.Language)
+                .ThenInclude(x => x.Translations)
+            .Include(x => x.UserProfileCompetencies)
+                .ThenInclude(x => x.Competency)
                 .ThenInclude(x => x.Translations)
             .FirstOrDefaultAsync(up => up.Id == id);
 
@@ -96,6 +124,14 @@ public class UserProfileService : IUserProfileService
             Translations = _mapper.Map<List<SkillTranslationDto>>(s.Skill.Translations)
         }).ToList();
 
+        userProfileDto.Competencies = profile.UserProfileCompetencies.Select(c => new UserProfileCompetencyResponse
+        {
+            CompetencyId = c.CompetencyId,
+            CompetencyName = c.Competency.Name,
+            ProficiencyLevel = c.ProficiencyLevel,
+            Translations = _mapper.Map<List<CompetencyTranslationDto>>(c.Competency.Translations)
+        }).ToList();
+
         return userProfileDto;
     }
 
@@ -117,8 +153,10 @@ public class UserProfileService : IUserProfileService
             .Include(x => x.UserProfileSkills)
                 .ThenInclude(x => x.Skill)
             .Include(x => x.WorkExperiences)
-            .Include(x=>x.UserProfileLanguages)
-                .ThenInclude(x=>x.Language)
+            .Include(x => x.UserProfileLanguages)
+                .ThenInclude(x => x.Language)
+            .Include(x => x.UserProfileCompetencies)
+                .ThenInclude(x => x.Competency)
             .FirstOrDefaultAsync(up => up.Id == userProfileDto.Id);
 
         if (userProfile == null)
@@ -130,11 +168,13 @@ public class UserProfileService : IUserProfileService
         userProfile.UserProfileSkills.Clear();
         userProfile.WorkExperiences.Clear();
         userProfile.UserProfileLanguages.Clear();
+        userProfile.UserProfileCompetencies.Clear();
 
         _mapper.Map(userProfileDto.UserEducations, userProfile.UserEducations);
         _mapper.Map(userProfileDto.UserProfileSkills, userProfile.UserProfileSkills);
         _mapper.Map(userProfileDto.WorkExperiences, userProfile.WorkExperiences);
         _mapper.Map(userProfileDto.Languages, userProfile.UserProfileLanguages);
+        _mapper.Map(userProfileDto.Competencies, userProfile.UserProfileCompetencies);
 
         await _context.SaveChangesAsync();
 
