@@ -66,6 +66,7 @@ builder.Services.AddScoped<IWorkExperienceService, WorkExperienceService>();
 builder.Services.AddScoped<ILanguageService, LanguageService>();
 builder.Services.AddScoped<IUserProfileLanguageService, UserProfileLanguageService>();
 builder.Services.AddScoped<ICompetencyService, CompetencyService>();
+builder.Services.AddScoped<IUserProfileCompetencyService, UserProfileCompetencyService>();
 
 #endregion
 

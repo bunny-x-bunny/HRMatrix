@@ -16,6 +16,8 @@ public class UserProfile
 
     public ICollection<WorkExperience> WorkExperiences { get; set; }
 
+    public ICollection<UserProfileCompetency> UserProfileCompetencies { get; set; }
+
     public FamilyStatus FamilyStatus { get; set; }
 
     public ICollection<UserProfileLanguage> UserProfileLanguages { get; set; }

@@ -18,6 +18,8 @@ namespace HRMatrix.Persistence.Contexts
 
         public DbSet<UserProfileEducation> UserProfileEducations { get; set; }
 
+        public DbSet<UserProfileCompetency> UserProfileCompetencies { get; set; }
+
         public DbSet<UserProfile> UserProfiles { get; set; }
 
         public DbSet<UserProfileSkill> UserProfileSkills { get; set; }

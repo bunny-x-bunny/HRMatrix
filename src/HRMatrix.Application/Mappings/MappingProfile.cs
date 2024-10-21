@@ -13,6 +13,7 @@ using HRMatrix.Domain.Entities;
 using HRMatrix.Application.DTOs.UserProfilesLanguages;
 using HRMatrix.IdentityService.Models;
 using HRMatrix.Application.DTOs.Competency;
+using HRMatrix.Application.DTOs.UserProfileCompetency;
 
 public class MappingProfile : Profile
 {
@@ -209,6 +210,18 @@ public class MappingProfile : Profile
 
         CreateMap<UpdateCompetencyTranslationDto, CompetencyTranslation>()
             .ForMember(dest => dest.CompetencyId, opt => opt.Ignore())
+            .ReverseMap();
+
+        CreateMap<UserProfileCompetency, UserProfileCompetencyResponse>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Competency.Translations))
+            .ReverseMap();
+
+        CreateMap<CreateUserProfileCompetencyRequest, UserProfileCompetency>()
+            .ForMember(dest => dest.UserProfileId, opt => opt.Ignore())
+            .ReverseMap();
+
+        CreateMap<CreateUserProfileCompetenciesRequest, UserProfileCompetency>()
+            .ForMember(dest => dest.UserProfileId, opt => opt.MapFrom(src => src.UserProfileId))
             .ReverseMap();
     }
 }
