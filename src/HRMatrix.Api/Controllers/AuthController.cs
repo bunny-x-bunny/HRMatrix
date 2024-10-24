@@ -48,7 +48,6 @@ public class AuthController : ControllerBase
 
         return BadRequest(new { Message = "Registration failed." });
     }
-
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken(RefreshTokenRequest request)
     {

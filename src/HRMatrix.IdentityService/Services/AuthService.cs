@@ -22,6 +22,7 @@ public class AuthService : IAuthService
         _jwtTokenGenerator = jwtTokenGenerator;
     }
 
+    // Метод регистрации пользователя
     public async Task<IdentityResult> RegisterAsync(RegisterDto registerDto)
     {
         var user = new ApplicationUser
@@ -39,6 +40,7 @@ public class AuthService : IAuthService
         return result;
     }
 
+    // Метод входа пользователя
     public async Task<AuthResultDto> LoginAsync(LoginDto loginDto)
     {
         var user = await _userManager.FindByNameAsync(loginDto.Username);
@@ -50,15 +52,27 @@ public class AuthService : IAuthService
         var userRoles = await _userManager.GetRolesAsync(user);
         var tokens = _jwtTokenGenerator.GenerateTokens(user, userRoles);
 
-        return tokens;
+        return new AuthResultDto
+        {
+            AccessToken = tokens.AccessToken,
+            RefreshToken = tokens.RefreshToken
+        };
     }
 
+    // Метод обновления токена с использованием только RefreshToken
     public async Task<AuthResultDto> RefreshTokenAsync(RefreshTokenRequest request)
     {
-        var principal = GetPrincipalFromExpiredToken(request.AccessToken);
-        var userName = principal.Identity?.Name;
+        // Проверяем наличие RefreshToken в запросе
+        if (string.IsNullOrEmpty(request.RefreshToken))
+        {
+            return null;
+        }
 
-        if (string.IsNullOrEmpty(userName) || request.RefreshToken == null)
+        // Извлекаем ClaimsPrincipal из RefreshToken
+        var refreshTokenPrincipal = GetPrincipalFromExpiredToken(request.RefreshToken);
+        var userName = refreshTokenPrincipal?.Identity?.Name;
+
+        if (string.IsNullOrEmpty(userName))
         {
             return null;
         }
@@ -69,24 +83,39 @@ public class AuthService : IAuthService
             return null;
         }
 
-        var isValid = await _userManager.VerifyUserTokenAsync(user, "Default", "RefreshToken", request.RefreshToken);
-        if (!isValid)
-        {
-            return null;
-        }
-
+        // Генерация новых токенов
         var userRoles = await _userManager.GetRolesAsync(user);
         var tokens = _jwtTokenGenerator.GenerateTokens(user, userRoles);
-        
-        var newRefreshToken = await _userManager.GenerateUserTokenAsync(user, "Default", "RefreshToken");
 
         return new AuthResultDto
         {
             AccessToken = tokens.AccessToken,
-            RefreshToken = newRefreshToken
+            RefreshToken = tokens.RefreshToken
         };
     }
 
+    // Генерация RefreshToken в формате JWT
+    private string GenerateRefreshToken(ApplicationUser user)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.UTF8.GetBytes(_jwtTokenGenerator.Key);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                //new Claim(ClaimTypes.NameIdentifier, user.Id)
+            }),
+            Expires = DateTime.UtcNow.AddDays(7), // Срок действия RefreshToken
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
+    }
+
+    // Получение Principal из истекшего токена
     private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
     {
         var tokenValidationParameters = new TokenValidationParameters
@@ -95,7 +124,7 @@ public class AuthService : IAuthService
             ValidateIssuer = false,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtTokenGenerator.Key)),
-            ValidateLifetime = false
+            ValidateLifetime = false // Отключаем проверку срока действия, чтобы получить данные из истекшего токена
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
