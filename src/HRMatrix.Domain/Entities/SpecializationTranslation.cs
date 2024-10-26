@@ -1,10 +1,11 @@
 ﻿namespace HRMatrix.Domain.Entities;
 
-public class Skill
+public class SpecializationTranslation
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public ICollection<SkillTranslation> Translations { get; set; }
-    public int? SpecializationId { get; set; }
+    public string LanguageCode { get; set; }
+
+    public int SpecializationId { get; set; }
     public Specialization Specialization { get; set; }
 }

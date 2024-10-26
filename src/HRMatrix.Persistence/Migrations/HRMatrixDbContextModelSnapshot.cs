@@ -1734,7 +1734,12 @@ namespace HRMatrix.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("SpecializationId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SpecializationId");
 
                     b.ToTable("Skills");
 
@@ -1742,467 +1747,146 @@ namespace HRMatrix.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "C# Разработчик"
+                            Name = "JavaScript Разработчик",
+                            SpecializationId = 1
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Java Разработчик"
+                            Name = "HTML/CSS Разработчик",
+                            SpecializationId = 1
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Python Разработчик"
+                            Name = "C# Разработчик",
+                            SpecializationId = 2
                         },
                         new
                         {
                             Id = 4,
-                            Name = "JavaScript Разработчик"
+                            Name = "Java Разработчик",
+                            SpecializationId = 2
                         },
                         new
                         {
                             Id = 5,
-                            Name = "Ruby Разработчик"
+                            Name = "Специалист по данным",
+                            SpecializationId = 3
                         },
                         new
                         {
                             Id = 6,
-                            Name = "PHP Разработчик"
+                            Name = "Аналитик данных",
+                            SpecializationId = 3
                         },
                         new
                         {
                             Id = 7,
-                            Name = "Swift Разработчик"
+                            Name = "Инженер машинного обучения",
+                            SpecializationId = 4
                         },
                         new
                         {
                             Id = 8,
-                            Name = "Go Разработчик"
+                            Name = "Исследователь ИИ",
+                            SpecializationId = 4
                         },
                         new
                         {
                             Id = 9,
-                            Name = "C++ Разработчик"
+                            Name = "DevOps инженер",
+                            SpecializationId = 5
                         },
                         new
                         {
                             Id = 10,
-                            Name = "C Разработчик"
+                            Name = "Облачный инженер",
+                            SpecializationId = 5
                         },
                         new
                         {
                             Id = 11,
-                            Name = "TypeScript Разработчик"
+                            Name = "Swift Разработчик",
+                            SpecializationId = 6
                         },
                         new
                         {
                             Id = 12,
-                            Name = "HTML/CSS Разработчик"
+                            Name = "Android Разработчик",
+                            SpecializationId = 6
                         },
                         new
                         {
                             Id = 13,
-                            Name = "SQL Разработчик"
+                            Name = "Специалист по кибербезопасности",
+                            SpecializationId = 7
                         },
                         new
                         {
                             Id = 14,
-                            Name = "Специалист по данным"
+                            Name = "Этический хакер",
+                            SpecializationId = 7
                         },
                         new
                         {
                             Id = 15,
-                            Name = "Аналитик данных"
+                            Name = "Scrum-мастер",
+                            SpecializationId = 8
                         },
                         new
                         {
                             Id = 16,
-                            Name = "Инженер машинного обучения"
+                            Name = "Владелец продукта",
+                            SpecializationId = 8
                         },
                         new
                         {
                             Id = 17,
-                            Name = "DevOps инженер"
+                            Name = "Сетевой инженер",
+                            SpecializationId = 9
                         },
                         new
                         {
                             Id = 18,
-                            Name = "Мобильный разработчик"
+                            Name = "Администратор сети",
+                            SpecializationId = 9
                         },
                         new
                         {
                             Id = 19,
-                            Name = "Облачный инженер"
+                            Name = "Администратор базы данных",
+                            SpecializationId = 10
                         },
                         new
                         {
                             Id = 20,
-                            Name = "Блокчейн разработчик"
+                            Name = "Менеджер информационных систем",
+                            SpecializationId = 10
                         },
                         new
                         {
                             Id = 21,
-                            Name = "Специалист по кибербезопасности"
+                            Name = "UI/UX дизайнер",
+                            SpecializationId = 11
                         },
                         new
                         {
                             Id = 22,
-                            Name = "Администратор сети"
+                            Name = "Веб-дизайнер",
+                            SpecializationId = 11
                         },
                         new
                         {
                             Id = 23,
-                            Name = "Системный администратор"
+                            Name = "Бизнес-аналитик",
+                            SpecializationId = 12
                         },
                         new
                         {
                             Id = 24,
-                            Name = "Веб-дизайнер"
-                        },
-                        new
-                        {
-                            Id = 25,
-                            Name = "UI/UX дизайнер"
-                        },
-                        new
-                        {
-                            Id = 26,
-                            Name = "Разработчик игр"
-                        },
-                        new
-                        {
-                            Id = 27,
-                            Name = "Full-Stack Разработчик"
-                        },
-                        new
-                        {
-                            Id = 28,
-                            Name = "Инженер-программист"
-                        },
-                        new
-                        {
-                            Id = 29,
-                            Name = "Scrum-мастер"
-                        },
-                        new
-                        {
-                            Id = 30,
-                            Name = "Владелец продукта"
-                        },
-                        new
-                        {
-                            Id = 31,
-                            Name = "Технический писатель"
-                        },
-                        new
-                        {
-                            Id = 32,
-                            Name = "SEO специалист"
-                        },
-                        new
-                        {
-                            Id = 33,
-                            Name = "Контент менеджер"
-                        },
-                        new
-                        {
-                            Id = 34,
-                            Name = "Бизнес-аналитик"
-                        },
-                        new
-                        {
-                            Id = 35,
-                            Name = "Руководитель проекта"
-                        },
-                        new
-                        {
-                            Id = 36,
-                            Name = "Инженер по обеспечению качества"
-                        },
-                        new
-                        {
-                            Id = 37,
-                            Name = "Тестировщик программного обеспечения"
-                        },
-                        new
-                        {
-                            Id = 38,
-                            Name = "Веб-разработчик"
-                        },
-                        new
-                        {
-                            Id = 39,
-                            Name = "Специалист по поддержке ИТ"
-                        },
-                        new
-                        {
-                            Id = 40,
-                            Name = "Инженер по аппаратному обеспечению"
-                        },
-                        new
-                        {
-                            Id = 41,
-                            Name = "ИТ-консультант"
-                        },
-                        new
-                        {
-                            Id = 42,
-                            Name = "Специалист по ГИС"
-                        },
-                        new
-                        {
-                            Id = 43,
-                            Name = "Специалист по электронной коммерции"
-                        },
-                        new
-                        {
-                            Id = 44,
-                            Name = "Маркетолог"
-                        },
-                        new
-                        {
-                            Id = 45,
-                            Name = "Специалист по цифровому маркетингу"
-                        },
-                        new
-                        {
-                            Id = 46,
-                            Name = "Менеджер по социальным сетям"
-                        },
-                        new
-                        {
-                            Id = 47,
-                            Name = "Дизайнер видеоигр"
-                        },
-                        new
-                        {
-                            Id = 48,
-                            Name = "Администратор базы данных"
-                        },
-                        new
-                        {
-                            Id = 49,
-                            Name = "Менеджер информационных систем"
-                        },
-                        new
-                        {
-                            Id = 50,
-                            Name = "Офицер по соответствию"
-                        },
-                        new
-                        {
-                            Id = 51,
-                            Name = "Этический хакер"
-                        },
-                        new
-                        {
-                            Id = 52,
-                            Name = "Разработчик веб-приложений"
-                        },
-                        new
-                        {
-                            Id = 53,
-                            Name = "Разработчик API"
-                        },
-                        new
-                        {
-                            Id = 54,
-                            Name = "Инженер технической поддержки"
-                        },
-                        new
-                        {
-                            Id = 55,
-                            Name = "Координатор проекта ИТ"
-                        },
-                        new
-                        {
-                            Id = 56,
-                            Name = "Системный аналитик"
-                        },
-                        new
-                        {
-                            Id = 57,
-                            Name = "Архитектор предприятия"
-                        },
-                        new
-                        {
-                            Id = 58,
-                            Name = "ИТ-аудитор"
-                        },
-                        new
-                        {
-                            Id = 59,
-                            Name = "Разработчик мобильных игр"
-                        },
-                        new
-                        {
-                            Id = 60,
-                            Name = "Разработчик AR/VR"
-                        },
-                        new
-                        {
-                            Id = 61,
-                            Name = "Инженер-робототехник"
-                        },
-                        new
-                        {
-                            Id = 62,
-                            Name = "Специалист по техническому SEO"
-                        },
-                        new
-                        {
-                            Id = 63,
-                            Name = "Стратег контента"
-                        },
-                        new
-                        {
-                            Id = 64,
-                            Name = "Специалист по интеграции систем"
-                        },
-                        new
-                        {
-                            Id = 65,
-                            Name = "Тренер по ИТ"
-                        },
-                        new
-                        {
-                            Id = 66,
-                            Name = "Эксперт по криптографии"
-                        },
-                        new
-                        {
-                            Id = 67,
-                            Name = "UI-разработчик"
-                        },
-                        new
-                        {
-                            Id = 68,
-                            Name = "Исследователь UX"
-                        },
-                        new
-                        {
-                            Id = 69,
-                            Name = "Инженер данных"
-                        },
-                        new
-                        {
-                            Id = 70,
-                            Name = "Исследователь ИИ"
-                        },
-                        new
-                        {
-                            Id = 71,
-                            Name = "Тестировщик игр"
-                        },
-                        new
-                        {
-                            Id = 72,
-                            Name = "Тестировщик на проникновение"
-                        },
-                        new
-                        {
-                            Id = 73,
-                            Name = "Менеджер продукта"
-                        },
-                        new
-                        {
-                            Id = 74,
-                            Name = "Сетевой инженер"
-                        },
-                        new
-                        {
-                            Id = 75,
-                            Name = "Специалист по телекоммуникациям"
-                        },
-                        new
-                        {
-                            Id = 76,
-                            Name = "Инженер по встроенному ПО"
-                        },
-                        new
-                        {
-                            Id = 77,
-                            Name = "Архитектор облачных решений"
-                        },
-                        new
-                        {
-                            Id = 78,
-                            Name = "Аналитик бизнес-разведки"
-                        },
-                        new
-                        {
-                            Id = 79,
-                            Name = "Статистический аналитик"
-                        },
-                        new
-                        {
-                            Id = 80,
-                            Name = "Исследователь машинного обучения"
-                        },
-                        new
-                        {
-                            Id = 81,
-                            Name = "Специалист по визуализации данных"
-                        },
-                        new
-                        {
-                            Id = 82,
-                            Name = "Аналитик информационной безопасности"
-                        },
-                        new
-                        {
-                            Id = 83,
-                            Name = "Аналитик по соответствию ИТ"
-                        },
-                        new
-                        {
-                            Id = 84,
-                            Name = "Телекоммуникационный аналитик"
-                        },
-                        new
-                        {
-                            Id = 85,
-                            Name = "Операционный аналитик"
-                        },
-                        new
-                        {
-                            Id = 86,
-                            Name = "Менеджер программы"
-                        },
-                        new
-                        {
-                            Id = 87,
-                            Name = "Специалист по безопасности веб-сайта"
-                        },
-                        new
-                        {
-                            Id = 88,
-                            Name = "Специалист по здравоохранению ИТ"
-                        },
-                        new
-                        {
-                            Id = 89,
-                            Name = "Менеджер по рискам ИТ"
-                        },
-                        new
-                        {
-                            Id = 90,
-                            Name = "Специалист по искусственному интеллекту"
-                        },
-                        new
-                        {
-                            Id = 91,
-                            Name = "Офицер по защите данных"
-                        },
-                        new
-                        {
-                            Id = 92,
-                            Name = "Системный инженер"
-                        },
-                        new
-                        {
-                            Id = 93,
-                            Name = "Архитектор интеграции"
+                            Name = "Консультант по бизнес-анализу",
+                            SpecializationId = 12
                         });
                 });
 
@@ -2238,1954 +1922,867 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 1,
                             LanguageCode = "ru-RU",
-                            Name = "C# Разработчик",
+                            Name = "JavaScript Разработчик",
                             SkillId = 1
                         },
                         new
                         {
                             Id = 2,
                             LanguageCode = "en-US",
-                            Name = "C# Developer",
+                            Name = "JavaScript Developer",
                             SkillId = 1
                         },
                         new
                         {
                             Id = 3,
                             LanguageCode = "ky-KG",
-                            Name = "C# программист",
+                            Name = "JavaScript иштеп чыгуучу",
                             SkillId = 1
                         },
                         new
                         {
                             Id = 4,
                             LanguageCode = "ru-RU",
-                            Name = "Java Разработчик",
+                            Name = "HTML/CSS Разработчик",
                             SkillId = 2
                         },
                         new
                         {
                             Id = 5,
                             LanguageCode = "en-US",
-                            Name = "Java Developer",
+                            Name = "HTML/CSS Developer",
                             SkillId = 2
                         },
                         new
                         {
                             Id = 6,
                             LanguageCode = "ky-KG",
-                            Name = "Java программист",
+                            Name = "HTML/CSS иштеп чыгуучу",
                             SkillId = 2
                         },
                         new
                         {
                             Id = 7,
                             LanguageCode = "ru-RU",
-                            Name = "Python Разработчик",
+                            Name = "C# Разработчик",
                             SkillId = 3
                         },
                         new
                         {
                             Id = 8,
                             LanguageCode = "en-US",
-                            Name = "Python Developer",
+                            Name = "C# Developer",
                             SkillId = 3
                         },
                         new
                         {
                             Id = 9,
                             LanguageCode = "ky-KG",
-                            Name = "Python программист",
+                            Name = "C# иштеп чыгуучу",
                             SkillId = 3
                         },
                         new
                         {
                             Id = 10,
                             LanguageCode = "ru-RU",
-                            Name = "JavaScript Разработчик",
+                            Name = "Java Разработчик",
                             SkillId = 4
                         },
                         new
                         {
                             Id = 11,
                             LanguageCode = "en-US",
-                            Name = "JavaScript Developer",
+                            Name = "Java Developer",
                             SkillId = 4
                         },
                         new
                         {
                             Id = 12,
                             LanguageCode = "ky-KG",
-                            Name = "JavaScript программист",
+                            Name = "Java иштеп чыгуучу",
                             SkillId = 4
                         },
                         new
                         {
                             Id = 13,
                             LanguageCode = "ru-RU",
-                            Name = "Ruby Разработчик",
+                            Name = "Специалист по данным",
                             SkillId = 5
                         },
                         new
                         {
                             Id = 14,
                             LanguageCode = "en-US",
-                            Name = "Ruby Developer",
+                            Name = "Data Specialist",
                             SkillId = 5
                         },
                         new
                         {
                             Id = 15,
                             LanguageCode = "ky-KG",
-                            Name = "Ruby программист",
+                            Name = "Маалыматтар боюнча адис",
                             SkillId = 5
                         },
                         new
                         {
                             Id = 16,
                             LanguageCode = "ru-RU",
-                            Name = "PHP Разработчик",
+                            Name = "Аналитик данных",
                             SkillId = 6
                         },
                         new
                         {
                             Id = 17,
                             LanguageCode = "en-US",
-                            Name = "PHP Developer",
+                            Name = "Data Analyst",
                             SkillId = 6
                         },
                         new
                         {
                             Id = 18,
                             LanguageCode = "ky-KG",
-                            Name = "PHP программист",
+                            Name = "Маалыматтар аналитиги",
                             SkillId = 6
                         },
                         new
                         {
                             Id = 19,
                             LanguageCode = "ru-RU",
-                            Name = "Swift Разработчик",
+                            Name = "Инженер машинного обучения",
                             SkillId = 7
                         },
                         new
                         {
                             Id = 20,
                             LanguageCode = "en-US",
-                            Name = "Swift Developer",
+                            Name = "Machine Learning Engineer",
                             SkillId = 7
                         },
                         new
                         {
                             Id = 21,
                             LanguageCode = "ky-KG",
-                            Name = "Swift программист",
+                            Name = "Машиналык үйрөнүү инженери",
                             SkillId = 7
                         },
                         new
                         {
                             Id = 22,
                             LanguageCode = "ru-RU",
-                            Name = "Go Разработчик",
+                            Name = "Исследователь ИИ",
                             SkillId = 8
                         },
                         new
                         {
                             Id = 23,
                             LanguageCode = "en-US",
-                            Name = "Go Developer",
+                            Name = "AI Researcher",
                             SkillId = 8
                         },
                         new
                         {
                             Id = 24,
                             LanguageCode = "ky-KG",
-                            Name = "Go программист",
+                            Name = "ИИ изилдөөчүсү",
                             SkillId = 8
                         },
                         new
                         {
                             Id = 25,
                             LanguageCode = "ru-RU",
-                            Name = "C++ Разработчик",
+                            Name = "DevOps инженер",
                             SkillId = 9
                         },
                         new
                         {
                             Id = 26,
                             LanguageCode = "en-US",
-                            Name = "C++ Developer",
+                            Name = "DevOps Engineer",
                             SkillId = 9
                         },
                         new
                         {
                             Id = 27,
                             LanguageCode = "ky-KG",
-                            Name = "C++ программист",
+                            Name = "DevOps инженери",
                             SkillId = 9
                         },
                         new
                         {
                             Id = 28,
                             LanguageCode = "ru-RU",
-                            Name = "C Разработчик",
+                            Name = "Облачный инженер",
                             SkillId = 10
                         },
                         new
                         {
                             Id = 29,
                             LanguageCode = "en-US",
-                            Name = "C Developer",
+                            Name = "Cloud Engineer",
                             SkillId = 10
                         },
                         new
                         {
                             Id = 30,
                             LanguageCode = "ky-KG",
-                            Name = "C программист",
+                            Name = "Булут инженери",
                             SkillId = 10
                         },
                         new
                         {
                             Id = 31,
                             LanguageCode = "ru-RU",
-                            Name = "TypeScript Разработчик",
+                            Name = "Swift Разработчик",
                             SkillId = 11
                         },
                         new
                         {
                             Id = 32,
                             LanguageCode = "en-US",
-                            Name = "TypeScript Developer",
+                            Name = "Swift Developer",
                             SkillId = 11
                         },
                         new
                         {
                             Id = 33,
                             LanguageCode = "ky-KG",
-                            Name = "TypeScript программист",
+                            Name = "Swift иштеп чыгуучу",
                             SkillId = 11
                         },
                         new
                         {
                             Id = 34,
                             LanguageCode = "ru-RU",
-                            Name = "HTML/CSS Разработчик",
+                            Name = "Android Разработчик",
                             SkillId = 12
                         },
                         new
                         {
                             Id = 35,
                             LanguageCode = "en-US",
-                            Name = "HTML/CSS Developer",
+                            Name = "Android Developer",
                             SkillId = 12
                         },
                         new
                         {
                             Id = 36,
                             LanguageCode = "ky-KG",
-                            Name = "HTML/CSS программист",
+                            Name = "Android иштеп чыгуучу",
                             SkillId = 12
                         },
                         new
                         {
                             Id = 37,
                             LanguageCode = "ru-RU",
-                            Name = "SQL Разработчик",
+                            Name = "Специалист по кибербезопасности",
                             SkillId = 13
                         },
                         new
                         {
                             Id = 38,
                             LanguageCode = "en-US",
-                            Name = "SQL Developer",
+                            Name = "Cybersecurity Specialist",
                             SkillId = 13
                         },
                         new
                         {
                             Id = 39,
                             LanguageCode = "ky-KG",
-                            Name = "SQL программист",
+                            Name = "Киберкоопсуздук адиси",
                             SkillId = 13
                         },
                         new
                         {
                             Id = 40,
                             LanguageCode = "ru-RU",
-                            Name = "Data Scientist",
+                            Name = "Этический хакер",
                             SkillId = 14
                         },
                         new
                         {
                             Id = 41,
                             LanguageCode = "en-US",
-                            Name = "Data Scientist",
+                            Name = "Ethical Hacker",
                             SkillId = 14
                         },
                         new
                         {
                             Id = 42,
                             LanguageCode = "ky-KG",
-                            Name = "Data Scientist",
+                            Name = "Этикалык хакер",
                             SkillId = 14
                         },
                         new
                         {
                             Id = 43,
                             LanguageCode = "ru-RU",
-                            Name = "Аналитик данных",
+                            Name = "Scrum-мастер",
                             SkillId = 15
                         },
                         new
                         {
                             Id = 44,
                             LanguageCode = "en-US",
-                            Name = "Data Analyst",
+                            Name = "Scrum Master",
                             SkillId = 15
                         },
                         new
                         {
                             Id = 45,
                             LanguageCode = "ky-KG",
-                            Name = "Аналитик маалыматтары",
+                            Name = "Scrum мастер",
                             SkillId = 15
                         },
                         new
                         {
                             Id = 46,
                             LanguageCode = "ru-RU",
-                            Name = "Инженер машинного обучения",
+                            Name = "Владелец продукта",
                             SkillId = 16
                         },
                         new
                         {
                             Id = 47,
                             LanguageCode = "en-US",
-                            Name = "Machine Learning Engineer",
+                            Name = "Product Owner",
                             SkillId = 16
                         },
                         new
                         {
                             Id = 48,
                             LanguageCode = "ky-KG",
-                            Name = "Машиналык үйрөнүү инженери",
+                            Name = "Продукт ээси",
                             SkillId = 16
                         },
                         new
                         {
                             Id = 49,
                             LanguageCode = "ru-RU",
-                            Name = "DevOps инженер",
+                            Name = "Сетевой инженер",
                             SkillId = 17
                         },
                         new
                         {
                             Id = 50,
                             LanguageCode = "en-US",
-                            Name = "DevOps Engineer",
+                            Name = "Network Engineer",
                             SkillId = 17
                         },
                         new
                         {
                             Id = 51,
                             LanguageCode = "ky-KG",
-                            Name = "DevOps инженер",
+                            Name = "Тармак инженери",
                             SkillId = 17
                         },
                         new
                         {
                             Id = 52,
                             LanguageCode = "ru-RU",
-                            Name = "Мобильный разработчик",
+                            Name = "Администратор сети",
                             SkillId = 18
                         },
                         new
                         {
                             Id = 53,
                             LanguageCode = "en-US",
-                            Name = "Mobile App Developer",
+                            Name = "Network Administrator",
                             SkillId = 18
                         },
                         new
                         {
                             Id = 54,
                             LanguageCode = "ky-KG",
-                            Name = "Мобилдик колдонмо иштеп чыгуучу",
+                            Name = "Тармак администратору",
                             SkillId = 18
                         },
                         new
                         {
                             Id = 55,
                             LanguageCode = "ru-RU",
-                            Name = "Облачный инженер",
+                            Name = "Администратор базы данных",
                             SkillId = 19
                         },
                         new
                         {
                             Id = 56,
                             LanguageCode = "en-US",
-                            Name = "Cloud Engineer",
+                            Name = "Database Administrator",
                             SkillId = 19
                         },
                         new
                         {
                             Id = 57,
                             LanguageCode = "ky-KG",
-                            Name = "Булут инженери",
+                            Name = "Маалыматтар базасынын администратору",
                             SkillId = 19
                         },
                         new
                         {
                             Id = 58,
                             LanguageCode = "ru-RU",
-                            Name = "Блокчейн разработчик",
+                            Name = "Менеджер информационных систем",
                             SkillId = 20
                         },
                         new
                         {
                             Id = 59,
                             LanguageCode = "en-US",
-                            Name = "Blockchain Developer",
+                            Name = "Information Systems Manager",
                             SkillId = 20
                         },
                         new
                         {
                             Id = 60,
                             LanguageCode = "ky-KG",
-                            Name = "Блокчейн иштеп чыгуучу",
+                            Name = "Маалымат системаларынын менеджери",
                             SkillId = 20
                         },
                         new
                         {
                             Id = 61,
                             LanguageCode = "ru-RU",
-                            Name = "Специалист по кибербезопасности",
+                            Name = "UI/UX дизайнер",
                             SkillId = 21
                         },
                         new
                         {
                             Id = 62,
                             LanguageCode = "en-US",
-                            Name = "Cybersecurity Specialist",
+                            Name = "UI/UX Designer",
                             SkillId = 21
                         },
                         new
                         {
                             Id = 63,
                             LanguageCode = "ky-KG",
-                            Name = "Киберкоопсуздук адиси",
+                            Name = "UI/UX дизайнер",
                             SkillId = 21
                         },
                         new
                         {
                             Id = 64,
                             LanguageCode = "ru-RU",
-                            Name = "Администратор сети",
+                            Name = "Веб-дизайнер",
                             SkillId = 22
                         },
                         new
                         {
                             Id = 65,
                             LanguageCode = "en-US",
-                            Name = "Network Administrator",
+                            Name = "Web Designer",
                             SkillId = 22
                         },
                         new
                         {
                             Id = 66,
                             LanguageCode = "ky-KG",
-                            Name = "Тармак администратору",
+                            Name = "Веб-дизайнер",
                             SkillId = 22
                         },
                         new
                         {
                             Id = 67,
                             LanguageCode = "ru-RU",
-                            Name = "Системный администратор",
+                            Name = "Бизнес-аналитик",
                             SkillId = 23
                         },
                         new
                         {
                             Id = 68,
                             LanguageCode = "en-US",
-                            Name = "System Administrator",
+                            Name = "Business Analyst",
                             SkillId = 23
                         },
                         new
                         {
                             Id = 69,
                             LanguageCode = "ky-KG",
-                            Name = "Системалык администратор",
+                            Name = "Бизнес аналитик",
                             SkillId = 23
                         },
                         new
                         {
                             Id = 70,
                             LanguageCode = "ru-RU",
-                            Name = "Веб-дизайнер",
+                            Name = "Консультант по бизнес-анализу",
                             SkillId = 24
                         },
                         new
                         {
                             Id = 71,
                             LanguageCode = "en-US",
-                            Name = "Web Designer",
+                            Name = "Business Analysis Consultant",
                             SkillId = 24
                         },
                         new
                         {
                             Id = 72,
                             LanguageCode = "ky-KG",
-                            Name = "Веб-дизайнер",
+                            Name = "Бизнес-аналитика боюнча кеңешчи",
                             SkillId = 24
-                        },
-                        new
-                        {
-                            Id = 73,
-                            LanguageCode = "ru-RU",
-                            Name = "UI/UX дизайнер",
-                            SkillId = 25
-                        },
-                        new
-                        {
-                            Id = 74,
-                            LanguageCode = "en-US",
-                            Name = "UI/UX Designer",
-                            SkillId = 25
-                        },
-                        new
-                        {
-                            Id = 75,
-                            LanguageCode = "ky-KG",
-                            Name = "UI/UX дизайнер",
-                            SkillId = 25
-                        },
-                        new
-                        {
-                            Id = 76,
-                            LanguageCode = "ru-RU",
-                            Name = "Разработчик игр",
-                            SkillId = 26
-                        },
-                        new
-                        {
-                            Id = 77,
-                            LanguageCode = "en-US",
-                            Name = "Game Developer",
-                            SkillId = 26
-                        },
-                        new
-                        {
-                            Id = 78,
-                            LanguageCode = "ky-KG",
-                            Name = "Оюн иштеп чыгуучу",
-                            SkillId = 26
-                        },
-                        new
-                        {
-                            Id = 79,
-                            LanguageCode = "ru-RU",
-                            Name = "Full-Stack Разработчик",
-                            SkillId = 27
-                        },
-                        new
-                        {
-                            Id = 80,
-                            LanguageCode = "en-US",
-                            Name = "Full-Stack Developer",
-                            SkillId = 27
-                        },
-                        new
-                        {
-                            Id = 81,
-                            LanguageCode = "ky-KG",
-                            Name = "Full-Stack иштеп чыгуучу",
-                            SkillId = 27
-                        },
-                        new
-                        {
-                            Id = 82,
-                            LanguageCode = "ru-RU",
-                            Name = "Инженер-программист",
-                            SkillId = 28
-                        },
-                        new
-                        {
-                            Id = 83,
-                            LanguageCode = "en-US",
-                            Name = "Software Engineer",
-                            SkillId = 28
-                        },
-                        new
-                        {
-                            Id = 84,
-                            LanguageCode = "ky-KG",
-                            Name = "Программалык камсыздоо инженери",
-                            SkillId = 28
-                        },
-                        new
-                        {
-                            Id = 85,
-                            LanguageCode = "ru-RU",
-                            Name = "Scrum-мастер",
-                            SkillId = 29
-                        },
-                        new
-                        {
-                            Id = 86,
-                            LanguageCode = "en-US",
-                            Name = "Scrum Master",
-                            SkillId = 29
-                        },
-                        new
-                        {
-                            Id = 87,
-                            LanguageCode = "ky-KG",
-                            Name = "Scrum мастер",
-                            SkillId = 29
-                        },
-                        new
-                        {
-                            Id = 88,
-                            LanguageCode = "ru-RU",
-                            Name = "Владелец продукта",
-                            SkillId = 30
-                        },
-                        new
-                        {
-                            Id = 89,
-                            LanguageCode = "en-US",
-                            Name = "Product Owner",
-                            SkillId = 30
-                        },
-                        new
-                        {
-                            Id = 90,
-                            LanguageCode = "ky-KG",
-                            Name = "Продукт ээси",
-                            SkillId = 30
-                        },
-                        new
-                        {
-                            Id = 91,
-                            LanguageCode = "ru-RU",
-                            Name = "Технический писатель",
-                            SkillId = 31
-                        },
-                        new
-                        {
-                            Id = 92,
-                            LanguageCode = "en-US",
-                            Name = "Technical Writer",
-                            SkillId = 31
-                        },
-                        new
-                        {
-                            Id = 93,
-                            LanguageCode = "ky-KG",
-                            Name = "Техникалык жазуучу",
-                            SkillId = 31
-                        },
-                        new
-                        {
-                            Id = 94,
-                            LanguageCode = "ru-RU",
-                            Name = "SEO специалист",
-                            SkillId = 32
-                        },
-                        new
-                        {
-                            Id = 95,
-                            LanguageCode = "en-US",
-                            Name = "SEO Specialist",
-                            SkillId = 32
-                        },
-                        new
-                        {
-                            Id = 96,
-                            LanguageCode = "ky-KG",
-                            Name = "SEO адиси",
-                            SkillId = 32
-                        },
-                        new
-                        {
-                            Id = 97,
-                            LanguageCode = "ru-RU",
-                            Name = "Контент менеджер",
-                            SkillId = 33
-                        },
-                        new
-                        {
-                            Id = 98,
-                            LanguageCode = "en-US",
-                            Name = "Content Manager",
-                            SkillId = 33
-                        },
-                        new
-                        {
-                            Id = 99,
-                            LanguageCode = "ky-KG",
-                            Name = "Мазмун менеджери",
-                            SkillId = 33
-                        },
-                        new
-                        {
-                            Id = 100,
-                            LanguageCode = "ru-RU",
-                            Name = "Бизнес-аналитик",
-                            SkillId = 34
-                        },
-                        new
-                        {
-                            Id = 101,
-                            LanguageCode = "en-US",
-                            Name = "Business Analyst",
-                            SkillId = 34
-                        },
-                        new
-                        {
-                            Id = 102,
-                            LanguageCode = "ky-KG",
-                            Name = "Бизнес аналитик",
-                            SkillId = 34
-                        },
-                        new
-                        {
-                            Id = 103,
-                            LanguageCode = "ru-RU",
-                            Name = "Руководитель проекта",
-                            SkillId = 35
-                        },
-                        new
-                        {
-                            Id = 104,
-                            LanguageCode = "en-US",
-                            Name = "Project Manager",
-                            SkillId = 35
-                        },
-                        new
-                        {
-                            Id = 105,
-                            LanguageCode = "ky-KG",
-                            Name = "Долбоор менеджери",
-                            SkillId = 35
-                        },
-                        new
-                        {
-                            Id = 106,
-                            LanguageCode = "ru-RU",
-                            Name = "Инженер по обеспечению качества",
-                            SkillId = 36
-                        },
-                        new
-                        {
-                            Id = 107,
-                            LanguageCode = "en-US",
-                            Name = "Quality Assurance Engineer",
-                            SkillId = 36
-                        },
-                        new
-                        {
-                            Id = 108,
-                            LanguageCode = "ky-KG",
-                            Name = "Сапатты камсыздоо инженери",
-                            SkillId = 36
-                        },
-                        new
-                        {
-                            Id = 109,
-                            LanguageCode = "ru-RU",
-                            Name = "Тестировщик программного обеспечения",
-                            SkillId = 37
-                        },
-                        new
-                        {
-                            Id = 110,
-                            LanguageCode = "en-US",
-                            Name = "Software Tester",
-                            SkillId = 37
-                        },
-                        new
-                        {
-                            Id = 111,
-                            LanguageCode = "ky-KG",
-                            Name = "Программалык камсыздоо тестери",
-                            SkillId = 37
-                        },
-                        new
-                        {
-                            Id = 112,
-                            LanguageCode = "ru-RU",
-                            Name = "Веб-разработчик",
-                            SkillId = 38
-                        },
-                        new
-                        {
-                            Id = 113,
-                            LanguageCode = "en-US",
-                            Name = "Web Developer",
-                            SkillId = 38
-                        },
-                        new
-                        {
-                            Id = 114,
-                            LanguageCode = "ky-KG",
-                            Name = "Веб иштеп чыгуучу",
-                            SkillId = 38
-                        },
-                        new
-                        {
-                            Id = 115,
-                            LanguageCode = "ru-RU",
-                            Name = "Специалист по поддержке ИТ",
-                            SkillId = 39
-                        },
-                        new
-                        {
-                            Id = 116,
-                            LanguageCode = "en-US",
-                            Name = "IT Support Specialist",
-                            SkillId = 39
-                        },
-                        new
-                        {
-                            Id = 117,
-                            LanguageCode = "ky-KG",
-                            Name = "IT колдоо адиси",
-                            SkillId = 39
-                        },
-                        new
-                        {
-                            Id = 118,
-                            LanguageCode = "ru-RU",
-                            Name = "Инженер по аппаратному обеспечению",
-                            SkillId = 40
-                        },
-                        new
-                        {
-                            Id = 119,
-                            LanguageCode = "en-US",
-                            Name = "Hardware Engineer",
-                            SkillId = 40
-                        },
-                        new
-                        {
-                            Id = 120,
-                            LanguageCode = "ky-KG",
-                            Name = "Аппараттык камсыздоо инженери",
-                            SkillId = 40
-                        },
-                        new
-                        {
-                            Id = 121,
-                            LanguageCode = "ru-RU",
-                            Name = "ИТ-консультант",
-                            SkillId = 41
-                        },
-                        new
-                        {
-                            Id = 122,
-                            LanguageCode = "en-US",
-                            Name = "IT Consultant",
-                            SkillId = 41
-                        },
-                        new
-                        {
-                            Id = 123,
-                            LanguageCode = "ky-KG",
-                            Name = "IT консультанты",
-                            SkillId = 41
-                        },
-                        new
-                        {
-                            Id = 124,
-                            LanguageCode = "ru-RU",
-                            Name = "Специалист по ГИС",
-                            SkillId = 42
-                        },
-                        new
-                        {
-                            Id = 125,
-                            LanguageCode = "en-US",
-                            Name = "GIS Specialist",
-                            SkillId = 42
-                        },
-                        new
-                        {
-                            Id = 126,
-                            LanguageCode = "ky-KG",
-                            Name = "ГИС адиси",
-                            SkillId = 42
-                        },
-                        new
-                        {
-                            Id = 127,
-                            LanguageCode = "ru-RU",
-                            Name = "Специалист по электронной коммерции",
-                            SkillId = 43
-                        },
-                        new
-                        {
-                            Id = 128,
-                            LanguageCode = "en-US",
-                            Name = "E-commerce Specialist",
-                            SkillId = 43
-                        },
-                        new
-                        {
-                            Id = 129,
-                            LanguageCode = "ky-KG",
-                            Name = "Электрондук соода адиси",
-                            SkillId = 43
-                        },
-                        new
-                        {
-                            Id = 130,
-                            LanguageCode = "ru-RU",
-                            Name = "Маркетолог",
-                            SkillId = 44
-                        },
-                        new
-                        {
-                            Id = 131,
-                            LanguageCode = "en-US",
-                            Name = "Marketing Specialist",
-                            SkillId = 44
-                        },
-                        new
-                        {
-                            Id = 132,
-                            LanguageCode = "ky-KG",
-                            Name = "Маркетинг адиси",
-                            SkillId = 44
-                        },
-                        new
-                        {
-                            Id = 133,
-                            LanguageCode = "ru-RU",
-                            Name = "Специалист по цифровому маркетингу",
-                            SkillId = 45
-                        },
-                        new
-                        {
-                            Id = 134,
-                            LanguageCode = "en-US",
-                            Name = "Digital Marketing Specialist",
-                            SkillId = 45
-                        },
-                        new
-                        {
-                            Id = 135,
-                            LanguageCode = "ky-KG",
-                            Name = "Санариптик маркетинг адиси",
-                            SkillId = 45
-                        },
-                        new
-                        {
-                            Id = 136,
-                            LanguageCode = "ru-RU",
-                            Name = "Менеджер по социальным сетям",
-                            SkillId = 46
-                        },
-                        new
-                        {
-                            Id = 137,
-                            LanguageCode = "en-US",
-                            Name = "Social Media Manager",
-                            SkillId = 46
-                        },
-                        new
-                        {
-                            Id = 138,
-                            LanguageCode = "ky-KG",
-                            Name = "Социалдык медиа менеджери",
-                            SkillId = 46
-                        },
-                        new
-                        {
-                            Id = 139,
-                            LanguageCode = "ru-RU",
-                            Name = "Дизайнер видеоигр",
-                            SkillId = 47
-                        },
-                        new
-                        {
-                            Id = 140,
-                            LanguageCode = "en-US",
-                            Name = "Video Game Designer",
-                            SkillId = 47
-                        },
-                        new
-                        {
-                            Id = 141,
-                            LanguageCode = "ky-KG",
-                            Name = "Видео оюн дизайнери",
-                            SkillId = 47
-                        },
-                        new
-                        {
-                            Id = 142,
-                            LanguageCode = "ru-RU",
-                            Name = "Администратор базы данных",
-                            SkillId = 48
-                        },
-                        new
-                        {
-                            Id = 143,
-                            LanguageCode = "en-US",
-                            Name = "Database Administrator",
-                            SkillId = 48
-                        },
-                        new
-                        {
-                            Id = 144,
-                            LanguageCode = "ky-KG",
-                            Name = "Маалымат базасынын администратору",
-                            SkillId = 48
-                        },
-                        new
-                        {
-                            Id = 145,
-                            LanguageCode = "ru-RU",
-                            Name = "Менеджер информационных систем",
-                            SkillId = 49
-                        },
-                        new
-                        {
-                            Id = 146,
-                            LanguageCode = "en-US",
-                            Name = "Information Systems Manager",
-                            SkillId = 49
-                        },
-                        new
-                        {
-                            Id = 147,
-                            LanguageCode = "ky-KG",
-                            Name = "Маалымат системаларынын менеджери",
-                            SkillId = 49
-                        },
-                        new
-                        {
-                            Id = 148,
-                            LanguageCode = "ru-RU",
-                            Name = "Офицер по соответствию",
-                            SkillId = 50
-                        },
-                        new
-                        {
-                            Id = 149,
-                            LanguageCode = "en-US",
-                            Name = "Compliance Officer",
-                            SkillId = 50
-                        },
-                        new
-                        {
-                            Id = 150,
-                            LanguageCode = "ky-KG",
-                            Name = "Шайкештик боюнча офицер",
-                            SkillId = 50
-                        },
-                        new
-                        {
-                            Id = 151,
-                            LanguageCode = "ru-RU",
-                            Name = "Этический хакер",
-                            SkillId = 51
-                        },
-                        new
-                        {
-                            Id = 152,
-                            LanguageCode = "en-US",
-                            Name = "Ethical Hacker",
-                            SkillId = 51
-                        },
-                        new
-                        {
-                            Id = 153,
-                            LanguageCode = "ky-KG",
-                            Name = "Этикалык хакер",
-                            SkillId = 51
-                        },
-                        new
-                        {
-                            Id = 154,
-                            LanguageCode = "ru-RU",
-                            Name = "Разработчик веб-приложений",
-                            SkillId = 52
-                        },
-                        new
-                        {
-                            Id = 155,
-                            LanguageCode = "en-US",
-                            Name = "Web Application Developer",
-                            SkillId = 52
-                        },
-                        new
-                        {
-                            Id = 156,
-                            LanguageCode = "ky-KG",
-                            Name = "Веб колдонмо иштеп чыгуучу",
-                            SkillId = 52
-                        },
-                        new
-                        {
-                            Id = 157,
-                            LanguageCode = "ru-RU",
-                            Name = "Разработчик API",
-                            SkillId = 53
-                        },
-                        new
-                        {
-                            Id = 158,
-                            LanguageCode = "en-US",
-                            Name = "API Developer",
-                            SkillId = 53
-                        },
-                        new
-                        {
-                            Id = 159,
-                            LanguageCode = "ky-KG",
-                            Name = "API иштеп чыгуучу",
-                            SkillId = 53
-                        },
-                        new
-                        {
-                            Id = 160,
-                            LanguageCode = "ru-RU",
-                            Name = "Инженер технической поддержки",
-                            SkillId = 54
-                        },
-                        new
-                        {
-                            Id = 161,
-                            LanguageCode = "en-US",
-                            Name = "Technical Support Engineer",
-                            SkillId = 54
-                        },
-                        new
-                        {
-                            Id = 162,
-                            LanguageCode = "ky-KG",
-                            Name = "Техникалык колдоо инженери",
-                            SkillId = 54
-                        },
-                        new
-                        {
-                            Id = 163,
-                            LanguageCode = "ru-RU",
-                            Name = "Координатор проекта ИТ",
-                            SkillId = 55
-                        },
-                        new
-                        {
-                            Id = 164,
-                            LanguageCode = "en-US",
-                            Name = "IT Project Coordinator",
-                            SkillId = 55
-                        },
-                        new
-                        {
-                            Id = 165,
-                            LanguageCode = "ky-KG",
-                            Name = "IT долбоор координатору",
-                            SkillId = 55
-                        },
-                        new
-                        {
-                            Id = 166,
-                            LanguageCode = "ru-RU",
-                            Name = "Системный аналитик",
-                            SkillId = 56
-                        },
-                        new
-                        {
-                            Id = 167,
-                            LanguageCode = "en-US",
-                            Name = "System Analyst",
-                            SkillId = 56
-                        },
-                        new
-                        {
-                            Id = 168,
-                            LanguageCode = "ky-KG",
-                            Name = "Система аналитиги",
-                            SkillId = 56
-                        },
-                        new
-                        {
-                            Id = 169,
-                            LanguageCode = "ru-RU",
-                            Name = "Архитектор предприятия",
-                            SkillId = 57
-                        },
-                        new
-                        {
-                            Id = 170,
-                            LanguageCode = "en-US",
-                            Name = "Enterprise Architect",
-                            SkillId = 57
-                        },
+                        });
+                });
+
+            modelBuilder.Entity("HRMatrix.Domain.Entities.Specialization", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Specializations");
+
+                    b.HasData(
                         new
                         {
-                            Id = 171,
-                            LanguageCode = "ky-KG",
-                            Name = "Ишкананын архитектору",
-                            SkillId = 57
-                        },
-                        new
-                        {
-                            Id = 172,
-                            LanguageCode = "ru-RU",
-                            Name = "ИТ-аудитор",
-                            SkillId = 58
-                        },
-                        new
-                        {
-                            Id = 173,
-                            LanguageCode = "en-US",
-                            Name = "IT Auditor",
-                            SkillId = 58
-                        },
-                        new
-                        {
-                            Id = 174,
-                            LanguageCode = "ky-KG",
-                            Name = "IT аудитору",
-                            SkillId = 58
-                        },
-                        new
-                        {
-                            Id = 175,
-                            LanguageCode = "ru-RU",
-                            Name = "Разработчик мобильных игр",
-                            SkillId = 59
-                        },
-                        new
-                        {
-                            Id = 176,
-                            LanguageCode = "en-US",
-                            Name = "Mobile Game Developer",
-                            SkillId = 59
-                        },
-                        new
-                        {
-                            Id = 177,
-                            LanguageCode = "ky-KG",
-                            Name = "Мобилдик оюн иштеп чыгуучу",
-                            SkillId = 59
-                        },
-                        new
-                        {
-                            Id = 178,
-                            LanguageCode = "ru-RU",
-                            Name = "Разработчик AR/VR",
-                            SkillId = 60
-                        },
-                        new
-                        {
-                            Id = 179,
-                            LanguageCode = "en-US",
-                            Name = "AR/VR Developer",
-                            SkillId = 60
-                        },
-                        new
-                        {
-                            Id = 180,
-                            LanguageCode = "ky-KG",
-                            Name = "AR/VR иштеп чыгуучу",
-                            SkillId = 60
-                        },
-                        new
-                        {
-                            Id = 181,
-                            LanguageCode = "ru-RU",
-                            Name = "Инженер-робототехник",
-                            SkillId = 61
-                        },
-                        new
-                        {
-                            Id = 182,
-                            LanguageCode = "en-US",
-                            Name = "Robotics Engineer",
-                            SkillId = 61
-                        },
-                        new
-                        {
-                            Id = 183,
-                            LanguageCode = "ky-KG",
-                            Name = "Робототехника инженери",
-                            SkillId = 61
-                        },
-                        new
-                        {
-                            Id = 184,
-                            LanguageCode = "ru-RU",
-                            Name = "Специалист по техническому SEO",
-                            SkillId = 62
-                        },
-                        new
-                        {
-                            Id = 185,
-                            LanguageCode = "en-US",
-                            Name = "Technical SEO Specialist",
-                            SkillId = 62
-                        },
-                        new
-                        {
-                            Id = 186,
-                            LanguageCode = "ky-KG",
-                            Name = "Техникалык SEO адиси",
-                            SkillId = 62
-                        },
-                        new
-                        {
-                            Id = 187,
-                            LanguageCode = "ru-RU",
-                            Name = "Стратег контента",
-                            SkillId = 63
-                        },
-                        new
-                        {
-                            Id = 188,
-                            LanguageCode = "en-US",
-                            Name = "Content Strategist",
-                            SkillId = 63
-                        },
-                        new
-                        {
-                            Id = 189,
-                            LanguageCode = "ky-KG",
-                            Name = "Мазмун стратегиясы",
-                            SkillId = 63
-                        },
-                        new
-                        {
-                            Id = 190,
-                            LanguageCode = "ru-RU",
-                            Name = "Специалист по интеграции систем",
-                            SkillId = 64
-                        },
-                        new
-                        {
-                            Id = 191,
-                            LanguageCode = "en-US",
-                            Name = "System Integration Specialist",
-                            SkillId = 64
-                        },
-                        new
-                        {
-                            Id = 192,
-                            LanguageCode = "ky-KG",
-                            Name = "Системалык интеграция адиси",
-                            SkillId = 64
-                        },
-                        new
-                        {
-                            Id = 193,
-                            LanguageCode = "ru-RU",
-                            Name = "Тренер по ИТ",
-                            SkillId = 65
-                        },
-                        new
-                        {
-                            Id = 194,
-                            LanguageCode = "en-US",
-                            Name = "IT Trainer",
-                            SkillId = 65
-                        },
-                        new
-                        {
-                            Id = 195,
-                            LanguageCode = "ky-KG",
-                            Name = "IT тренери",
-                            SkillId = 65
-                        },
-                        new
-                        {
-                            Id = 196,
-                            LanguageCode = "ru-RU",
-                            Name = "Эксперт по криптографии",
-                            SkillId = 66
-                        },
-                        new
-                        {
-                            Id = 197,
-                            LanguageCode = "en-US",
-                            Name = "Cryptography Expert",
-                            SkillId = 66
-                        },
-                        new
-                        {
-                            Id = 198,
-                            LanguageCode = "ky-KG",
-                            Name = "Криптография боюнча эксперт",
-                            SkillId = 66
-                        },
-                        new
-                        {
-                            Id = 199,
-                            LanguageCode = "ru-RU",
-                            Name = "UI-разработчик",
-                            SkillId = 67
-                        },
-                        new
-                        {
-                            Id = 200,
-                            LanguageCode = "en-US",
-                            Name = "UI Developer",
-                            SkillId = 67
-                        },
-                        new
-                        {
-                            Id = 201,
-                            LanguageCode = "ky-KG",
-                            Name = "UI иштеп чыгуучу",
-                            SkillId = 67
-                        },
-                        new
-                        {
-                            Id = 202,
-                            LanguageCode = "ru-RU",
-                            Name = "Исследователь UX",
-                            SkillId = 68
-                        },
-                        new
-                        {
-                            Id = 203,
-                            LanguageCode = "en-US",
-                            Name = "UX Researcher",
-                            SkillId = 68
-                        },
-                        new
-                        {
-                            Id = 204,
-                            LanguageCode = "ky-KG",
-                            Name = "UX изилдөөчү",
-                            SkillId = 68
-                        },
-                        new
-                        {
-                            Id = 205,
-                            LanguageCode = "ru-RU",
-                            Name = "Инженер данных",
-                            SkillId = 69
-                        },
-                        new
-                        {
-                            Id = 206,
-                            LanguageCode = "en-US",
-                            Name = "Data Engineer",
-                            SkillId = 69
-                        },
-                        new
-                        {
-                            Id = 207,
-                            LanguageCode = "ky-KG",
-                            Name = "Маалымат инженери",
-                            SkillId = 69
-                        },
-                        new
-                        {
-                            Id = 208,
-                            LanguageCode = "ru-RU",
-                            Name = "Исследователь ИИ",
-                            SkillId = 70
-                        },
-                        new
-                        {
-                            Id = 209,
-                            LanguageCode = "en-US",
-                            Name = "AI Researcher",
-                            SkillId = 70
-                        },
-                        new
-                        {
-                            Id = 210,
-                            LanguageCode = "ky-KG",
-                            Name = "ИИ изилдөөчү",
-                            SkillId = 70
-                        },
-                        new
-                        {
-                            Id = 211,
-                            LanguageCode = "ru-RU",
-                            Name = "Тестировщик игр",
-                            SkillId = 71
-                        },
-                        new
-                        {
-                            Id = 212,
-                            LanguageCode = "en-US",
-                            Name = "Game Tester",
-                            SkillId = 71
-                        },
-                        new
-                        {
-                            Id = 213,
-                            LanguageCode = "ky-KG",
-                            Name = "Оюн тестери",
-                            SkillId = 71
-                        },
-                        new
-                        {
-                            Id = 214,
-                            LanguageCode = "ru-RU",
-                            Name = "Тестировщик на проникновение",
-                            SkillId = 72
-                        },
-                        new
-                        {
-                            Id = 215,
-                            LanguageCode = "en-US",
-                            Name = "Penetration Tester",
-                            SkillId = 72
-                        },
-                        new
-                        {
-                            Id = 216,
-                            LanguageCode = "ky-KG",
-                            Name = "Пенетрация тестери",
-                            SkillId = 72
-                        },
-                        new
-                        {
-                            Id = 217,
-                            LanguageCode = "ru-RU",
-                            Name = "Менеджер продукта",
-                            SkillId = 73
-                        },
-                        new
-                        {
-                            Id = 218,
-                            LanguageCode = "en-US",
-                            Name = "Product Manager",
-                            SkillId = 73
-                        },
-                        new
-                        {
-                            Id = 219,
-                            LanguageCode = "ky-KG",
-                            Name = "Продукт менеджери",
-                            SkillId = 73
-                        },
-                        new
-                        {
-                            Id = 220,
-                            LanguageCode = "ru-RU",
-                            Name = "Сетевой инженер",
-                            SkillId = 74
-                        },
-                        new
-                        {
-                            Id = 221,
-                            LanguageCode = "en-US",
-                            Name = "Network Engineer",
-                            SkillId = 74
-                        },
-                        new
-                        {
-                            Id = 222,
-                            LanguageCode = "ky-KG",
-                            Name = "Тармак инженери",
-                            SkillId = 74
-                        },
-                        new
-                        {
-                            Id = 223,
-                            LanguageCode = "ru-RU",
-                            Name = "Специалист по телекоммуникациям",
-                            SkillId = 75
-                        },
-                        new
-                        {
-                            Id = 224,
-                            LanguageCode = "en-US",
-                            Name = "Telecommunications Specialist",
-                            SkillId = 75
-                        },
-                        new
-                        {
-                            Id = 225,
-                            LanguageCode = "ky-KG",
-                            Name = "Телеком адиси",
-                            SkillId = 75
-                        },
-                        new
-                        {
-                            Id = 226,
-                            LanguageCode = "ru-RU",
-                            Name = "Инженер по встроенному ПО",
-                            SkillId = 76
-                        },
-                        new
-                        {
-                            Id = 227,
-                            LanguageCode = "en-US",
-                            Name = "Firmware Engineer",
-                            SkillId = 76
-                        },
-                        new
-                        {
-                            Id = 228,
-                            LanguageCode = "ky-KG",
-                            Name = "Орнотулган программалык камсыздоо инженери",
-                            SkillId = 76
-                        },
-                        new
-                        {
-                            Id = 229,
-                            LanguageCode = "ru-RU",
-                            Name = "Архитектор облачных решений",
-                            SkillId = 77
-                        },
-                        new
-                        {
-                            Id = 230,
-                            LanguageCode = "en-US",
-                            Name = "Cloud Solutions Architect",
-                            SkillId = 77
-                        },
-                        new
-                        {
-                            Id = 231,
-                            LanguageCode = "ky-KG",
-                            Name = "Булут чечимдеринин архитектору",
-                            SkillId = 77
-                        },
-                        new
-                        {
-                            Id = 232,
-                            LanguageCode = "ru-RU",
-                            Name = "Аналитик бизнес-разведки",
-                            SkillId = 78
+                            Id = 1,
+                            Name = "Разработка FrontEnd"
                         },
                         new
                         {
-                            Id = 233,
-                            LanguageCode = "en-US",
-                            Name = "Business Intelligence Analyst",
-                            SkillId = 78
+                            Id = 2,
+                            Name = "Разработка BackEnd"
                         },
                         new
                         {
-                            Id = 234,
-                            LanguageCode = "ky-KG",
-                            Name = "Бизнес-чалгындоо аналитиги",
-                            SkillId = 78
+                            Id = 3,
+                            Name = "Наука о данных и аналитика"
                         },
                         new
                         {
-                            Id = 235,
-                            LanguageCode = "ru-RU",
-                            Name = "Статистический аналитик",
-                            SkillId = 79
+                            Id = 4,
+                            Name = "Машинное обучение и ИИ"
                         },
                         new
                         {
-                            Id = 236,
-                            LanguageCode = "en-US",
-                            Name = "Statistical Analyst",
-                            SkillId = 79
+                            Id = 5,
+                            Name = "DevOps и облачные технологии"
                         },
                         new
                         {
-                            Id = 237,
-                            LanguageCode = "ky-KG",
-                            Name = "Статистикалык аналитик",
-                            SkillId = 79
+                            Id = 6,
+                            Name = "Мобильная разработка"
                         },
                         new
                         {
-                            Id = 238,
-                            LanguageCode = "ru-RU",
-                            Name = "Исследователь машинного обучения",
-                            SkillId = 80
+                            Id = 7,
+                            Name = "Кибербезопасность"
                         },
                         new
                         {
-                            Id = 239,
-                            LanguageCode = "en-US",
-                            Name = "Machine Learning Researcher",
-                            SkillId = 80
+                            Id = 8,
+                            Name = "Управление проектами и продуктами"
                         },
                         new
                         {
-                            Id = 240,
-                            LanguageCode = "ky-KG",
-                            Name = "Машина үйрөнүү изилдөөчүсү",
-                            SkillId = 80
+                            Id = 9,
+                            Name = "Сетевые технологии и поддержка ИТ"
                         },
                         new
                         {
-                            Id = 241,
-                            LanguageCode = "ru-RU",
-                            Name = "Специалист по визуализации данных",
-                            SkillId = 81
+                            Id = 10,
+                            Name = "Управление базами данных"
                         },
                         new
                         {
-                            Id = 242,
-                            LanguageCode = "en-US",
-                            Name = "Data Visualization Specialist",
-                            SkillId = 81
+                            Id = 11,
+                            Name = "Дизайн UI/UX"
                         },
                         new
                         {
-                            Id = 243,
-                            LanguageCode = "ky-KG",
-                            Name = "Маалыматтарды визуалдаштыруу адиси",
-                            SkillId = 81
-                        },
+                            Id = 12,
+                            Name = "Бизнес-анализ"
+                        });
+                });
+
+            modelBuilder.Entity("HRMatrix.Domain.Entities.SpecializationTranslation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("LanguageCode")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("SpecializationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SpecializationId");
+
+                    b.ToTable("SpecializationsTranslation");
+
+                    b.HasData(
                         new
                         {
-                            Id = 244,
+                            Id = 1,
                             LanguageCode = "ru-RU",
-                            Name = "Аналитик информационной безопасности",
-                            SkillId = 82
+                            Name = "Разработка FrontEnd",
+                            SpecializationId = 1
                         },
                         new
                         {
-                            Id = 245,
+                            Id = 2,
                             LanguageCode = "en-US",
-                            Name = "Information Security Analyst",
-                            SkillId = 82
+                            Name = "FrontEnd Development",
+                            SpecializationId = 1
                         },
                         new
                         {
-                            Id = 246,
+                            Id = 3,
                             LanguageCode = "ky-KG",
-                            Name = "Маалымат коопсуздугунун аналитиги",
-                            SkillId = 82
+                            Name = "FrontEnd иштеп чыгуу",
+                            SpecializationId = 1
                         },
                         new
                         {
-                            Id = 247,
+                            Id = 4,
                             LanguageCode = "ru-RU",
-                            Name = "Аналитик по соответствию ИТ",
-                            SkillId = 83
+                            Name = "Разработка BackEnd",
+                            SpecializationId = 2
                         },
                         new
                         {
-                            Id = 248,
+                            Id = 5,
                             LanguageCode = "en-US",
-                            Name = "IT Compliance Analyst",
-                            SkillId = 83
+                            Name = "BackEnd Development",
+                            SpecializationId = 2
                         },
                         new
                         {
-                            Id = 249,
+                            Id = 6,
                             LanguageCode = "ky-KG",
-                            Name = "IT шайкештик аналитиги",
-                            SkillId = 83
+                            Name = "BackEnd иштеп чыгуу",
+                            SpecializationId = 2
                         },
                         new
                         {
-                            Id = 250,
+                            Id = 7,
                             LanguageCode = "ru-RU",
-                            Name = "Телекоммуникационный аналитик",
-                            SkillId = 84
+                            Name = "Наука о данных и аналитика",
+                            SpecializationId = 3
                         },
                         new
                         {
-                            Id = 251,
+                            Id = 8,
                             LanguageCode = "en-US",
-                            Name = "Telecom Analyst",
-                            SkillId = 84
+                            Name = "Data Science and Analysis",
+                            SpecializationId = 3
                         },
                         new
                         {
-                            Id = 252,
+                            Id = 9,
                             LanguageCode = "ky-KG",
-                            Name = "Телеком аналитик",
-                            SkillId = 84
+                            Name = "Маалымат илими жана аналитика",
+                            SpecializationId = 3
                         },
                         new
                         {
-                            Id = 253,
+                            Id = 10,
                             LanguageCode = "ru-RU",
-                            Name = "Операционный аналитик",
-                            SkillId = 85
+                            Name = "Машинное обучение и ИИ",
+                            SpecializationId = 4
                         },
                         new
                         {
-                            Id = 254,
+                            Id = 11,
                             LanguageCode = "en-US",
-                            Name = "Operations Analyst",
-                            SkillId = 85
+                            Name = "Machine Learning and AI",
+                            SpecializationId = 4
                         },
                         new
                         {
-                            Id = 255,
+                            Id = 12,
                             LanguageCode = "ky-KG",
-                            Name = "Операция аналитиги",
-                            SkillId = 85
+                            Name = "Машина үйрөнүү жана ЖИ",
+                            SpecializationId = 4
                         },
                         new
                         {
-                            Id = 256,
+                            Id = 13,
                             LanguageCode = "ru-RU",
-                            Name = "Менеджер программы",
-                            SkillId = 86
+                            Name = "DevOps и облачные технологии",
+                            SpecializationId = 5
                         },
                         new
                         {
-                            Id = 257,
+                            Id = 14,
                             LanguageCode = "en-US",
-                            Name = "Program Manager",
-                            SkillId = 86
+                            Name = "DevOps and Cloud Engineering",
+                            SpecializationId = 5
                         },
                         new
                         {
-                            Id = 258,
+                            Id = 15,
                             LanguageCode = "ky-KG",
-                            Name = "Программа менеджери",
-                            SkillId = 86
+                            Name = "DevOps жана булут технологиялары",
+                            SpecializationId = 5
                         },
                         new
                         {
-                            Id = 259,
+                            Id = 16,
                             LanguageCode = "ru-RU",
-                            Name = "Специалист по безопасности веб-сайта",
-                            SkillId = 87
+                            Name = "Мобильная разработка",
+                            SpecializationId = 6
                         },
                         new
                         {
-                            Id = 260,
+                            Id = 17,
                             LanguageCode = "en-US",
-                            Name = "Web Security Specialist",
-                            SkillId = 87
+                            Name = "Mobile Development",
+                            SpecializationId = 6
                         },
                         new
                         {
-                            Id = 261,
+                            Id = 18,
                             LanguageCode = "ky-KG",
-                            Name = "Веб коопсуздук адиси",
-                            SkillId = 87
+                            Name = "Мобилдик иштеп чыгуу",
+                            SpecializationId = 6
                         },
                         new
                         {
-                            Id = 262,
+                            Id = 19,
                             LanguageCode = "ru-RU",
-                            Name = "Специалист по здравоохранению ИТ",
-                            SkillId = 88
+                            Name = "Кибербезопасность",
+                            SpecializationId = 7
                         },
                         new
                         {
-                            Id = 263,
+                            Id = 20,
                             LanguageCode = "en-US",
-                            Name = "Health IT Specialist",
-                            SkillId = 88
+                            Name = "Cybersecurity",
+                            SpecializationId = 7
                         },
                         new
                         {
-                            Id = 264,
+                            Id = 21,
                             LanguageCode = "ky-KG",
-                            Name = "Ден-соолук IT адиси",
-                            SkillId = 88
+                            Name = "Киберкоопсуздук",
+                            SpecializationId = 7
                         },
                         new
                         {
-                            Id = 265,
+                            Id = 22,
                             LanguageCode = "ru-RU",
-                            Name = "Менеджер по рискам ИТ",
-                            SkillId = 89
+                            Name = "Управление проектами и продуктами",
+                            SpecializationId = 8
                         },
                         new
                         {
-                            Id = 266,
+                            Id = 23,
                             LanguageCode = "en-US",
-                            Name = "IT Risk Manager",
-                            SkillId = 89
+                            Name = "Project and Product Management",
+                            SpecializationId = 8
                         },
                         new
                         {
-                            Id = 267,
+                            Id = 24,
                             LanguageCode = "ky-KG",
-                            Name = "IT коркунуч менеджери",
-                            SkillId = 89
+                            Name = "Долбоорлорду жана продуктуларды башкаруу",
+                            SpecializationId = 8
                         },
                         new
                         {
-                            Id = 268,
+                            Id = 25,
                             LanguageCode = "ru-RU",
-                            Name = "Специалист по искусственному интеллекту",
-                            SkillId = 90
+                            Name = "Сетевые технологии и поддержка ИТ",
+                            SpecializationId = 9
                         },
                         new
                         {
-                            Id = 269,
+                            Id = 26,
                             LanguageCode = "en-US",
-                            Name = "Artificial Intelligence Specialist",
-                            SkillId = 90
+                            Name = "Networking and IT Support",
+                            SpecializationId = 9
                         },
                         new
                         {
-                            Id = 270,
+                            Id = 27,
                             LanguageCode = "ky-KG",
-                            Name = "Жасалма интеллект адиси",
-                            SkillId = 90
+                            Name = "Тармактык технологиялар жана IT колдоо",
+                            SpecializationId = 9
                         },
                         new
                         {
-                            Id = 271,
+                            Id = 28,
                             LanguageCode = "ru-RU",
-                            Name = "Офицер по защите данных",
-                            SkillId = 91
+                            Name = "Управление базами данных",
+                            SpecializationId = 10
                         },
                         new
                         {
-                            Id = 272,
+                            Id = 29,
                             LanguageCode = "en-US",
-                            Name = "Data Privacy Officer",
-                            SkillId = 91
+                            Name = "Database Management",
+                            SpecializationId = 10
                         },
                         new
                         {
-                            Id = 273,
+                            Id = 30,
                             LanguageCode = "ky-KG",
-                            Name = "Маалыматтарды купуялуулук боюнча офицер",
-                            SkillId = 91
+                            Name = "Маалымат базасын башкаруу",
+                            SpecializationId = 10
                         },
                         new
                         {
-                            Id = 274,
+                            Id = 31,
                             LanguageCode = "ru-RU",
-                            Name = "Системный инженер",
-                            SkillId = 92
+                            Name = "Дизайн UI/UX",
+                            SpecializationId = 11
                         },
                         new
                         {
-                            Id = 275,
+                            Id = 32,
                             LanguageCode = "en-US",
-                            Name = "Systems Engineer",
-                            SkillId = 92
+                            Name = "UI/UX Design",
+                            SpecializationId = 11
                         },
                         new
                         {
-                            Id = 276,
+                            Id = 33,
                             LanguageCode = "ky-KG",
-                            Name = "Системалар инженери",
-                            SkillId = 92
+                            Name = "UI/UX Дизайн",
+                            SpecializationId = 11
                         },
                         new
                         {
-                            Id = 277,
+                            Id = 34,
                             LanguageCode = "ru-RU",
-                            Name = "Архитектор интеграции",
-                            SkillId = 93
+                            Name = "Бизнес-анализ",
+                            SpecializationId = 12
                         },
                         new
                         {
-                            Id = 278,
+                            Id = 35,
                             LanguageCode = "en-US",
-                            Name = "Integration Architect",
-                            SkillId = 93
+                            Name = "Business Analysis",
+                            SpecializationId = 12
                         },
                         new
                         {
-                            Id = 279,
+                            Id = 36,
                             LanguageCode = "ky-KG",
-                            Name = "Интеграция архитектуру",
-                            SkillId = 93
+                            Name = "Бизнес анализ",
+                            SpecializationId = 12
                         });
                 });
 
@@ -4530,7 +3127,7 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6d73e393-3529-4453-9177-646104fd5141",
+                            ConcurrencyStamp = "c2c0ebe2-8653-4a1f-b9a6-e1670f414070",
                             DateOfBirth = new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user@mail.com",
                             EmailConfirmed = false,
@@ -4539,9 +3136,9 @@ namespace HRMatrix.Persistence.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@MAIL.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOjLvGMKy3uerKP07g0tDYkrGPNoUNmRoo5ILXRrbWo0hXOd4NSyibIAdHz7xPFWeg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEK3XiTE6x+2IXjB6F9EWL0LbULt1i5btE1nnYnA+pPe+ZC65KhWFnJKH4OZieIX8Cw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ee7ddac8-4c11-46ee-80d3-0eed1ba0677e",
+                            SecurityStamp = "b17a677e-7a6e-4c59-888d-360cbe8ba8ae",
                             TwoFactorEnabled = false,
                             UserName = "user"
                         },
@@ -4549,7 +3146,7 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "492354df-fb11-40a5-a8ee-7bc182b7def0",
+                            ConcurrencyStamp = "b71c94e2-8be4-4e87-99c7-0a6c7089b179",
                             DateOfBirth = new DateTime(1985, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "superuser@mail.com",
                             EmailConfirmed = false,
@@ -4558,9 +3155,9 @@ namespace HRMatrix.Persistence.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERUSER@MAIL.COM",
                             NormalizedUserName = "SUPERUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPOCPxo+1Z3Bd3Z5zJnHyN4hjot55DI8a0h/RyTMcTOMQ9qQjn3L/ZCkmSr3WQMqUQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOOEkuB0SHOmCqPBUPRMcwB2hn3r/A8f/w4uKS6QY6l6V9jzXDM0Bq5r+pvuA5p3Qw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "164b44d8-1777-4c55-a3b1-430a8ac10f8c",
+                            SecurityStamp = "66fc5a21-593d-47e7-9b6d-d103ba14bcb2",
                             TwoFactorEnabled = false,
                             UserName = "superuser"
                         },
@@ -4568,7 +3165,7 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ae94b4fe-b0f1-4359-a4ce-f1e377b62e40",
+                            ConcurrencyStamp = "7e4f66f2-e08b-438a-ad1b-145c6fe60570",
                             DateOfBirth = new DateTime(1992, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "hr@mail.com",
                             EmailConfirmed = false,
@@ -4577,9 +3174,9 @@ namespace HRMatrix.Persistence.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "HR@MAIL.COM",
                             NormalizedUserName = "HR",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEcLWPz/m/fFJaBZDXhXQBdIeecCqtcO8AH06O9OVnr7dkWTexHloq3J3bI7np2GmQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEG8ovQAIcYS1EVbLXUnQ+icJzCzNzg93mVQ1YBFz+xrPDtNSvQHZ6hboHJXsTTp0uQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "75e15f65-b6a1-4471-bc96-d7992ee3975a",
+                            SecurityStamp = "e48102ee-3965-4637-93f4-9ea842f0756c",
                             TwoFactorEnabled = false,
                             UserName = "hr"
                         },
@@ -4587,7 +3184,7 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 4,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "055216c6-8977-4119-87f8-d20d0181ec0f",
+                            ConcurrencyStamp = "743f9c1a-f81a-452c-a8b7-9d4310187539",
                             DateOfBirth = new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@mail.com",
                             EmailConfirmed = false,
@@ -4596,9 +3193,9 @@ namespace HRMatrix.Persistence.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDFME1SNh3JpYzrc+WTCiMj6h8QqwZAlqA8xj43u1oO2cuAzD1VuaBWtOXdZ8gp99Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJ3gh38dCdSaQ6TTXG+Ov0uxmKH0LA43iDX0wWvNqXhzs8/C10r0aDQBOatlH92ceQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1a415936-0ad1-4fef-af5c-fa5b98a1b21b",
+                            SecurityStamp = "c36f2590-6dce-4869-a5dd-fc5ce21cbd1e",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -4779,6 +3376,16 @@ namespace HRMatrix.Persistence.Migrations
                     b.Navigation("AssignedUserProfile");
                 });
 
+            modelBuilder.Entity("HRMatrix.Domain.Entities.Skill", b =>
+                {
+                    b.HasOne("HRMatrix.Domain.Entities.Specialization", "Specialization")
+                        .WithMany("Skills")
+                        .HasForeignKey("SpecializationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Specialization");
+                });
+
             modelBuilder.Entity("HRMatrix.Domain.Entities.SkillTranslation", b =>
                 {
                     b.HasOne("HRMatrix.Domain.Entities.Skill", "Skill")
@@ -4788,6 +3395,17 @@ namespace HRMatrix.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Skill");
+                });
+
+            modelBuilder.Entity("HRMatrix.Domain.Entities.SpecializationTranslation", b =>
+                {
+                    b.HasOne("HRMatrix.Domain.Entities.Specialization", "Specialization")
+                        .WithMany("Translations")
+                        .HasForeignKey("SpecializationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Specialization");
                 });
 
             modelBuilder.Entity("HRMatrix.Domain.Entities.UserProfileCompetency", b =>
@@ -4952,6 +3570,13 @@ namespace HRMatrix.Persistence.Migrations
 
             modelBuilder.Entity("HRMatrix.Domain.Entities.Skill", b =>
                 {
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("HRMatrix.Domain.Entities.Specialization", b =>
+                {
+                    b.Navigation("Skills");
+
                     b.Navigation("Translations");
                 });
 

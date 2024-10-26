@@ -14,100 +14,59 @@ public class SkillConfiguration : IEntityTypeConfiguration<Skill>
             .IsRequired()
             .HasMaxLength(100);
 
+        builder.HasOne(s => s.Specialization)
+            .WithMany(s => s.Skills)
+            .HasForeignKey(s => s.SpecializationId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.HasData(
-            new Skill { Id = 1, Name = "C# Разработчик" },
-            new Skill { Id = 2, Name = "Java Разработчик" },
-            new Skill { Id = 3, Name = "Python Разработчик" },
-            new Skill { Id = 4, Name = "JavaScript Разработчик" },
-            new Skill { Id = 5, Name = "Ruby Разработчик" },
-            new Skill { Id = 6, Name = "PHP Разработчик" },
-            new Skill { Id = 7, Name = "Swift Разработчик" },
-            new Skill { Id = 8, Name = "Go Разработчик" },
-            new Skill { Id = 9, Name = "C++ Разработчик" },
-            new Skill { Id = 10, Name = "C Разработчик" },
-            new Skill { Id = 11, Name = "TypeScript Разработчик" },
-            new Skill { Id = 12, Name = "HTML/CSS Разработчик" },
-            new Skill { Id = 13, Name = "SQL Разработчик" },
-            new Skill { Id = 14, Name = "Специалист по данным" },
-            new Skill { Id = 15, Name = "Аналитик данных" },
-            new Skill { Id = 16, Name = "Инженер машинного обучения" },
-            new Skill { Id = 17, Name = "DevOps инженер" },
-            new Skill { Id = 18, Name = "Мобильный разработчик" },
-            new Skill { Id = 19, Name = "Облачный инженер" },
-            new Skill { Id = 20, Name = "Блокчейн разработчик" },
-            new Skill { Id = 21, Name = "Специалист по кибербезопасности" },
-            new Skill { Id = 22, Name = "Администратор сети" },
-            new Skill { Id = 23, Name = "Системный администратор" },
-            new Skill { Id = 24, Name = "Веб-дизайнер" },
-            new Skill { Id = 25, Name = "UI/UX дизайнер" },
-            new Skill { Id = 26, Name = "Разработчик игр" },
-            new Skill { Id = 27, Name = "Full-Stack Разработчик" },
-            new Skill { Id = 28, Name = "Инженер-программист" },
-            new Skill { Id = 29, Name = "Scrum-мастер" },
-            new Skill { Id = 30, Name = "Владелец продукта" },
-            new Skill { Id = 31, Name = "Технический писатель" },
-            new Skill { Id = 32, Name = "SEO специалист" },
-            new Skill { Id = 33, Name = "Контент менеджер" },
-            new Skill { Id = 34, Name = "Бизнес-аналитик" },
-            new Skill { Id = 35, Name = "Руководитель проекта" },
-            new Skill { Id = 36, Name = "Инженер по обеспечению качества" },
-            new Skill { Id = 37, Name = "Тестировщик программного обеспечения" },
-            new Skill { Id = 38, Name = "Веб-разработчик" },
-            new Skill { Id = 39, Name = "Специалист по поддержке ИТ" },
-            new Skill { Id = 40, Name = "Инженер по аппаратному обеспечению" },
-            new Skill { Id = 41, Name = "ИТ-консультант" },
-            new Skill { Id = 42, Name = "Специалист по ГИС" },
-            new Skill { Id = 43, Name = "Специалист по электронной коммерции" },
-            new Skill { Id = 44, Name = "Маркетолог" },
-            new Skill { Id = 45, Name = "Специалист по цифровому маркетингу" },
-            new Skill { Id = 46, Name = "Менеджер по социальным сетям" },
-            new Skill { Id = 47, Name = "Дизайнер видеоигр" },
-            new Skill { Id = 48, Name = "Администратор базы данных" },
-            new Skill { Id = 49, Name = "Менеджер информационных систем" },
-            new Skill { Id = 50, Name = "Офицер по соответствию" },
-            new Skill { Id = 51, Name = "Этический хакер" },
-            new Skill { Id = 52, Name = "Разработчик веб-приложений" },
-            new Skill { Id = 53, Name = "Разработчик API" },
-            new Skill { Id = 54, Name = "Инженер технической поддержки" },
-            new Skill { Id = 55, Name = "Координатор проекта ИТ" },
-            new Skill { Id = 56, Name = "Системный аналитик" },
-            new Skill { Id = 57, Name = "Архитектор предприятия" },
-            new Skill { Id = 58, Name = "ИТ-аудитор" },
-            new Skill { Id = 59, Name = "Разработчик мобильных игр" },
-            new Skill { Id = 60, Name = "Разработчик AR/VR" },
-            new Skill { Id = 61, Name = "Инженер-робототехник" },
-            new Skill { Id = 62, Name = "Специалист по техническому SEO" },
-            new Skill { Id = 63, Name = "Стратег контента" },
-            new Skill { Id = 64, Name = "Специалист по интеграции систем" },
-            new Skill { Id = 65, Name = "Тренер по ИТ" },
-            new Skill { Id = 66, Name = "Эксперт по криптографии" },
-            new Skill { Id = 67, Name = "UI-разработчик" },
-            new Skill { Id = 68, Name = "Исследователь UX" },
-            new Skill { Id = 69, Name = "Инженер данных" },
-            new Skill { Id = 70, Name = "Исследователь ИИ" },
-            new Skill { Id = 71, Name = "Тестировщик игр" },
-            new Skill { Id = 72, Name = "Тестировщик на проникновение" },
-            new Skill { Id = 73, Name = "Менеджер продукта" },
-            new Skill { Id = 74, Name = "Сетевой инженер" },
-            new Skill { Id = 75, Name = "Специалист по телекоммуникациям" },
-            new Skill { Id = 76, Name = "Инженер по встроенному ПО" },
-            new Skill { Id = 77, Name = "Архитектор облачных решений" },
-            new Skill { Id = 78, Name = "Аналитик бизнес-разведки" },
-            new Skill { Id = 79, Name = "Статистический аналитик" },
-            new Skill { Id = 80, Name = "Исследователь машинного обучения" },
-            new Skill { Id = 81, Name = "Специалист по визуализации данных" },
-            new Skill { Id = 82, Name = "Аналитик информационной безопасности" },
-            new Skill { Id = 83, Name = "Аналитик по соответствию ИТ" },
-            new Skill { Id = 84, Name = "Телекоммуникационный аналитик" },
-            new Skill { Id = 85, Name = "Операционный аналитик" },
-            new Skill { Id = 86, Name = "Менеджер программы" },
-            new Skill { Id = 87, Name = "Специалист по безопасности веб-сайта" },
-            new Skill { Id = 88, Name = "Специалист по здравоохранению ИТ" },
-            new Skill { Id = 89, Name = "Менеджер по рискам ИТ" },
-            new Skill { Id = 90, Name = "Специалист по искусственному интеллекту" },
-            new Skill { Id = 91, Name = "Офицер по защите данных" },
-            new Skill { Id = 92, Name = "Системный инженер" },
-            new Skill { Id = 93, Name = "Архитектор интеграции" }
+    // Разработка FrontEnd
+            new Skill { Id = 1, Name = "JavaScript Разработчик", SpecializationId = 1 },
+            new Skill { Id = 2, Name = "HTML/CSS Разработчик", SpecializationId = 1 },
+
+            // Разработка BackEnd
+            new Skill { Id = 3, Name = "C# Разработчик", SpecializationId = 2 },
+            new Skill { Id = 4, Name = "Java Разработчик", SpecializationId = 2 },
+
+            // Наука о данных и аналитика
+            new Skill { Id = 5, Name = "Специалист по данным", SpecializationId = 3 },
+            new Skill { Id = 6, Name = "Аналитик данных", SpecializationId = 3 },
+
+            // Машинное обучение и ИИ
+            new Skill { Id = 7, Name = "Инженер машинного обучения", SpecializationId = 4 },
+            new Skill { Id = 8, Name = "Исследователь ИИ", SpecializationId = 4 },
+
+            // DevOps и облачные технологии
+            new Skill { Id = 9, Name = "DevOps инженер", SpecializationId = 5 },
+            new Skill { Id = 10, Name = "Облачный инженер", SpecializationId = 5 },
+
+            // Мобильная разработка
+            new Skill { Id = 11, Name = "Swift Разработчик", SpecializationId = 6 },
+            new Skill { Id = 12, Name = "Android Разработчик", SpecializationId = 6 },
+
+            // Кибербезопасность
+            new Skill { Id = 13, Name = "Специалист по кибербезопасности", SpecializationId = 7 },
+            new Skill { Id = 14, Name = "Этический хакер", SpecializationId = 7 },
+
+            // Управление проектами и продуктами
+            new Skill { Id = 15, Name = "Scrum-мастер", SpecializationId = 8 },
+            new Skill { Id = 16, Name = "Владелец продукта", SpecializationId = 8 },
+
+            // Сетевые технологии и поддержка ИТ
+            new Skill { Id = 17, Name = "Сетевой инженер", SpecializationId = 9 },
+            new Skill { Id = 18, Name = "Администратор сети", SpecializationId = 9 },
+
+            // Управление базами данных
+            new Skill { Id = 19, Name = "Администратор базы данных", SpecializationId = 10 },
+            new Skill { Id = 20, Name = "Менеджер информационных систем", SpecializationId = 10 },
+
+            // Дизайн UI/UX
+            new Skill { Id = 21, Name = "UI/UX дизайнер", SpecializationId = 11 },
+            new Skill { Id = 22, Name = "Веб-дизайнер", SpecializationId = 11 },
+
+            // Бизнес-анализ
+            new Skill { Id = 23, Name = "Бизнес-аналитик", SpecializationId = 12 },
+            new Skill { Id = 24, Name = "Консультант по бизнес-анализу", SpecializationId = 12 }
         );
     }
 }

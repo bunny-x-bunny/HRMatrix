@@ -34,6 +34,9 @@ namespace HRMatrix.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -52,6 +55,19 @@ namespace HRMatrix.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Competencies",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Competencies", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -94,7 +110,7 @@ namespace HRMatrix.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Skills",
+                name: "Specializations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -103,7 +119,7 @@ namespace HRMatrix.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Skills", x => x.Id);
+                    table.PrimaryKey("PK_Specializations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -115,10 +131,9 @@ namespace HRMatrix.Persistence.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AdditionalSkills = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    AdditionalCompetences = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    ProfilePhotoPath = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    VideoPath = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                    ProfilePhotoPath = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    VideoPath = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    AspNetUserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -232,6 +247,27 @@ namespace HRMatrix.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CompetencyTranslations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LanguageCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    CompetencyId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompetencyTranslations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CompetencyTranslations_Competencies_CompetencyId",
+                        column: x => x.CompetencyId,
+                        principalTable: "Competencies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EducationLevelTranslation",
                 columns: table => new
                 {
@@ -295,22 +331,42 @@ namespace HRMatrix.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SkillTranslation",
+                name: "Skills",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    SpecializationId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Skills", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Skills_Specializations_SpecializationId",
+                        column: x => x.SpecializationId,
+                        principalTable: "Specializations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SpecializationsTranslation",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     LanguageCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    SkillId = table.Column<int>(type: "int", nullable: false)
+                    SpecializationId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SkillTranslation", x => x.Id);
+                    table.PrimaryKey("PK_SpecializationsTranslation", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SkillTranslation_Skills_SkillId",
-                        column: x => x.SkillId,
-                        principalTable: "Skills",
+                        name: "FK_SpecializationsTranslation_Specializations_SpecializationId",
+                        column: x => x.SpecializationId,
+                        principalTable: "Specializations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -338,6 +394,63 @@ namespace HRMatrix.Persistence.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_FamilyStatuses_UserProfiles_UserProfileId",
+                        column: x => x.UserProfileId,
+                        principalTable: "UserProfiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Specialization = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ExpectedCompletionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PaymentAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    CustomerEmail = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    CustomerPhone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CreatedByUserId = table.Column<int>(type: "int", nullable: false),
+                    AssignedUserProfileId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_UserProfiles_AssignedUserProfileId",
+                        column: x => x.AssignedUserProfileId,
+                        principalTable: "UserProfiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserProfileCompetencies",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserProfileId = table.Column<int>(type: "int", nullable: false),
+                    CompetencyId = table.Column<int>(type: "int", nullable: false),
+                    ProficiencyLevel = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserProfileCompetencies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserProfileCompetencies_Competencies_CompetencyId",
+                        column: x => x.CompetencyId,
+                        principalTable: "Competencies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserProfileCompetencies_UserProfiles_UserProfileId",
                         column: x => x.UserProfileId,
                         principalTable: "UserProfiles",
                         principalColumn: "Id",
@@ -399,6 +512,51 @@ namespace HRMatrix.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "WorkExperiences",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserProfileId = table.Column<int>(type: "int", nullable: false),
+                    CompanyName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Position = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Achievements = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkExperiences", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WorkExperiences_UserProfiles_UserProfileId",
+                        column: x => x.UserProfileId,
+                        principalTable: "UserProfiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SkillTranslation",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LanguageCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    SkillId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SkillTranslation", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SkillTranslation_Skills_SkillId",
+                        column: x => x.SkillId,
+                        principalTable: "Skills",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserProfileSkills",
                 columns: table => new
                 {
@@ -425,30 +583,6 @@ namespace HRMatrix.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "WorkExperiences",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserProfileId = table.Column<int>(type: "int", nullable: false),
-                    CompanyName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Position = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Achievements = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WorkExperiences", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_WorkExperiences_UserProfiles_UserProfileId",
-                        column: x => x.UserProfileId,
-                        principalTable: "UserProfiles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
@@ -462,13 +596,33 @@ namespace HRMatrix.Persistence.Migrations
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "DateOfBirth", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "c2e564d5-1690-430e-b523-3bf0fb7cce88", "user@mail.com", false, false, null, "USER@MAIL.COM", "USER", "AQAAAAIAAYagAAAAEGPnCm9NsKGtd7tnte6LRbkhQIioWz1mUE1pUQxuEBFfSGoE2sTex75KDCxlC1ra8w==", null, false, "cce93891-f06d-4efc-a2f0-36350ba20a5c", false, "user" },
-                    { 2, 0, "420e1f6f-4090-48f5-b52e-50ac9f2081fb", "superuser@mail.com", false, false, null, "SUPERUSER@MAIL.COM", "SUPERUSER", "AQAAAAIAAYagAAAAEOu2DdkjkK9z+slQsg1GB50ivJA4DJOabj8hTfEeLTzj9EQDZ1GvpDapH3jrpyKQZA==", null, false, "81f25803-2e90-4f28-9fd5-38ece42fac23", false, "superuser" },
-                    { 3, 0, "70cd7a4e-e7a8-44e6-99c5-ee5a44ed523f", "hr@mail.com", false, false, null, "HR@MAIL.COM", "HR", "AQAAAAIAAYagAAAAEA/XK/hZ8c4+ycTQlyY3V2SgSNer2F4HbFPJCDvRoNjrtpofpBDJGlO8LyvT/bnyFw==", null, false, "ed455a1e-a3c6-4db3-9fc8-fb244e9ca8f7", false, "hr" },
-                    { 4, 0, "db00d3be-e47d-496d-975d-ff820eaf718e", "admin@mail.com", false, false, null, "ADMIN@MAIL.COM", "ADMIN", "AQAAAAIAAYagAAAAEEoP3wE70mrEjdY6X54PyWwPKnIFY1qiVFhckfu2YMJQadG8M/bxGwpZwRZpuK99qw==", null, false, "d017d803-fc8e-4498-b6df-354f2cd6ca29", false, "admin" }
+                    { 1, 0, "c2c0ebe2-8653-4a1f-b9a6-e1670f414070", new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "user@mail.com", false, "John", "Doe", false, null, "USER@MAIL.COM", "USER", "AQAAAAIAAYagAAAAEK3XiTE6x+2IXjB6F9EWL0LbULt1i5btE1nnYnA+pPe+ZC65KhWFnJKH4OZieIX8Cw==", null, false, "b17a677e-7a6e-4c59-888d-360cbe8ba8ae", false, "user" },
+                    { 2, 0, "b71c94e2-8be4-4e87-99c7-0a6c7089b179", new DateTime(1985, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "superuser@mail.com", false, "Jane", "Doe", false, null, "SUPERUSER@MAIL.COM", "SUPERUSER", "AQAAAAIAAYagAAAAEOOEkuB0SHOmCqPBUPRMcwB2hn3r/A8f/w4uKS6QY6l6V9jzXDM0Bq5r+pvuA5p3Qw==", null, false, "66fc5a21-593d-47e7-9b6d-d103ba14bcb2", false, "superuser" },
+                    { 3, 0, "7e4f66f2-e08b-438a-ad1b-145c6fe60570", new DateTime(1992, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "hr@mail.com", false, "Alice", "Smith", false, null, "HR@MAIL.COM", "HR", "AQAAAAIAAYagAAAAEG8ovQAIcYS1EVbLXUnQ+icJzCzNzg93mVQ1YBFz+xrPDtNSvQHZ6hboHJXsTTp0uQ==", null, false, "e48102ee-3965-4637-93f4-9ea842f0756c", false, "hr" },
+                    { 4, 0, "743f9c1a-f81a-452c-a8b7-9d4310187539", new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@mail.com", false, "Bob", "Johnson", false, null, "ADMIN@MAIL.COM", "ADMIN", "AQAAAAIAAYagAAAAEJ3gh38dCdSaQ6TTXG+Ov0uxmKH0LA43iDX0wWvNqXhzs8/C10r0aDQBOatlH92ceQ==", null, false, "c36f2590-6dce-4869-a5dd-fc5ce21cbd1e", false, "admin" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Competencies",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Эффективная коммуникация" },
+                    { 2, "Клиентоориентированность" },
+                    { 3, "Умение работать в команде" },
+                    { 4, "Ориентация на результат" },
+                    { 5, "Негативный настрой (пессимизм)" },
+                    { 6, "Равнодушие" },
+                    { 7, "Лицемерие" },
+                    { 8, "Лидерство" },
+                    { 9, "Надежность / Стабильность" },
+                    { 10, "Развитие бизнеса / Партнерство" },
+                    { 11, "Креативное мышление" },
+                    { 12, "Стратегическое мышление" },
+                    { 13, "Самоорганизация" }
                 });
 
             migrationBuilder.InsertData(
@@ -534,103 +688,22 @@ namespace HRMatrix.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Skills",
+                table: "Specializations",
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { 1, "C# Разработчик" },
-                    { 2, "Java Разработчик" },
-                    { 3, "Python Разработчик" },
-                    { 4, "JavaScript Разработчик" },
-                    { 5, "Ruby Разработчик" },
-                    { 6, "PHP Разработчик" },
-                    { 7, "Swift Разработчик" },
-                    { 8, "Go Разработчик" },
-                    { 9, "C++ Разработчик" },
-                    { 10, "C Разработчик" },
-                    { 11, "TypeScript Разработчик" },
-                    { 12, "HTML/CSS Разработчик" },
-                    { 13, "SQL Разработчик" },
-                    { 14, "Специалист по данным" },
-                    { 15, "Аналитик данных" },
-                    { 16, "Инженер машинного обучения" },
-                    { 17, "DevOps инженер" },
-                    { 18, "Мобильный разработчик" },
-                    { 19, "Облачный инженер" },
-                    { 20, "Блокчейн разработчик" },
-                    { 21, "Специалист по кибербезопасности" },
-                    { 22, "Администратор сети" },
-                    { 23, "Системный администратор" },
-                    { 24, "Веб-дизайнер" },
-                    { 25, "UI/UX дизайнер" },
-                    { 26, "Разработчик игр" },
-                    { 27, "Full-Stack Разработчик" },
-                    { 28, "Инженер-программист" },
-                    { 29, "Scrum-мастер" },
-                    { 30, "Владелец продукта" },
-                    { 31, "Технический писатель" },
-                    { 32, "SEO специалист" },
-                    { 33, "Контент менеджер" },
-                    { 34, "Бизнес-аналитик" },
-                    { 35, "Руководитель проекта" },
-                    { 36, "Инженер по обеспечению качества" },
-                    { 37, "Тестировщик программного обеспечения" },
-                    { 38, "Веб-разработчик" },
-                    { 39, "Специалист по поддержке ИТ" },
-                    { 40, "Инженер по аппаратному обеспечению" },
-                    { 41, "ИТ-консультант" },
-                    { 42, "Специалист по ГИС" },
-                    { 43, "Специалист по электронной коммерции" },
-                    { 44, "Маркетолог" },
-                    { 45, "Специалист по цифровому маркетингу" },
-                    { 46, "Менеджер по социальным сетям" },
-                    { 47, "Дизайнер видеоигр" },
-                    { 48, "Администратор базы данных" },
-                    { 49, "Менеджер информационных систем" },
-                    { 50, "Офицер по соответствию" },
-                    { 51, "Этический хакер" },
-                    { 52, "Разработчик веб-приложений" },
-                    { 53, "Разработчик API" },
-                    { 54, "Инженер технической поддержки" },
-                    { 55, "Координатор проекта ИТ" },
-                    { 56, "Системный аналитик" },
-                    { 57, "Архитектор предприятия" },
-                    { 58, "ИТ-аудитор" },
-                    { 59, "Разработчик мобильных игр" },
-                    { 60, "Разработчик AR/VR" },
-                    { 61, "Инженер-робототехник" },
-                    { 62, "Специалист по техническому SEO" },
-                    { 63, "Стратег контента" },
-                    { 64, "Специалист по интеграции систем" },
-                    { 65, "Тренер по ИТ" },
-                    { 66, "Эксперт по криптографии" },
-                    { 67, "UI-разработчик" },
-                    { 68, "Исследователь UX" },
-                    { 69, "Инженер данных" },
-                    { 70, "Исследователь ИИ" },
-                    { 71, "Тестировщик игр" },
-                    { 72, "Тестировщик на проникновение" },
-                    { 73, "Менеджер продукта" },
-                    { 74, "Сетевой инженер" },
-                    { 75, "Специалист по телекоммуникациям" },
-                    { 76, "Инженер по встроенному ПО" },
-                    { 77, "Архитектор облачных решений" },
-                    { 78, "Аналитик бизнес-разведки" },
-                    { 79, "Статистический аналитик" },
-                    { 80, "Исследователь машинного обучения" },
-                    { 81, "Специалист по визуализации данных" },
-                    { 82, "Аналитик информационной безопасности" },
-                    { 83, "Аналитик по соответствию ИТ" },
-                    { 84, "Телекоммуникационный аналитик" },
-                    { 85, "Операционный аналитик" },
-                    { 86, "Менеджер программы" },
-                    { 87, "Специалист по безопасности веб-сайта" },
-                    { 88, "Специалист по здравоохранению ИТ" },
-                    { 89, "Менеджер по рискам ИТ" },
-                    { 90, "Специалист по искусственному интеллекту" },
-                    { 91, "Офицер по защите данных" },
-                    { 92, "Системный инженер" },
-                    { 93, "Архитектор интеграции" }
+                    { 1, "Разработка FrontEnd" },
+                    { 2, "Разработка BackEnd" },
+                    { 3, "Наука о данных и аналитика" },
+                    { 4, "Машинное обучение и ИИ" },
+                    { 5, "DevOps и облачные технологии" },
+                    { 6, "Мобильная разработка" },
+                    { 7, "Кибербезопасность" },
+                    { 8, "Управление проектами и продуктами" },
+                    { 9, "Сетевые технологии и поддержка ИТ" },
+                    { 10, "Управление базами данных" },
+                    { 11, "Дизайн UI/UX" },
+                    { 12, "Бизнес-анализ" }
                 });
 
             migrationBuilder.InsertData(
@@ -642,6 +715,52 @@ namespace HRMatrix.Persistence.Migrations
                     { 2, 2 },
                     { 3, 3 },
                     { 4, 4 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "CompetencyTranslations",
+                columns: new[] { "Id", "CompetencyId", "LanguageCode", "Name" },
+                values: new object[,]
+                {
+                    { 1, 1, "ru-RU", "Эффективная коммуникация" },
+                    { 2, 1, "en-US", "Effective Communication" },
+                    { 3, 1, "ky-KG", "Натыйжалуу баарлашуу" },
+                    { 4, 2, "ru-RU", "Клиентоориентированность" },
+                    { 5, 2, "en-US", "Customer Focus" },
+                    { 6, 2, "ky-KG", "Кардарга багытталуу" },
+                    { 7, 3, "ru-RU", "Умение работать в команде" },
+                    { 8, 3, "en-US", "Teamwork" },
+                    { 9, 3, "ky-KG", "Командалык иш" },
+                    { 10, 4, "ru-RU", "Ориентация на результат" },
+                    { 11, 4, "en-US", "Result Orientation" },
+                    { 12, 4, "ky-KG", "Жыйынтыкка багытталуу" },
+                    { 13, 5, "ru-RU", "Негативный настрой (пессимизм)" },
+                    { 14, 5, "en-US", "Negative Attitude (Pessimism)" },
+                    { 15, 5, "ky-KG", "Терс маанай (пессимизм)" },
+                    { 16, 6, "ru-RU", "Равнодушие" },
+                    { 17, 6, "en-US", "Indifference" },
+                    { 18, 6, "ky-KG", "Кайдыгерлик" },
+                    { 19, 7, "ru-RU", "Лицемерие" },
+                    { 20, 7, "en-US", "Hypocrisy" },
+                    { 21, 7, "ky-KG", "Экөө сүйлөөчүлүк" },
+                    { 22, 8, "ru-RU", "Лидерство" },
+                    { 23, 8, "en-US", "Leadership" },
+                    { 24, 8, "ky-KG", "Лидерлик" },
+                    { 25, 9, "ru-RU", "Надежность / Стабильность" },
+                    { 26, 9, "en-US", "Reliability / Stability" },
+                    { 27, 9, "ky-KG", "Ишенимдүүлүк / Туруктуулук" },
+                    { 28, 10, "ru-RU", "Развитие бизнеса / Партнерство" },
+                    { 29, 10, "en-US", "Business Development / Partnership" },
+                    { 30, 10, "ky-KG", "Бизнес өнүктүрүү / Өнөктөш" },
+                    { 31, 11, "ru-RU", "Креативное мышление" },
+                    { 32, 11, "en-US", "Creative Thinking" },
+                    { 33, 11, "ky-KG", "Креативдүү ой жүгүртүү" },
+                    { 34, 12, "ru-RU", "Стратегическое мышление" },
+                    { 35, 12, "en-US", "Strategic Thinking" },
+                    { 36, 12, "ky-KG", "Стратегиялык ой жүгүртүү" },
+                    { 37, 13, "ru-RU", "Самоорганизация" },
+                    { 38, 13, "en-US", "Self-Organization" },
+                    { 39, 13, "ky-KG", "Өзүн-өзү уюштуруу" }
                 });
 
             migrationBuilder.InsertData(
@@ -789,289 +908,156 @@ namespace HRMatrix.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Skills",
+                columns: new[] { "Id", "Name", "SpecializationId" },
+                values: new object[,]
+                {
+                    { 1, "JavaScript Разработчик", 1 },
+                    { 2, "HTML/CSS Разработчик", 1 },
+                    { 3, "C# Разработчик", 2 },
+                    { 4, "Java Разработчик", 2 },
+                    { 5, "Специалист по данным", 3 },
+                    { 6, "Аналитик данных", 3 },
+                    { 7, "Инженер машинного обучения", 4 },
+                    { 8, "Исследователь ИИ", 4 },
+                    { 9, "DevOps инженер", 5 },
+                    { 10, "Облачный инженер", 5 },
+                    { 11, "Swift Разработчик", 6 },
+                    { 12, "Android Разработчик", 6 },
+                    { 13, "Специалист по кибербезопасности", 7 },
+                    { 14, "Этический хакер", 7 },
+                    { 15, "Scrum-мастер", 8 },
+                    { 16, "Владелец продукта", 8 },
+                    { 17, "Сетевой инженер", 9 },
+                    { 18, "Администратор сети", 9 },
+                    { 19, "Администратор базы данных", 10 },
+                    { 20, "Менеджер информационных систем", 10 },
+                    { 21, "UI/UX дизайнер", 11 },
+                    { 22, "Веб-дизайнер", 11 },
+                    { 23, "Бизнес-аналитик", 12 },
+                    { 24, "Консультант по бизнес-анализу", 12 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "SpecializationsTranslation",
+                columns: new[] { "Id", "LanguageCode", "Name", "SpecializationId" },
+                values: new object[,]
+                {
+                    { 1, "ru-RU", "Разработка FrontEnd", 1 },
+                    { 2, "en-US", "FrontEnd Development", 1 },
+                    { 3, "ky-KG", "FrontEnd иштеп чыгуу", 1 },
+                    { 4, "ru-RU", "Разработка BackEnd", 2 },
+                    { 5, "en-US", "BackEnd Development", 2 },
+                    { 6, "ky-KG", "BackEnd иштеп чыгуу", 2 },
+                    { 7, "ru-RU", "Наука о данных и аналитика", 3 },
+                    { 8, "en-US", "Data Science and Analysis", 3 },
+                    { 9, "ky-KG", "Маалымат илими жана аналитика", 3 },
+                    { 10, "ru-RU", "Машинное обучение и ИИ", 4 },
+                    { 11, "en-US", "Machine Learning and AI", 4 },
+                    { 12, "ky-KG", "Машина үйрөнүү жана ЖИ", 4 },
+                    { 13, "ru-RU", "DevOps и облачные технологии", 5 },
+                    { 14, "en-US", "DevOps and Cloud Engineering", 5 },
+                    { 15, "ky-KG", "DevOps жана булут технологиялары", 5 },
+                    { 16, "ru-RU", "Мобильная разработка", 6 },
+                    { 17, "en-US", "Mobile Development", 6 },
+                    { 18, "ky-KG", "Мобилдик иштеп чыгуу", 6 },
+                    { 19, "ru-RU", "Кибербезопасность", 7 },
+                    { 20, "en-US", "Cybersecurity", 7 },
+                    { 21, "ky-KG", "Киберкоопсуздук", 7 },
+                    { 22, "ru-RU", "Управление проектами и продуктами", 8 },
+                    { 23, "en-US", "Project and Product Management", 8 },
+                    { 24, "ky-KG", "Долбоорлорду жана продуктуларды башкаруу", 8 },
+                    { 25, "ru-RU", "Сетевые технологии и поддержка ИТ", 9 },
+                    { 26, "en-US", "Networking and IT Support", 9 },
+                    { 27, "ky-KG", "Тармактык технологиялар жана IT колдоо", 9 },
+                    { 28, "ru-RU", "Управление базами данных", 10 },
+                    { 29, "en-US", "Database Management", 10 },
+                    { 30, "ky-KG", "Маалымат базасын башкаруу", 10 },
+                    { 31, "ru-RU", "Дизайн UI/UX", 11 },
+                    { 32, "en-US", "UI/UX Design", 11 },
+                    { 33, "ky-KG", "UI/UX Дизайн", 11 },
+                    { 34, "ru-RU", "Бизнес-анализ", 12 },
+                    { 35, "en-US", "Business Analysis", 12 },
+                    { 36, "ky-KG", "Бизнес анализ", 12 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "SkillTranslation",
                 columns: new[] { "Id", "LanguageCode", "Name", "SkillId" },
                 values: new object[,]
                 {
-                    { 1, "ru-RU", "C# Разработчик", 1 },
-                    { 2, "en-US", "C# Developer", 1 },
-                    { 3, "ky-KG", "C# программист", 1 },
-                    { 4, "ru-RU", "Java Разработчик", 2 },
-                    { 5, "en-US", "Java Developer", 2 },
-                    { 6, "ky-KG", "Java программист", 2 },
-                    { 7, "ru-RU", "Python Разработчик", 3 },
-                    { 8, "en-US", "Python Developer", 3 },
-                    { 9, "ky-KG", "Python программист", 3 },
-                    { 10, "ru-RU", "JavaScript Разработчик", 4 },
-                    { 11, "en-US", "JavaScript Developer", 4 },
-                    { 12, "ky-KG", "JavaScript программист", 4 },
-                    { 13, "ru-RU", "Ruby Разработчик", 5 },
-                    { 14, "en-US", "Ruby Developer", 5 },
-                    { 15, "ky-KG", "Ruby программист", 5 },
-                    { 16, "ru-RU", "PHP Разработчик", 6 },
-                    { 17, "en-US", "PHP Developer", 6 },
-                    { 18, "ky-KG", "PHP программист", 6 },
-                    { 19, "ru-RU", "Swift Разработчик", 7 },
-                    { 20, "en-US", "Swift Developer", 7 },
-                    { 21, "ky-KG", "Swift программист", 7 },
-                    { 22, "ru-RU", "Go Разработчик", 8 },
-                    { 23, "en-US", "Go Developer", 8 },
-                    { 24, "ky-KG", "Go программист", 8 },
-                    { 25, "ru-RU", "C++ Разработчик", 9 },
-                    { 26, "en-US", "C++ Developer", 9 },
-                    { 27, "ky-KG", "C++ программист", 9 },
-                    { 28, "ru-RU", "C Разработчик", 10 },
-                    { 29, "en-US", "C Developer", 10 },
-                    { 30, "ky-KG", "C программист", 10 },
-                    { 31, "ru-RU", "TypeScript Разработчик", 11 },
-                    { 32, "en-US", "TypeScript Developer", 11 },
-                    { 33, "ky-KG", "TypeScript программист", 11 },
-                    { 34, "ru-RU", "HTML/CSS Разработчик", 12 },
-                    { 35, "en-US", "HTML/CSS Developer", 12 },
-                    { 36, "ky-KG", "HTML/CSS программист", 12 },
-                    { 37, "ru-RU", "SQL Разработчик", 13 },
-                    { 38, "en-US", "SQL Developer", 13 },
-                    { 39, "ky-KG", "SQL программист", 13 },
-                    { 40, "ru-RU", "Data Scientist", 14 },
-                    { 41, "en-US", "Data Scientist", 14 },
-                    { 42, "ky-KG", "Data Scientist", 14 },
-                    { 43, "ru-RU", "Аналитик данных", 15 },
-                    { 44, "en-US", "Data Analyst", 15 },
-                    { 45, "ky-KG", "Аналитик маалыматтары", 15 },
-                    { 46, "ru-RU", "Инженер машинного обучения", 16 },
-                    { 47, "en-US", "Machine Learning Engineer", 16 },
-                    { 48, "ky-KG", "Машиналык үйрөнүү инженери", 16 },
-                    { 49, "ru-RU", "DevOps инженер", 17 },
-                    { 50, "en-US", "DevOps Engineer", 17 },
-                    { 51, "ky-KG", "DevOps инженер", 17 },
-                    { 52, "ru-RU", "Мобильный разработчик", 18 },
-                    { 53, "en-US", "Mobile App Developer", 18 },
-                    { 54, "ky-KG", "Мобилдик колдонмо иштеп чыгуучу", 18 },
-                    { 55, "ru-RU", "Облачный инженер", 19 },
-                    { 56, "en-US", "Cloud Engineer", 19 },
-                    { 57, "ky-KG", "Булут инженери", 19 },
-                    { 58, "ru-RU", "Блокчейн разработчик", 20 },
-                    { 59, "en-US", "Blockchain Developer", 20 },
-                    { 60, "ky-KG", "Блокчейн иштеп чыгуучу", 20 },
-                    { 61, "ru-RU", "Специалист по кибербезопасности", 21 },
-                    { 62, "en-US", "Cybersecurity Specialist", 21 },
-                    { 63, "ky-KG", "Киберкоопсуздук адиси", 21 },
-                    { 64, "ru-RU", "Администратор сети", 22 },
-                    { 65, "en-US", "Network Administrator", 22 },
-                    { 66, "ky-KG", "Тармак администратору", 22 },
-                    { 67, "ru-RU", "Системный администратор", 23 },
-                    { 68, "en-US", "System Administrator", 23 },
-                    { 69, "ky-KG", "Системалык администратор", 23 },
-                    { 70, "ru-RU", "Веб-дизайнер", 24 },
-                    { 71, "en-US", "Web Designer", 24 },
-                    { 72, "ky-KG", "Веб-дизайнер", 24 },
-                    { 73, "ru-RU", "UI/UX дизайнер", 25 },
-                    { 74, "en-US", "UI/UX Designer", 25 },
-                    { 75, "ky-KG", "UI/UX дизайнер", 25 },
-                    { 76, "ru-RU", "Разработчик игр", 26 },
-                    { 77, "en-US", "Game Developer", 26 },
-                    { 78, "ky-KG", "Оюн иштеп чыгуучу", 26 },
-                    { 79, "ru-RU", "Full-Stack Разработчик", 27 },
-                    { 80, "en-US", "Full-Stack Developer", 27 },
-                    { 81, "ky-KG", "Full-Stack иштеп чыгуучу", 27 },
-                    { 82, "ru-RU", "Инженер-программист", 28 },
-                    { 83, "en-US", "Software Engineer", 28 },
-                    { 84, "ky-KG", "Программалык камсыздоо инженери", 28 },
-                    { 85, "ru-RU", "Scrum-мастер", 29 },
-                    { 86, "en-US", "Scrum Master", 29 },
-                    { 87, "ky-KG", "Scrum мастер", 29 },
-                    { 88, "ru-RU", "Владелец продукта", 30 },
-                    { 89, "en-US", "Product Owner", 30 },
-                    { 90, "ky-KG", "Продукт ээси", 30 },
-                    { 91, "ru-RU", "Технический писатель", 31 },
-                    { 92, "en-US", "Technical Writer", 31 },
-                    { 93, "ky-KG", "Техникалык жазуучу", 31 },
-                    { 94, "ru-RU", "SEO специалист", 32 },
-                    { 95, "en-US", "SEO Specialist", 32 },
-                    { 96, "ky-KG", "SEO адиси", 32 },
-                    { 97, "ru-RU", "Контент менеджер", 33 },
-                    { 98, "en-US", "Content Manager", 33 },
-                    { 99, "ky-KG", "Мазмун менеджери", 33 },
-                    { 100, "ru-RU", "Бизнес-аналитик", 34 },
-                    { 101, "en-US", "Business Analyst", 34 },
-                    { 102, "ky-KG", "Бизнес аналитик", 34 },
-                    { 103, "ru-RU", "Руководитель проекта", 35 },
-                    { 104, "en-US", "Project Manager", 35 },
-                    { 105, "ky-KG", "Долбоор менеджери", 35 },
-                    { 106, "ru-RU", "Инженер по обеспечению качества", 36 },
-                    { 107, "en-US", "Quality Assurance Engineer", 36 },
-                    { 108, "ky-KG", "Сапатты камсыздоо инженери", 36 },
-                    { 109, "ru-RU", "Тестировщик программного обеспечения", 37 },
-                    { 110, "en-US", "Software Tester", 37 },
-                    { 111, "ky-KG", "Программалык камсыздоо тестери", 37 },
-                    { 112, "ru-RU", "Веб-разработчик", 38 },
-                    { 113, "en-US", "Web Developer", 38 },
-                    { 114, "ky-KG", "Веб иштеп чыгуучу", 38 },
-                    { 115, "ru-RU", "Специалист по поддержке ИТ", 39 },
-                    { 116, "en-US", "IT Support Specialist", 39 },
-                    { 117, "ky-KG", "IT колдоо адиси", 39 },
-                    { 118, "ru-RU", "Инженер по аппаратному обеспечению", 40 },
-                    { 119, "en-US", "Hardware Engineer", 40 },
-                    { 120, "ky-KG", "Аппараттык камсыздоо инженери", 40 },
-                    { 121, "ru-RU", "ИТ-консультант", 41 },
-                    { 122, "en-US", "IT Consultant", 41 },
-                    { 123, "ky-KG", "IT консультанты", 41 },
-                    { 124, "ru-RU", "Специалист по ГИС", 42 },
-                    { 125, "en-US", "GIS Specialist", 42 },
-                    { 126, "ky-KG", "ГИС адиси", 42 },
-                    { 127, "ru-RU", "Специалист по электронной коммерции", 43 },
-                    { 128, "en-US", "E-commerce Specialist", 43 },
-                    { 129, "ky-KG", "Электрондук соода адиси", 43 },
-                    { 130, "ru-RU", "Маркетолог", 44 },
-                    { 131, "en-US", "Marketing Specialist", 44 },
-                    { 132, "ky-KG", "Маркетинг адиси", 44 },
-                    { 133, "ru-RU", "Специалист по цифровому маркетингу", 45 },
-                    { 134, "en-US", "Digital Marketing Specialist", 45 },
-                    { 135, "ky-KG", "Санариптик маркетинг адиси", 45 },
-                    { 136, "ru-RU", "Менеджер по социальным сетям", 46 },
-                    { 137, "en-US", "Social Media Manager", 46 },
-                    { 138, "ky-KG", "Социалдык медиа менеджери", 46 },
-                    { 139, "ru-RU", "Дизайнер видеоигр", 47 },
-                    { 140, "en-US", "Video Game Designer", 47 },
-                    { 141, "ky-KG", "Видео оюн дизайнери", 47 },
-                    { 142, "ru-RU", "Администратор базы данных", 48 },
-                    { 143, "en-US", "Database Administrator", 48 },
-                    { 144, "ky-KG", "Маалымат базасынын администратору", 48 },
-                    { 145, "ru-RU", "Менеджер информационных систем", 49 },
-                    { 146, "en-US", "Information Systems Manager", 49 },
-                    { 147, "ky-KG", "Маалымат системаларынын менеджери", 49 },
-                    { 148, "ru-RU", "Офицер по соответствию", 50 },
-                    { 149, "en-US", "Compliance Officer", 50 },
-                    { 150, "ky-KG", "Шайкештик боюнча офицер", 50 },
-                    { 151, "ru-RU", "Этический хакер", 51 },
-                    { 152, "en-US", "Ethical Hacker", 51 },
-                    { 153, "ky-KG", "Этикалык хакер", 51 },
-                    { 154, "ru-RU", "Разработчик веб-приложений", 52 },
-                    { 155, "en-US", "Web Application Developer", 52 },
-                    { 156, "ky-KG", "Веб колдонмо иштеп чыгуучу", 52 },
-                    { 157, "ru-RU", "Разработчик API", 53 },
-                    { 158, "en-US", "API Developer", 53 },
-                    { 159, "ky-KG", "API иштеп чыгуучу", 53 },
-                    { 160, "ru-RU", "Инженер технической поддержки", 54 },
-                    { 161, "en-US", "Technical Support Engineer", 54 },
-                    { 162, "ky-KG", "Техникалык колдоо инженери", 54 },
-                    { 163, "ru-RU", "Координатор проекта ИТ", 55 },
-                    { 164, "en-US", "IT Project Coordinator", 55 },
-                    { 165, "ky-KG", "IT долбоор координатору", 55 },
-                    { 166, "ru-RU", "Системный аналитик", 56 },
-                    { 167, "en-US", "System Analyst", 56 },
-                    { 168, "ky-KG", "Система аналитиги", 56 },
-                    { 169, "ru-RU", "Архитектор предприятия", 57 },
-                    { 170, "en-US", "Enterprise Architect", 57 },
-                    { 171, "ky-KG", "Ишкананын архитектору", 57 },
-                    { 172, "ru-RU", "ИТ-аудитор", 58 },
-                    { 173, "en-US", "IT Auditor", 58 },
-                    { 174, "ky-KG", "IT аудитору", 58 },
-                    { 175, "ru-RU", "Разработчик мобильных игр", 59 },
-                    { 176, "en-US", "Mobile Game Developer", 59 },
-                    { 177, "ky-KG", "Мобилдик оюн иштеп чыгуучу", 59 },
-                    { 178, "ru-RU", "Разработчик AR/VR", 60 },
-                    { 179, "en-US", "AR/VR Developer", 60 },
-                    { 180, "ky-KG", "AR/VR иштеп чыгуучу", 60 },
-                    { 181, "ru-RU", "Инженер-робототехник", 61 },
-                    { 182, "en-US", "Robotics Engineer", 61 },
-                    { 183, "ky-KG", "Робототехника инженери", 61 },
-                    { 184, "ru-RU", "Специалист по техническому SEO", 62 },
-                    { 185, "en-US", "Technical SEO Specialist", 62 },
-                    { 186, "ky-KG", "Техникалык SEO адиси", 62 },
-                    { 187, "ru-RU", "Стратег контента", 63 },
-                    { 188, "en-US", "Content Strategist", 63 },
-                    { 189, "ky-KG", "Мазмун стратегиясы", 63 },
-                    { 190, "ru-RU", "Специалист по интеграции систем", 64 },
-                    { 191, "en-US", "System Integration Specialist", 64 },
-                    { 192, "ky-KG", "Системалык интеграция адиси", 64 },
-                    { 193, "ru-RU", "Тренер по ИТ", 65 },
-                    { 194, "en-US", "IT Trainer", 65 },
-                    { 195, "ky-KG", "IT тренери", 65 },
-                    { 196, "ru-RU", "Эксперт по криптографии", 66 },
-                    { 197, "en-US", "Cryptography Expert", 66 },
-                    { 198, "ky-KG", "Криптография боюнча эксперт", 66 },
-                    { 199, "ru-RU", "UI-разработчик", 67 },
-                    { 200, "en-US", "UI Developer", 67 },
-                    { 201, "ky-KG", "UI иштеп чыгуучу", 67 },
-                    { 202, "ru-RU", "Исследователь UX", 68 },
-                    { 203, "en-US", "UX Researcher", 68 },
-                    { 204, "ky-KG", "UX изилдөөчү", 68 },
-                    { 205, "ru-RU", "Инженер данных", 69 },
-                    { 206, "en-US", "Data Engineer", 69 },
-                    { 207, "ky-KG", "Маалымат инженери", 69 },
-                    { 208, "ru-RU", "Исследователь ИИ", 70 },
-                    { 209, "en-US", "AI Researcher", 70 },
-                    { 210, "ky-KG", "ИИ изилдөөчү", 70 },
-                    { 211, "ru-RU", "Тестировщик игр", 71 },
-                    { 212, "en-US", "Game Tester", 71 },
-                    { 213, "ky-KG", "Оюн тестери", 71 },
-                    { 214, "ru-RU", "Тестировщик на проникновение", 72 },
-                    { 215, "en-US", "Penetration Tester", 72 },
-                    { 216, "ky-KG", "Пенетрация тестери", 72 },
-                    { 217, "ru-RU", "Менеджер продукта", 73 },
-                    { 218, "en-US", "Product Manager", 73 },
-                    { 219, "ky-KG", "Продукт менеджери", 73 },
-                    { 220, "ru-RU", "Сетевой инженер", 74 },
-                    { 221, "en-US", "Network Engineer", 74 },
-                    { 222, "ky-KG", "Тармак инженери", 74 },
-                    { 223, "ru-RU", "Специалист по телекоммуникациям", 75 },
-                    { 224, "en-US", "Telecommunications Specialist", 75 },
-                    { 225, "ky-KG", "Телеком адиси", 75 },
-                    { 226, "ru-RU", "Инженер по встроенному ПО", 76 },
-                    { 227, "en-US", "Firmware Engineer", 76 },
-                    { 228, "ky-KG", "Орнотулган программалык камсыздоо инженери", 76 },
-                    { 229, "ru-RU", "Архитектор облачных решений", 77 },
-                    { 230, "en-US", "Cloud Solutions Architect", 77 },
-                    { 231, "ky-KG", "Булут чечимдеринин архитектору", 77 },
-                    { 232, "ru-RU", "Аналитик бизнес-разведки", 78 },
-                    { 233, "en-US", "Business Intelligence Analyst", 78 },
-                    { 234, "ky-KG", "Бизнес-чалгындоо аналитиги", 78 },
-                    { 235, "ru-RU", "Статистический аналитик", 79 },
-                    { 236, "en-US", "Statistical Analyst", 79 },
-                    { 237, "ky-KG", "Статистикалык аналитик", 79 },
-                    { 238, "ru-RU", "Исследователь машинного обучения", 80 },
-                    { 239, "en-US", "Machine Learning Researcher", 80 },
-                    { 240, "ky-KG", "Машина үйрөнүү изилдөөчүсү", 80 },
-                    { 241, "ru-RU", "Специалист по визуализации данных", 81 },
-                    { 242, "en-US", "Data Visualization Specialist", 81 },
-                    { 243, "ky-KG", "Маалыматтарды визуалдаштыруу адиси", 81 },
-                    { 244, "ru-RU", "Аналитик информационной безопасности", 82 },
-                    { 245, "en-US", "Information Security Analyst", 82 },
-                    { 246, "ky-KG", "Маалымат коопсуздугунун аналитиги", 82 },
-                    { 247, "ru-RU", "Аналитик по соответствию ИТ", 83 },
-                    { 248, "en-US", "IT Compliance Analyst", 83 },
-                    { 249, "ky-KG", "IT шайкештик аналитиги", 83 },
-                    { 250, "ru-RU", "Телекоммуникационный аналитик", 84 },
-                    { 251, "en-US", "Telecom Analyst", 84 },
-                    { 252, "ky-KG", "Телеком аналитик", 84 },
-                    { 253, "ru-RU", "Операционный аналитик", 85 },
-                    { 254, "en-US", "Operations Analyst", 85 },
-                    { 255, "ky-KG", "Операция аналитиги", 85 },
-                    { 256, "ru-RU", "Менеджер программы", 86 },
-                    { 257, "en-US", "Program Manager", 86 },
-                    { 258, "ky-KG", "Программа менеджери", 86 },
-                    { 259, "ru-RU", "Специалист по безопасности веб-сайта", 87 },
-                    { 260, "en-US", "Web Security Specialist", 87 },
-                    { 261, "ky-KG", "Веб коопсуздук адиси", 87 },
-                    { 262, "ru-RU", "Специалист по здравоохранению ИТ", 88 },
-                    { 263, "en-US", "Health IT Specialist", 88 },
-                    { 264, "ky-KG", "Ден-соолук IT адиси", 88 },
-                    { 265, "ru-RU", "Менеджер по рискам ИТ", 89 },
-                    { 266, "en-US", "IT Risk Manager", 89 },
-                    { 267, "ky-KG", "IT коркунуч менеджери", 89 },
-                    { 268, "ru-RU", "Специалист по искусственному интеллекту", 90 },
-                    { 269, "en-US", "Artificial Intelligence Specialist", 90 },
-                    { 270, "ky-KG", "Жасалма интеллект адиси", 90 },
-                    { 271, "ru-RU", "Офицер по защите данных", 91 },
-                    { 272, "en-US", "Data Privacy Officer", 91 },
-                    { 273, "ky-KG", "Маалыматтарды купуялуулук боюнча офицер", 91 },
-                    { 274, "ru-RU", "Системный инженер", 92 },
-                    { 275, "en-US", "Systems Engineer", 92 },
-                    { 276, "ky-KG", "Системалар инженери", 92 },
-                    { 277, "ru-RU", "Архитектор интеграции", 93 },
-                    { 278, "en-US", "Integration Architect", 93 },
-                    { 279, "ky-KG", "Интеграция архитектуру", 93 }
+                    { 1, "ru-RU", "JavaScript Разработчик", 1 },
+                    { 2, "en-US", "JavaScript Developer", 1 },
+                    { 3, "ky-KG", "JavaScript иштеп чыгуучу", 1 },
+                    { 4, "ru-RU", "HTML/CSS Разработчик", 2 },
+                    { 5, "en-US", "HTML/CSS Developer", 2 },
+                    { 6, "ky-KG", "HTML/CSS иштеп чыгуучу", 2 },
+                    { 7, "ru-RU", "C# Разработчик", 3 },
+                    { 8, "en-US", "C# Developer", 3 },
+                    { 9, "ky-KG", "C# иштеп чыгуучу", 3 },
+                    { 10, "ru-RU", "Java Разработчик", 4 },
+                    { 11, "en-US", "Java Developer", 4 },
+                    { 12, "ky-KG", "Java иштеп чыгуучу", 4 },
+                    { 13, "ru-RU", "Специалист по данным", 5 },
+                    { 14, "en-US", "Data Specialist", 5 },
+                    { 15, "ky-KG", "Маалыматтар боюнча адис", 5 },
+                    { 16, "ru-RU", "Аналитик данных", 6 },
+                    { 17, "en-US", "Data Analyst", 6 },
+                    { 18, "ky-KG", "Маалыматтар аналитиги", 6 },
+                    { 19, "ru-RU", "Инженер машинного обучения", 7 },
+                    { 20, "en-US", "Machine Learning Engineer", 7 },
+                    { 21, "ky-KG", "Машиналык үйрөнүү инженери", 7 },
+                    { 22, "ru-RU", "Исследователь ИИ", 8 },
+                    { 23, "en-US", "AI Researcher", 8 },
+                    { 24, "ky-KG", "ИИ изилдөөчүсү", 8 },
+                    { 25, "ru-RU", "DevOps инженер", 9 },
+                    { 26, "en-US", "DevOps Engineer", 9 },
+                    { 27, "ky-KG", "DevOps инженери", 9 },
+                    { 28, "ru-RU", "Облачный инженер", 10 },
+                    { 29, "en-US", "Cloud Engineer", 10 },
+                    { 30, "ky-KG", "Булут инженери", 10 },
+                    { 31, "ru-RU", "Swift Разработчик", 11 },
+                    { 32, "en-US", "Swift Developer", 11 },
+                    { 33, "ky-KG", "Swift иштеп чыгуучу", 11 },
+                    { 34, "ru-RU", "Android Разработчик", 12 },
+                    { 35, "en-US", "Android Developer", 12 },
+                    { 36, "ky-KG", "Android иштеп чыгуучу", 12 },
+                    { 37, "ru-RU", "Специалист по кибербезопасности", 13 },
+                    { 38, "en-US", "Cybersecurity Specialist", 13 },
+                    { 39, "ky-KG", "Киберкоопсуздук адиси", 13 },
+                    { 40, "ru-RU", "Этический хакер", 14 },
+                    { 41, "en-US", "Ethical Hacker", 14 },
+                    { 42, "ky-KG", "Этикалык хакер", 14 },
+                    { 43, "ru-RU", "Scrum-мастер", 15 },
+                    { 44, "en-US", "Scrum Master", 15 },
+                    { 45, "ky-KG", "Scrum мастер", 15 },
+                    { 46, "ru-RU", "Владелец продукта", 16 },
+                    { 47, "en-US", "Product Owner", 16 },
+                    { 48, "ky-KG", "Продукт ээси", 16 },
+                    { 49, "ru-RU", "Сетевой инженер", 17 },
+                    { 50, "en-US", "Network Engineer", 17 },
+                    { 51, "ky-KG", "Тармак инженери", 17 },
+                    { 52, "ru-RU", "Администратор сети", 18 },
+                    { 53, "en-US", "Network Administrator", 18 },
+                    { 54, "ky-KG", "Тармак администратору", 18 },
+                    { 55, "ru-RU", "Администратор базы данных", 19 },
+                    { 56, "en-US", "Database Administrator", 19 },
+                    { 57, "ky-KG", "Маалыматтар базасынын администратору", 19 },
+                    { 58, "ru-RU", "Менеджер информационных систем", 20 },
+                    { 59, "en-US", "Information Systems Manager", 20 },
+                    { 60, "ky-KG", "Маалымат системаларынын менеджери", 20 },
+                    { 61, "ru-RU", "UI/UX дизайнер", 21 },
+                    { 62, "en-US", "UI/UX Designer", 21 },
+                    { 63, "ky-KG", "UI/UX дизайнер", 21 },
+                    { 64, "ru-RU", "Веб-дизайнер", 22 },
+                    { 65, "en-US", "Web Designer", 22 },
+                    { 66, "ky-KG", "Веб-дизайнер", 22 },
+                    { 67, "ru-RU", "Бизнес-аналитик", 23 },
+                    { 68, "en-US", "Business Analyst", 23 },
+                    { 69, "ky-KG", "Бизнес аналитик", 23 },
+                    { 70, "ru-RU", "Консультант по бизнес-анализу", 24 },
+                    { 71, "en-US", "Business Analysis Consultant", 24 },
+                    { 72, "ky-KG", "Бизнес-аналитика боюнча кеңешчи", 24 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -1114,6 +1100,11 @@ namespace HRMatrix.Persistence.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CompetencyTranslations_CompetencyId",
+                table: "CompetencyTranslations",
+                column: "CompetencyId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EducationLevelTranslation_EducationLevelId",
                 table: "EducationLevelTranslation",
                 column: "EducationLevelId");
@@ -1140,9 +1131,34 @@ namespace HRMatrix.Persistence.Migrations
                 column: "MaritalStatusId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_AssignedUserProfileId",
+                table: "Orders",
+                column: "AssignedUserProfileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Skills_SpecializationId",
+                table: "Skills",
+                column: "SpecializationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SkillTranslation_SkillId",
                 table: "SkillTranslation",
                 column: "SkillId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SpecializationsTranslation_SpecializationId",
+                table: "SpecializationsTranslation",
+                column: "SpecializationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserProfileCompetencies_CompetencyId",
+                table: "UserProfileCompetencies",
+                column: "CompetencyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserProfileCompetencies_UserProfileId",
+                table: "UserProfileCompetencies",
+                column: "UserProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserProfileEducations_EducationLevelId",
@@ -1199,6 +1215,9 @@ namespace HRMatrix.Persistence.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CompetencyTranslations");
+
+            migrationBuilder.DropTable(
                 name: "EducationLevelTranslation");
 
             migrationBuilder.DropTable(
@@ -1211,7 +1230,16 @@ namespace HRMatrix.Persistence.Migrations
                 name: "MaritalStatusTranslations");
 
             migrationBuilder.DropTable(
+                name: "Orders");
+
+            migrationBuilder.DropTable(
                 name: "SkillTranslation");
+
+            migrationBuilder.DropTable(
+                name: "SpecializationsTranslation");
+
+            migrationBuilder.DropTable(
+                name: "UserProfileCompetencies");
 
             migrationBuilder.DropTable(
                 name: "UserProfileEducations");
@@ -1235,6 +1263,9 @@ namespace HRMatrix.Persistence.Migrations
                 name: "MaritalStatuses");
 
             migrationBuilder.DropTable(
+                name: "Competencies");
+
+            migrationBuilder.DropTable(
                 name: "EducationLevels");
 
             migrationBuilder.DropTable(
@@ -1245,6 +1276,9 @@ namespace HRMatrix.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserProfiles");
+
+            migrationBuilder.DropTable(
+                name: "Specializations");
         }
     }
 }

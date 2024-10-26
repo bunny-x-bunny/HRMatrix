@@ -15,6 +15,7 @@ using HRMatrix.IdentityService.Models;
 using HRMatrix.Application.DTOs.Competency;
 using HRMatrix.Application.DTOs.UserProfileCompetency;
 using HRMatrix.Application.DTOs.Order;
+using HRMatrix.Application.DTOs.Specialization;
 
 public class MappingProfile : Profile
 {
@@ -244,5 +245,28 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedByUserId, opt => opt.Ignore())
             .ForMember(dest => dest.AssignedUserProfile, opt => opt.Ignore());
+
+        // Маппинг для Specialization и SpecializationDto
+        CreateMap<Specialization, SpecializationDto>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+            .ReverseMap();
+
+        CreateMap<SpecializationTranslation, SpecializationTranslationDto>().ReverseMap();
+
+        CreateMap<CreateSpecializationDto, Specialization>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+            .ReverseMap();
+
+        CreateMap<UpdateSpecializationDto, Specialization>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+            .ReverseMap();
+
+        CreateMap<CreateSpecializationTranslationDto, SpecializationTranslation>()
+            .ForMember(dest => dest.SpecializationId, opt => opt.Ignore())
+            .ReverseMap();
+
+        CreateMap<UpdateSpecializationTranslationDto, SpecializationTranslation>()
+            .ForMember(dest => dest.SpecializationId, opt => opt.Ignore())
+            .ReverseMap();
     }
 }
