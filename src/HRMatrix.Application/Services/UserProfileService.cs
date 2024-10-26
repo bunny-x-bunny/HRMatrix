@@ -229,10 +229,13 @@ public class UserProfileService : IUserProfileService
 
     public async Task<List<UserProfileSuggestionDto>> SearchUserProfilesAsync(string query, int limit)
     {
-        query = query.ToLower();
+        var tokens = query.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
         var profiles = await _context.UserProfiles.AsNoTracking()
-            .Where(up => up.FirstName.ToLower().Contains(query) || up.LastName.ToLower().Contains(query))
+            .Where(up => tokens.All(e =>
+                EF.Functions.Like(up.FirstName, "%" + e + "%") ||
+                EF.Functions.Like(up.LastName, "%" + e + "%")
+            ))
             .Select(up => new UserProfileSuggestionDto
             {
                 Id = up.Id,
