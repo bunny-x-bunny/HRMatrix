@@ -10,6 +10,7 @@ using HRMatrix.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using HRMatrix.Application.DTOs.Competency;
 using HRMatrix.Application.DTOs.UserProfileCompetency;
+using HRMatrix.Application.DTOs.Specialization;
 
 namespace HRMatrix.Application.Services;
 
@@ -35,7 +36,11 @@ public class UserProfileService : IUserProfileService
                 .ThenInclude(el => el.Translations)
             .Include(x => x.UserProfileSkills)
                 .ThenInclude(x => x.Skill)
-                .ThenInclude(x => x.Translations)
+                    .ThenInclude(x => x.Translations)
+            .Include(x => x.UserProfileSkills)
+                .ThenInclude(x => x.Skill)
+                    .ThenInclude(x => x.Specialization)
+                        .ThenInclude(sp => sp.Translations)
             .Include(x => x.WorkExperiences)
             .Include(x => x.UserProfileLanguages)
                 .ThenInclude(x => x.Language)
@@ -66,7 +71,13 @@ public class UserProfileService : IUserProfileService
                     SkillId = s.SkillId,
                     SkillName = s.Skill.Name,
                     ProficiencyLevel = s.ProficiencyLevel,
-                    Translations = _mapper.Map<List<SkillTranslationDto>>(s.Skill.Translations)
+                    Translations = _mapper.Map<List<SkillTranslationDto>>(s.Skill.Translations),
+                    Specialization = new SpecializationDto
+                    {
+                        Id = s.Skill.Specialization.Id,
+                        Name = s.Skill.Specialization.Name,
+                        Translations = _mapper.Map<List<SpecializationTranslationDto>>(s.Skill.Specialization.Translations)
+                    }
                 }).ToList();
 
             userProfile.Competencies = profiles
@@ -94,7 +105,11 @@ public class UserProfileService : IUserProfileService
                 .ThenInclude(el => el.Translations)
             .Include(x => x.UserProfileSkills)
                 .ThenInclude(x => x.Skill)
-                .ThenInclude(x => x.Translations)
+                    .ThenInclude(x => x.Translations)
+            .Include(x => x.UserProfileSkills)
+                .ThenInclude(x => x.Skill)
+                    .ThenInclude(x => x.Specialization)
+                        .ThenInclude(sp => sp.Translations)
             .Include(x => x.WorkExperiences)
             .Include(x => x.UserProfileLanguages)
                 .ThenInclude(x => x.Language)
@@ -121,7 +136,13 @@ public class UserProfileService : IUserProfileService
             SkillId = s.SkillId,
             SkillName = s.Skill.Name,
             ProficiencyLevel = s.ProficiencyLevel,
-            Translations = _mapper.Map<List<SkillTranslationDto>>(s.Skill.Translations)
+            Translations = _mapper.Map<List<SkillTranslationDto>>(s.Skill.Translations),
+            Specialization = new SpecializationDto
+            {
+                Id = s.Skill.Specialization.Id,
+                Name = s.Skill.Specialization.Name,
+                Translations = _mapper.Map<List<SpecializationTranslationDto>>(s.Skill.Specialization.Translations)
+            }
         }).ToList();
 
         userProfileDto.Competencies = profile.UserProfileCompetencies.Select(c => new UserProfileCompetencyResponse
