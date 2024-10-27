@@ -16,6 +16,7 @@ using HRMatrix.Application.DTOs.Competency;
 using HRMatrix.Application.DTOs.UserProfileCompetency;
 using HRMatrix.Application.DTOs.Order;
 using HRMatrix.Application.DTOs.Specialization;
+using HRMatrix.Application.DTOs.WorkType;
 
 public class MappingProfile : Profile
 {
@@ -268,5 +269,20 @@ public class MappingProfile : Profile
         CreateMap<UpdateSpecializationTranslationDto, SpecializationTranslation>()
             .ForMember(dest => dest.SpecializationId, opt => opt.Ignore())
             .ReverseMap();
+
+        // WorkType -> WorkTypeDto и обратно
+        CreateMap<WorkType, WorkTypeDto>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
+
+        CreateMap<CreateWorkTypeDto, WorkType>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
+
+        CreateMap<UpdateWorkTypeDto, WorkType>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
+
+        // WorkTypeTranslation -> WorkTypeTranslationDto
+        CreateMap<WorkTypeTranslation, WorkTypeTranslationDto>();
+        CreateMap<CreateWorkTypeTranslationDto, WorkTypeTranslation>();
+        CreateMap<UpdateWorkTypeTranslationDto, WorkTypeTranslation>();
     }
 }

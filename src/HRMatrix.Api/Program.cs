@@ -69,6 +69,8 @@ builder.Services.AddScoped<ICompetencyService, CompetencyService>();
 builder.Services.AddScoped<IUserProfileCompetencyService, UserProfileCompetencyService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ISpecializationService, SpecializationService>();
+builder.Services.AddScoped<IWorkTypeService, WorkTypeService>();
+
 
 
 #endregion
