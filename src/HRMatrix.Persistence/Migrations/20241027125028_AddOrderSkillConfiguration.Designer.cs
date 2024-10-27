@@ -4,6 +4,7 @@ using HRMatrix.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HRMatrix.Persistence.Migrations
 {
     [DbContext(typeof(HRMatrixDbContext))]
-    partial class HRMatrixDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241027125028_AddOrderSkillConfiguration")]
+    partial class AddOrderSkillConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1668,7 +1671,7 @@ namespace HRMatrix.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AssignedUserProfileId")
+                    b.Property<int>("AssignedUserProfileId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -1678,6 +1681,7 @@ namespace HRMatrix.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CustomerEmail")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -1694,8 +1698,7 @@ namespace HRMatrix.Persistence.Migrations
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("ExpectedCompletionDate")
-                        .IsRequired()
+                    b.Property<DateTime>("ExpectedCompletionDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Location")
@@ -3269,7 +3272,7 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "df605f20-70f3-41ea-a00d-04ed73ff12cd",
+                            ConcurrencyStamp = "a66ddfac-360b-45fe-a59b-9528af1cacd3",
                             DateOfBirth = new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user@mail.com",
                             EmailConfirmed = false,
@@ -3278,9 +3281,9 @@ namespace HRMatrix.Persistence.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@MAIL.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJxTxNHYTVyg8UrgWjyQuLiBCoLf47ABB6YZVgG6RW08sc5K86Iu5+uh8bSxZREDmw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECjhptntV15BR/JU5qIHbZqFkmbY62VnwqmVm/Eto5N8iJbKAtTlgFfD/1KVldUFMA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a62c235c-3afb-4bf9-9dad-db0793e4b533",
+                            SecurityStamp = "69423d88-7b00-483b-bd6f-3443c8622654",
                             TwoFactorEnabled = false,
                             UserName = "user"
                         },
@@ -3288,7 +3291,7 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d8b07577-e3e7-4642-a393-27f14372e569",
+                            ConcurrencyStamp = "7509ea0a-6e6a-4c0a-a3e9-5d794eadad24",
                             DateOfBirth = new DateTime(1985, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "superuser@mail.com",
                             EmailConfirmed = false,
@@ -3297,9 +3300,9 @@ namespace HRMatrix.Persistence.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERUSER@MAIL.COM",
                             NormalizedUserName = "SUPERUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJmnk15gNToM5aqXmrLdnXkfxpRbbOfrhZv4sI/neSPCIHWigtANFUprOpTjI/CMqw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDtsLW4E0OuiNULl/C63pWt7k5Bchij3Dqpw0HVjR9msMLbSLBkqpYhKXgcp7fHVkA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e1c978c2-12a5-494e-9759-a230ccbfdc5a",
+                            SecurityStamp = "713fefff-15f3-456b-b17a-6c85c9d7fc65",
                             TwoFactorEnabled = false,
                             UserName = "superuser"
                         },
@@ -3307,7 +3310,7 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "73cabefe-46c0-465d-9e0e-00ff660ba423",
+                            ConcurrencyStamp = "5d68440a-cd56-4065-94da-0d01f0a5033f",
                             DateOfBirth = new DateTime(1992, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "hr@mail.com",
                             EmailConfirmed = false,
@@ -3316,9 +3319,9 @@ namespace HRMatrix.Persistence.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "HR@MAIL.COM",
                             NormalizedUserName = "HR",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGcqZxWqLXWtNGKqKw4l8mYq2SwztxvSW4e1ickSJSFjGBkdNKEq8BQuiRCXC7WYTg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECjWbFRgZixRrIZXGSVpFEqRLtbL76uSajx6ORtBDf/BinXUwUOL4get3uJsr2ihWw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5ae67e20-f724-4283-8d05-ad82e802d645",
+                            SecurityStamp = "3d91ef1f-d8f4-43f2-aaff-4c4922aa19f4",
                             TwoFactorEnabled = false,
                             UserName = "hr"
                         },
@@ -3326,7 +3329,7 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 4,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fa5487a6-ea59-4437-a566-007700fd6a40",
+                            ConcurrencyStamp = "29a56005-63ff-4eac-b39a-b35b9909d7d9",
                             DateOfBirth = new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@mail.com",
                             EmailConfirmed = false,
@@ -3335,9 +3338,9 @@ namespace HRMatrix.Persistence.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEL5xOhtX7f+3sFM2lL1zI/LG2av8ZVP3iOvsbb2NEFiizAv+crrbSq1SemtSuXKDXA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGD1idsW+UvjZRsTFaPsHhw1lr6evSgmNqkrYGViqmxZknF40cy4GNTE71YTSIuVnQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "33cfe581-5232-48e6-afc4-14861455b786",
+                            SecurityStamp = "4eab8c69-910a-4d65-bddc-4a7dc5b1186c",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -3512,7 +3515,8 @@ namespace HRMatrix.Persistence.Migrations
                     b.HasOne("HRMatrix.Domain.Entities.UserProfile", "AssignedUserProfile")
                         .WithMany()
                         .HasForeignKey("AssignedUserProfileId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("AssignedUserProfile");
                 });

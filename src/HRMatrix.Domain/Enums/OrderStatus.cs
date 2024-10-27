@@ -5,5 +5,6 @@ public enum OrderStatus
     Pending,
     InProgress,
     Completed,
-    Canceled
+    Canceled,
+    NotAssigned
 }

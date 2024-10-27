@@ -49,7 +49,7 @@ public static class AddServices
         });
 
         services.AddAuthorization();
-        services.AddSingleton(new JwtTokenGenerator(key, issuer, audience));
+        services.AddSingleton<JwtTokenGenerator>();
         services.AddScoped<IAuthService, AuthService>();
 
         return services;

@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using HRMatrix.IdentityService.DTOs;
 using HRMatrix.IdentityService.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace HRMatrix.Application.Services;
@@ -13,12 +14,14 @@ public class JwtTokenGenerator
     public string Key { get; }
     private readonly string _issuer;
     private readonly string _audience;
+    private readonly int _accessTokenLifetimeMinutes;
 
-    public JwtTokenGenerator(string key, string issuer, string audience)
+    public JwtTokenGenerator(IConfiguration configuration)
     {
-        Key = key;
-        _issuer = issuer;
-        _audience = audience;
+        Key = configuration["Jwt:Key"];
+        _issuer = configuration["Jwt:Issuer"];
+        _audience = configuration["Jwt:Audience"];
+        _accessTokenLifetimeMinutes = configuration.GetValue<int>("Jwt:AccessTokenLifetimeMinutes");
     }
 
     public AuthResultDto GenerateTokens(ApplicationUser user, IEnumerable<string> userRoles)
@@ -54,7 +57,7 @@ public class JwtTokenGenerator
             issuer: _issuer,
             audience: _audience,
             claims: claims,
-            expires: DateTime.Now.AddMinutes(30),
+            expires: DateTime.Now.AddMinutes(_accessTokenLifetimeMinutes),
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
@@ -70,9 +73,8 @@ public class JwtTokenGenerator
             Subject = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Name, user.UserName),
-                ///new Claim(ClaimTypes.NameIdentifier, user.Id)
             }),
-            Expires = DateTime.UtcNow.AddDays(7), // Срок действия RefreshToken
+            Expires = DateTime.UtcNow.AddDays(7),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 

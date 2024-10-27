@@ -63,15 +63,15 @@ public class OrdersController : ControllerBase
         var user = await _userManager.FindByNameAsync(userName);
         if (user == null)
             return NotFound("User not found");
-        
+
         var createdOrderId = await _orderService.CreateOrderAsync(orderDto, user.Id);
         return CreatedAtAction(nameof(GetOrderById), new { id = createdOrderId }, createdOrderId);
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateOrder(int id, [FromBody] UpdateOrderDto orderDto)
+    [HttpPut]
+    public async Task<IActionResult> UpdateOrder([FromBody] UpdateOrderDto orderDto)
     {
-        if (orderDto == null || orderDto.Id != id)
+        if (orderDto == null)
         {
             return BadRequest("Invalid order data.");
         }
