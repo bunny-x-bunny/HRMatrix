@@ -46,6 +46,10 @@ namespace HRMatrix.Persistence.Contexts
 
         public DbSet<Order> Orders { get; set; }
 
+        public DbSet<WorkType> WorkTypes { get; set; }
+
+        public DbSet<WorkTypeTranslation> WorkTypeTranslations { get; set; }
+
         public HRMatrixDbContext(DbContextOptions<HRMatrixDbContext> options) : base(options)
         {
         }
