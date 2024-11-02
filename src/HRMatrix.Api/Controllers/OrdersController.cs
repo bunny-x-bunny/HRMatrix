@@ -115,4 +115,15 @@ public class OrdersController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetOrders(
+        [FromQuery] List<int> categoryIds,
+        [FromQuery] List<int> specializationIds,
+        [FromQuery] string workType,
+        [FromQuery] string location)
+    {
+        var orders = await _orderService.GetFilteredOrdersAsync(categoryIds, specializationIds, workType, location);
+        return Ok(orders);
+    }
 }
