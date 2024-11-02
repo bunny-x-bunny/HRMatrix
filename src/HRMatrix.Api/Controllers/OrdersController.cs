@@ -22,6 +22,7 @@ public class OrdersController : ControllerBase
         _userManager = userManager;
     }
 
+
     [HttpGet("my-orders")]
     public async Task<IActionResult> GetMyOrders()
     {
@@ -36,7 +37,25 @@ public class OrdersController : ControllerBase
         var orders = await _orderService.GetOrdersByUserIdAsync(user.Id);
         return Ok(orders);
     }
-    
+
+    [HttpPost("{orderId}/respond")]
+    public async Task<IActionResult> RespondToOrder(int orderId)
+    {
+        var userName = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userName))
+            return NotFound("User not found");
+
+        var user = await _userManager.FindByNameAsync(userName);
+        if (user == null)
+            return NotFound("User not found");
+
+        var responseId = await _orderService.RespondToOrderAsync(orderId, user.Id);
+        if (responseId == 0)
+            return NotFound("Order not found or already responded");
+
+        return Ok(responseId);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetOrderById(int id)
     {

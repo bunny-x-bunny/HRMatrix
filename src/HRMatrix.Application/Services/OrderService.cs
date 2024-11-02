@@ -21,6 +21,30 @@ public class OrderService : IOrderService
         _mapper = mapper;
     }
 
+    public async Task<int> RespondToOrderAsync(int orderId, int userId)
+    {
+        var order = await _context.Orders.FindAsync(orderId);
+        if (order == null) return 0;
+        
+        var existingResponse = await _context.OrderResponses
+            .FirstOrDefaultAsync(r => r.OrderId == orderId && r.UserId == userId);
+        if (existingResponse != null)
+        {
+            return existingResponse.Id;
+        }
+        
+        var response = new OrderResponse
+        {
+            OrderId = orderId,
+            UserId = userId,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _context.OrderResponses.Add(response);
+        await _context.SaveChangesAsync();
+        return response.Id;
+    }
+
     public async Task<List<OrderDto>> GetOrdersByUserIdAsync(int userId)
     {
         var orders = await _context.Orders
