@@ -34,7 +34,6 @@ public class OrderService : IOrderService
         {
             Id = order.Id,
             Title = order.Title,
-            //ExpectedCompletionDate = order.ExpectedCompletionDate,
             PaymentAmount = order.PaymentAmount,
             Description = order.Description,
             CustomerEmail = order.CustomerEmail,
@@ -43,8 +42,7 @@ public class OrderService : IOrderService
             Status = order.Status,
             CreatedByUserId = order.CreatedByUserId,
             AssignedUserProfileId = order.AssignedUserProfileId,
-            Location = order.Location,
-            //SkillIds = order.OrderSkills.Select(os => os.SkillId).ToList()
+            Location = order.Location
         }).ToList();
 
         return orderDtos;
