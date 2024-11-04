@@ -138,14 +138,14 @@ public class UserProfileController : ControllerBase
     }
 
     [HttpGet("search")]
-    public async Task<IActionResult> SearchUserProfiles([FromQuery] string query, int limit = 10)
+    public async Task<IActionResult> SearchUserProfiles([FromQuery] string query, int limit = 10, [FromQuery] int? categoryId = null, [FromQuery] int? specialtyId = null, [FromQuery] int? locationId = null, [FromQuery] int? workTypeId = null)
     {
-        if (string.IsNullOrWhiteSpace(query))
+        if (string.IsNullOrWhiteSpace(query) && categoryId == null && specialtyId == null && locationId == null && workTypeId == null)
         {
-            return BadRequest("Query parameter cannot be empty.");
+            return BadRequest("At least one search parameter must be provided.");
         }
 
-        var profiles = await _userProfileService.SearchUserProfilesAsync(query, limit);
+        var profiles = await _userProfileService.SearchUserProfilesAsync(query, limit, categoryId, specialtyId, locationId, workTypeId);
         return Ok(profiles);
     }
 }

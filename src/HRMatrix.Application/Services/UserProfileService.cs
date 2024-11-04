@@ -263,15 +263,22 @@ public class UserProfileService : IUserProfileService
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<UserProfileSuggestionDto>> SearchUserProfilesAsync(string query, int limit)
+    public async Task<List<UserProfileSuggestionDto>> SearchUserProfilesAsync(string query, int limit, int? categoryId, int? specialtyId, int? locationId, int? workTypeId)
     {
-        var tokens = query.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+        var tokens = string.IsNullOrWhiteSpace(query) ? new string[0] : query.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
-        var profiles = await _context.UserProfiles.AsNoTracking()
-            .Where(up => tokens.All(e =>
+        var profilesQuery = _context.UserProfiles.AsNoTracking().Where(up =>
+            (tokens.Length == 0 || tokens.All(e =>
                 EF.Functions.Like(up.FirstName, "%" + e + "%") ||
                 EF.Functions.Like(up.LastName, "%" + e + "%")
-            ))
+            )) &&
+            (categoryId == null || up.UserProfileCompetencies.Any(c => c.Competency.Id == categoryId)) &&
+            (specialtyId == null || up.UserProfileSkills.Any(s => s.Skill.Id == specialtyId)) &&
+            (locationId == null || up.CityId == locationId) &&
+            (workTypeId == null || up.UserProfileWorkTypes.Any(wt => wt.WorkType.Id == workTypeId))
+        );
+
+        var profiles = await profilesQuery
             .Select(up => new UserProfileSuggestionDto
             {
                 Id = up.Id,
