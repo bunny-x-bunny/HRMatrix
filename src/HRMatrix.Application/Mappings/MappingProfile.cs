@@ -19,6 +19,7 @@ using HRMatrix.Application.DTOs.Specialization;
 using HRMatrix.Application.DTOs.WorkType;
 using HRMatrix.Application.DTOs.Country;
 using HRMatrix.Application.DTOs;
+using HRMatrix.Application.DTOs.City;
 
 public class MappingProfile : Profile
 {
@@ -308,6 +309,30 @@ public class MappingProfile : Profile
 
         CreateMap<UpdateCountryTranslationDto, CountryTranslation>()
             .ForMember(dest => dest.CountryId, opt => opt.Ignore())
+            .ReverseMap();
+
+        // Маппинг для City и CityDto
+        CreateMap<City, CityDto>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+            .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country))
+            .ReverseMap();
+
+        CreateMap<CityTranslation, CityTranslationDto>().ReverseMap();
+
+        CreateMap<CreateCityDto, City>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+            .ReverseMap();
+
+        CreateMap<CreateCityTranslationDto, CityTranslation>()
+            .ForMember(dest => dest.CityId, opt => opt.Ignore())
+            .ReverseMap();
+
+        CreateMap<UpdateCityDto, City>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+            .ReverseMap();
+
+        CreateMap<UpdateCityTranslationDto, CityTranslation>()
+            .ForMember(dest => dest.CityId, opt => opt.Ignore())
             .ReverseMap();
     }
 }

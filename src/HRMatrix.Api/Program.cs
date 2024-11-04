@@ -2,6 +2,7 @@
 using HRMatrix.Application.Services.Directions;
 using HRMatrix.Application.Services.Interfaces.Directions;
 using HRMatrix.Application.Services.Interfaces;
+using HRMatrix.Domain.Entities;
 using HRMatrix.IdentityService;
 using HRMatrix.Persistence;
 using HRMatrix.Persistence.Contexts;
@@ -71,6 +72,7 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ISpecializationService, SpecializationService>();
 builder.Services.AddScoped<IWorkTypeService, WorkTypeService>();
 builder.Services.AddScoped<ICountryService, CountryService>();
+builder.Services.AddScoped<ICityService, CityService>();
 
 
 #endregion

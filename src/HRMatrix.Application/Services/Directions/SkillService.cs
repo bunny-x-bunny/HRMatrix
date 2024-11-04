@@ -22,8 +22,8 @@ namespace HRMatrix.Application.Services.Directions
         {
             var skills = await _context.Skills
                 .Include(s => s.Translations)
-                .Include(s => s.Specialization) // Включаем информацию о специализации
-                .ThenInclude(sp => sp.Translations) // Включаем переводы специализации
+                .Include(s => s.Specialization)
+                .ThenInclude(sp => sp.Translations)
                 .ToListAsync();
             return _mapper.Map<List<SkillDto>>(skills);
         }
@@ -40,7 +40,6 @@ namespace HRMatrix.Application.Services.Directions
 
         public async Task<int> CreateSkillAsync(CreateSkillDto skillDto)
         {
-            // Проверка на существование специализации
             var specialization = await _context.Specializations.FindAsync(skillDto.SpecializationId);
             if (specialization == null)
             {
