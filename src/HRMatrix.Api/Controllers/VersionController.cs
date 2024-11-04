@@ -1,16 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HRMatrix.Persistence.Contexts;
+using Microsoft.AspNetCore.Mvc;
 
-namespace HRMatrix.Api.Controllers
+namespace HRMatrix.Api.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class VersionController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class VersionController : ControllerBase
+    private readonly HRMatrixDbContext _context;
+
+    public VersionController(HRMatrixDbContext context)
     {
-        [HttpGet]
-        public IActionResult GetVersion()
-        {
-            var version = "1.0.6";
-            return Ok(version);
-        }
+        _context = context;
     }
+
+    [HttpGet]
+    public IActionResult GetVersion()
+    {
+        var version = "1.0.7";
+        return Ok(version);
+    }
+
+    [HttpGet("CheckConnection")]
+    public IActionResult TestDbConnection() => _context.Database.CanConnect() ? Ok("OK") : Ok("Error");
 }

@@ -52,6 +52,14 @@ namespace HRMatrix.Persistence.Contexts
 
         public DbSet<OrderResponse> OrderResponses { get; set; }
 
+        public DbSet<Country> Countries { get; set; }
+
+        public DbSet<City> Cities { get; set; }
+
+        public DbSet<CountryTranslation> CountryTranslations { get; set; }
+
+        public DbSet<CityTranslation> CityTranslations { get; set; }
+
         public HRMatrixDbContext(DbContextOptions<HRMatrixDbContext> options) : base(options)
         {
         }
