@@ -26,5 +26,11 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
 
         builder.Property(up => up.VideoPath)
             .HasMaxLength(255);
+
+        builder.HasOne(up => up.City)
+            .WithMany()
+            .HasForeignKey(up => up.CityId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false);
     }
 }

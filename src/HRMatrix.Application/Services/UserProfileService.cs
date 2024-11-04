@@ -48,6 +48,11 @@ public class UserProfileService : IUserProfileService
             .Include(x => x.UserProfileCompetencies)
                 .ThenInclude(x => x.Competency)
                 .ThenInclude(x => x.Translations)
+            .Include(x => x.City)
+                .ThenInclude(city => city.Country)
+                .ThenInclude(country => country.Translations)
+            .Include(x => x.City)
+                .ThenInclude(city => city.Translations)
             .ToListAsync();
 
         var userProfilesDto = _mapper.Map<List<UserProfileDto>>(profiles);
@@ -117,6 +122,11 @@ public class UserProfileService : IUserProfileService
             .Include(x => x.UserProfileCompetencies)
                 .ThenInclude(x => x.Competency)
                 .ThenInclude(x => x.Translations)
+            .Include(x => x.City)
+                .ThenInclude(city => city.Country)
+                .ThenInclude(country => country.Translations)
+            .Include(x => x.City)
+                .ThenInclude(city => city.Translations)
             .FirstOrDefaultAsync(up => up.Id == id);
 
         if (profile == null) return null;
@@ -179,6 +189,7 @@ public class UserProfileService : IUserProfileService
                 .ThenInclude(x => x.Language)
             .Include(x => x.UserProfileCompetencies)
                 .ThenInclude(x => x.Competency)
+            .Include(x=>x.City)
             .FirstOrDefaultAsync(up => up.Id == userProfileDto.Id);
 
         if (userProfile == null)

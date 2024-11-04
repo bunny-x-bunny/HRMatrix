@@ -1,4 +1,5 @@
-﻿using HRMatrix.Application.DTOs.FamilyStatus;
+﻿using HRMatrix.Application.DTOs.City;
+using HRMatrix.Application.DTOs.FamilyStatus;
 using HRMatrix.Application.DTOs.UserProfileCompetency;
 using HRMatrix.Application.DTOs.UserProfileEducation;
 using HRMatrix.Application.DTOs.UserProfileSkills;
@@ -11,6 +12,7 @@ public class UserProfileDto : UserProfileBaseDto
 {
     public int Id { get; set; }
     public FamilyStatusDto FamilyStatus { get; set; }
+    public CityDto City { get; set; }
     public List<UserProfileEducationResponse> UserEducations { get; set; }
     public List<UserProfileSkillResponse> UserProfileSkills { get; set; }
     public List<WorkExperienceResponseDto> WorkExperiences { get; set; }
