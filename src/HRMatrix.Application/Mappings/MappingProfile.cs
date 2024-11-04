@@ -20,6 +20,7 @@ using HRMatrix.Application.DTOs.WorkType;
 using HRMatrix.Application.DTOs.Country;
 using HRMatrix.Application.DTOs;
 using HRMatrix.Application.DTOs.City;
+using HRMatrix.Application.DTOs.UserProfileWorkType;
 
 public class MappingProfile : Profile
 {
@@ -32,7 +33,8 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.UserProfileSkills, opt => opt.MapFrom(src => src.UserProfileSkills))
             .ForMember(dest => dest.WorkExperiences, opt => opt.MapFrom(src => src.WorkExperiences))
             .ForMember(dest => dest.UserProfileCompetencies, opt => opt.MapFrom(src => src.Competencies))
-            .ForMember(dest => dest.UserProfileLanguages, opt => opt.MapFrom(src => src.Languages));
+            .ForMember(dest => dest.UserProfileLanguages, opt => opt.MapFrom(src => src.Languages))
+            .ForMember(dest => dest.UserProfileWorkTypes, opt => opt.MapFrom(src => src.WorkTypes));
             
         // Маппинг для обновления UserProfile
         CreateMap<UpdateUserProfileDto, UserProfile>()
@@ -42,6 +44,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.WorkExperiences, opt => opt.MapFrom(src => src.WorkExperiences))
             .ForMember(dest => dest.UserProfileLanguages, opt => opt.MapFrom(src => src.Languages))
             .ForMember(dest => dest.UserProfileCompetencies, opt => opt.MapFrom(src => src.Competencies))
+            .ForMember(dest => dest.UserProfileWorkTypes, opt => opt.MapFrom(src => src.WorkTypes))
             .ReverseMap();
 
         // Маппинг для UserProfile и FamilyStatus
@@ -333,6 +336,21 @@ public class MappingProfile : Profile
 
         CreateMap<UpdateCityTranslationDto, CityTranslation>()
             .ForMember(dest => dest.CityId, opt => opt.Ignore())
+            .ReverseMap();
+
+        // Mapping for UserProfileWorkType and related DTOs
+        CreateMap<UserProfileWorkType, UserProfileWorkTypeResponse>()
+            .ForMember(dest => dest.WorkTypeId, opt => opt.MapFrom(src => src.WorkTypeId))
+            .ForMember(dest => dest.WorkTypeName, opt => opt.MapFrom(src => src.WorkType.Name))
+            .ReverseMap();
+
+        CreateMap<CreateUserProfileWorkTypeRequest, UserProfileWorkType>()
+            .ForMember(dest => dest.UserProfileId, opt => opt.Ignore())
+            .ForMember(dest => dest.WorkTypeId, opt => opt.MapFrom(src => src.WorkTypeId))
+            .ReverseMap();
+
+        CreateMap<CreateUserProfileWorkTypesRequest, UserProfileWorkType>()
+            .ForMember(dest => dest.UserProfileId, opt => opt.MapFrom(src => src.UserProfileId))
             .ReverseMap();
     }
 }

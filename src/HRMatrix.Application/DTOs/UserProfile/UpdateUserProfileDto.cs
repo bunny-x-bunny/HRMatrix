@@ -3,6 +3,7 @@ using HRMatrix.Application.DTOs.UserProfileCompetency;
 using HRMatrix.Application.DTOs.UserProfileEducation;
 using HRMatrix.Application.DTOs.UserProfileSkills;
 using HRMatrix.Application.DTOs.UserProfilesLanguages;
+using HRMatrix.Application.DTOs.UserProfileWorkType;
 using HRMatrix.Application.DTOs.WorkExperiences;
 
 namespace HRMatrix.Application.DTOs.UserProfile;
@@ -22,6 +23,8 @@ public class UpdateUserProfileDto : UserProfileBaseDto
     public List<CreateWorkExperienceNoIdDto> WorkExperiences { get; set; }
 
     public List<CreateUserProfileLanguageRequest> Languages { get; set; }
+
+    public List<CreateUserProfileWorkTypeRequest> WorkTypes { get; set; }
 
     public List<CreateUserProfileCompetencyRequest> Competencies { get; set; }
 }

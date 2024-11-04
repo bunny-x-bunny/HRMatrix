@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using HRMatrix.Application.DTOs.Competency;
 using HRMatrix.Application.DTOs.UserProfileCompetency;
 using HRMatrix.Application.DTOs.Specialization;
+using HRMatrix.Application.DTOs.UserProfileWorkType;
 
 namespace HRMatrix.Application.Services;
 
@@ -53,6 +54,8 @@ public class UserProfileService : IUserProfileService
                 .ThenInclude(country => country.Translations)
             .Include(x => x.City)
                 .ThenInclude(city => city.Translations)
+            .Include(x => x.UserProfileWorkTypes)
+                .ThenInclude(wt => wt.WorkType)
             .ToListAsync();
 
         var userProfilesDto = _mapper.Map<List<UserProfileDto>>(profiles);
@@ -94,10 +97,19 @@ public class UserProfileService : IUserProfileService
                     ProficiencyLevel = c.ProficiencyLevel,
                     Translations = _mapper.Map<List<CompetencyTranslationDto>>(c.Competency.Translations)
                 }).ToList();
+
+            userProfile.WorkTypes = profiles
+                .First(p => p.Id == userProfile.Id)
+                .UserProfileWorkTypes.Select(wt => new UserProfileWorkTypeResponse
+                {
+                    WorkTypeId = wt.WorkTypeId,
+                    WorkTypeName = wt.WorkType.Name
+                }).ToList();
         }
 
         return userProfilesDto;
     }
+
 
     public async Task<UserProfileDto> GetUserProfileByIdAsync(int id)
     {
@@ -127,6 +139,8 @@ public class UserProfileService : IUserProfileService
                 .ThenInclude(country => country.Translations)
             .Include(x => x.City)
                 .ThenInclude(city => city.Translations)
+            .Include(x => x.UserProfileWorkTypes)
+                .ThenInclude(wt => wt.WorkType)
             .FirstOrDefaultAsync(up => up.Id == id);
 
         if (profile == null) return null;
@@ -163,8 +177,15 @@ public class UserProfileService : IUserProfileService
             Translations = _mapper.Map<List<CompetencyTranslationDto>>(c.Competency.Translations)
         }).ToList();
 
+        userProfileDto.WorkTypes = profile.UserProfileWorkTypes.Select(wt => new UserProfileWorkTypeResponse
+        {
+            WorkTypeId = wt.WorkTypeId,
+            WorkTypeName = wt.WorkType.Name
+        }).ToList();
+
         return userProfileDto;
     }
+
 
     public async Task<int> CreateUserProfileAsync(CreateUserProfileDto userProfileDto, int userId)
     {
@@ -189,7 +210,9 @@ public class UserProfileService : IUserProfileService
                 .ThenInclude(x => x.Language)
             .Include(x => x.UserProfileCompetencies)
                 .ThenInclude(x => x.Competency)
-            .Include(x=>x.City)
+            .Include(x => x.City)
+            .Include(x => x.UserProfileWorkTypes)
+                .ThenInclude(x => x.WorkType)
             .FirstOrDefaultAsync(up => up.Id == userProfileDto.Id);
 
         if (userProfile == null)
@@ -202,13 +225,15 @@ public class UserProfileService : IUserProfileService
         userProfile.WorkExperiences.Clear();
         userProfile.UserProfileLanguages.Clear();
         userProfile.UserProfileCompetencies.Clear();
+        userProfile.UserProfileWorkTypes.Clear();
 
         _mapper.Map(userProfileDto.UserEducations, userProfile.UserEducations);
         _mapper.Map(userProfileDto.UserProfileSkills, userProfile.UserProfileSkills);
         _mapper.Map(userProfileDto.WorkExperiences, userProfile.WorkExperiences);
         _mapper.Map(userProfileDto.Languages, userProfile.UserProfileLanguages);
         _mapper.Map(userProfileDto.Competencies, userProfile.UserProfileCompetencies);
-        
+        _mapper.Map(userProfileDto.WorkTypes, userProfile.UserProfileWorkTypes);
+
         await _context.SaveChangesAsync();
 
         var updatedProfile = await GetUserProfileByIdAsync(userProfile.Id);
