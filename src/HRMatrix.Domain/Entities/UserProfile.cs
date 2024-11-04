@@ -18,6 +18,8 @@ public class UserProfile
 
     public ICollection<WorkExperience> WorkExperiences { get; set; }
 
+    public ICollection<UserProfileWorkType> UserProfileWorkTypes { get; set; }
+
     public ICollection<UserProfileCompetency> UserProfileCompetencies { get; set; }
 
     public FamilyStatus FamilyStatus { get; set; }
