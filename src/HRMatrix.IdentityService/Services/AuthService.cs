@@ -88,6 +88,17 @@ public class AuthService : IAuthService
         };
     }
 
+    public async Task<IdentityResult> ChangePasswordAsync(ChangePasswordDto changePasswordDto)
+    {
+        var user = await _userManager.FindByIdAsync(changePasswordDto.UserId);
+        if (user == null)
+        {
+            return IdentityResult.Failed(new IdentityError { Description = "User not found." });
+        }
+
+        return await _userManager.ChangePasswordAsync(user, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+    }
+
     private string GenerateRefreshToken(ApplicationUser user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();

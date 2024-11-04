@@ -64,4 +64,16 @@ public class AuthController : ControllerBase
 
         return Unauthorized(new { Message = "Invalid refresh token." });
     }
+
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword(ChangePasswordDto changePasswordDto)
+    {
+        var result = await _authService.ChangePasswordAsync(changePasswordDto);
+        if (result.Succeeded)
+        {
+            return Ok(new { Message = "Password changed successfully." });
+        }
+
+        return BadRequest(new { Message = "Password change failed.", Errors = result.Errors });
+    }
 }
