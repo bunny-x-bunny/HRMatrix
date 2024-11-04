@@ -9,6 +9,7 @@ public class CreateOrderDto
     public string? CustomerEmail { get; set; }
     public string? CustomerPhone { get; set; }
     public int? AssignedUserProfileId { get; set; }
-    public string Location { get; set; }
+    public int? CityId { get; set; }
     public List<int> SkillIds { get; set; }
+    public List<int> WorkTypeIds { get; set; }
 }

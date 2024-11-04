@@ -40,5 +40,16 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .WithMany()
             .HasForeignKey(o => o.AssignedUserProfileId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(o => o.City)
+            .WithMany()
+            .HasForeignKey(o => o.CityId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasMany(o => o.OrderWorkTypes)
+            .WithOne(owt => owt.Order)
+            .HasForeignKey(owt => owt.OrderId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

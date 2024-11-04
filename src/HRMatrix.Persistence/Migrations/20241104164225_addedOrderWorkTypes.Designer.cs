@@ -4,6 +4,7 @@ using HRMatrix.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HRMatrix.Persistence.Migrations
 {
     [DbContext(typeof(HRMatrixDbContext))]
-    partial class HRMatrixDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241104164225_addedOrderWorkTypes")]
+    partial class addedOrderWorkTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2576,9 +2579,6 @@ namespace HRMatrix.Persistence.Migrations
                     b.Property<int?>("AssignedUserProfileId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CityId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -2606,6 +2606,10 @@ namespace HRMatrix.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("PaymentAmount")
                         .HasColumnType("decimal(18,2)");
 
@@ -2620,8 +2624,6 @@ namespace HRMatrix.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AssignedUserProfileId");
-
-                    b.HasIndex("CityId");
 
                     b.ToTable("Orders");
                 });
@@ -4256,7 +4258,7 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "aaecc633-7e90-4fec-88ae-1a9701b1117a",
+                            ConcurrencyStamp = "978ba10f-291e-4e8c-ba2a-8d57f3f24dfa",
                             DateOfBirth = new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user@mail.com",
                             EmailConfirmed = false,
@@ -4265,9 +4267,9 @@ namespace HRMatrix.Persistence.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@MAIL.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPB6l8qibYohTLnnM9P8fHEaOBBZMMGrMrKgrm5Jd1stGTA5/Vs+Dmh7FM2/FfR8wA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBTsyoSdpZ43OlI58DKrybZZVeBEMkiFq9p14oq7yQs7AdFxjUPpDIpeIQSrtG5HJw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7b66fa4a-6668-4ff8-8151-f8f8a227508a",
+                            SecurityStamp = "527a34dc-ac3c-4951-b05d-8f8de37604cd",
                             TwoFactorEnabled = false,
                             UserName = "user"
                         },
@@ -4275,7 +4277,7 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b9ac5b9b-1b0e-4b57-a741-8d69f7da8a70",
+                            ConcurrencyStamp = "9dd98af0-2d5e-4303-8e6a-abc27343fb8b",
                             DateOfBirth = new DateTime(1985, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "superuser@mail.com",
                             EmailConfirmed = false,
@@ -4284,9 +4286,9 @@ namespace HRMatrix.Persistence.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERUSER@MAIL.COM",
                             NormalizedUserName = "SUPERUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDfN++MNX3YDoU6KUU09fAh+zXld5TOoNZpN2aLdU+aeOBMUbS0YLkMuykU0+0rspQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHhtjLYRF7I370sHWwn1uMAboDAq83McE2wnHKq0r5D2JMahDZKBxPr7Y1cwzHXMAA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9cdf26d7-f73e-4cda-9ee0-6a46834e2752",
+                            SecurityStamp = "f7228a57-c604-45b9-8cc2-a2606fc348f8",
                             TwoFactorEnabled = false,
                             UserName = "superuser"
                         },
@@ -4294,7 +4296,7 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3ea73183-eac3-4a6b-9032-13f17b5df33b",
+                            ConcurrencyStamp = "fb8aa098-c99f-4dc9-9140-8e8950c0feea",
                             DateOfBirth = new DateTime(1992, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "hr@mail.com",
                             EmailConfirmed = false,
@@ -4303,9 +4305,9 @@ namespace HRMatrix.Persistence.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "HR@MAIL.COM",
                             NormalizedUserName = "HR",
-                            PasswordHash = "AQAAAAIAAYagAAAAEF5ePOpLg/y/A1xYRlKQKCrURrFQkqkWZXEooUlQ8amE0bOaScODJN+FTGOAiyxzdQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAu4Un8bLhyGjIA9TUQCj0M51jvW3dadDp12pmoRKi2n7oOo/mlAB/JCu8cBZcHQhw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3a975272-803c-4153-8e3f-fcb6e8145942",
+                            SecurityStamp = "4eb5c231-9f88-4227-9193-87bd73c4a5de",
                             TwoFactorEnabled = false,
                             UserName = "hr"
                         },
@@ -4313,7 +4315,7 @@ namespace HRMatrix.Persistence.Migrations
                         {
                             Id = 4,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "25bae6ae-fb82-40eb-8b3f-844f9c66e18d",
+                            ConcurrencyStamp = "2b40a617-8723-4296-a567-cb3861b27c58",
                             DateOfBirth = new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@mail.com",
                             EmailConfirmed = false,
@@ -4322,9 +4324,9 @@ namespace HRMatrix.Persistence.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJWOA3IMTEf6G0CKvAGoS2QtYaMxRpA2hnr4sq6xac3ENu406ZdexrKd307r6oBrhQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKQJyBpoboRWA++af/v3I9gvPRSxjoiCjCuDAZQ/CRfvCvtoE+Vbo8fmp1Tg7prOww==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3e90fc9c-046d-44b9-9a99-1db708306919",
+                            SecurityStamp = "d2628030-af08-4b0e-8bfa-8e0e6d5adc99",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -4534,14 +4536,7 @@ namespace HRMatrix.Persistence.Migrations
                         .HasForeignKey("AssignedUserProfileId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("HRMatrix.Domain.Entities.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("AssignedUserProfile");
-
-                    b.Navigation("City");
                 });
 
             modelBuilder.Entity("HRMatrix.Domain.Entities.OrderResponse", b =>

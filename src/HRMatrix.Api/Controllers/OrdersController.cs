@@ -120,10 +120,10 @@ public class OrdersController : ControllerBase
     public async Task<IActionResult> GetOrders(
         [FromQuery] List<int> categoryIds,
         [FromQuery] List<int> specializationIds,
-        [FromQuery] string workType,
-        [FromQuery] string location)
+        [FromQuery] List<int> workTypeIds,
+        [FromQuery] List<int> cityIds)
     {
-        var orders = await _orderService.GetFilteredOrdersAsync(categoryIds, specializationIds, workType, location);
+        var orders = await _orderService.GetFilteredOrdersAsync(categoryIds, specializationIds, workTypeIds, cityIds);
         return Ok(orders);
     }
 }

@@ -29,8 +29,12 @@ public class Order
     public int? AssignedUserProfileId { get; set; }
 
     public UserProfile? AssignedUserProfile { get; set; }
-    
-    public string Location { get; set; }
 
     public ICollection<OrderSkill> OrderSkills { get; set; }
+
+    public int? CityId { get; set; }
+
+    public City City { get; set; }
+
+    public ICollection<OrderWorkType> OrderWorkTypes { get; set; }
 }
