@@ -17,6 +17,8 @@ using HRMatrix.Application.DTOs.UserProfileCompetency;
 using HRMatrix.Application.DTOs.Order;
 using HRMatrix.Application.DTOs.Specialization;
 using HRMatrix.Application.DTOs.WorkType;
+using HRMatrix.Application.DTOs.Country;
+using HRMatrix.Application.DTOs;
 
 public class MappingProfile : Profile
 {
@@ -284,5 +286,28 @@ public class MappingProfile : Profile
         CreateMap<WorkTypeTranslation, WorkTypeTranslationDto>();
         CreateMap<CreateWorkTypeTranslationDto, WorkTypeTranslation>();
         CreateMap<UpdateWorkTypeTranslationDto, WorkTypeTranslation>();
+
+        // Маппинг для Country и CountryDto
+        CreateMap<Country, CountryDto>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+            .ReverseMap();
+
+        CreateMap<CountryTranslation, CountryTranslationDto>().ReverseMap();
+
+        CreateMap<CreateCountryDto, Country>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+            .ReverseMap();
+
+        CreateMap<CreateCountryTranslationDto, CountryTranslation>()
+            .ForMember(dest => dest.CountryId, opt => opt.Ignore())
+            .ReverseMap();
+
+        CreateMap<UpdateCountryDto, Country>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+            .ReverseMap();
+
+        CreateMap<UpdateCountryTranslationDto, CountryTranslation>()
+            .ForMember(dest => dest.CountryId, opt => opt.Ignore())
+            .ReverseMap();
     }
 }

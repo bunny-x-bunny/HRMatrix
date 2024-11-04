@@ -70,7 +70,7 @@ builder.Services.AddScoped<IUserProfileCompetencyService, UserProfileCompetencyS
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ISpecializationService, SpecializationService>();
 builder.Services.AddScoped<IWorkTypeService, WorkTypeService>();
-
+builder.Services.AddScoped<ICountryService, CountryService>();
 
 
 #endregion
