@@ -155,10 +155,13 @@ public class OrderService : IOrderService
     public async Task<List<OrderDto>> GetOrdersByUserIdAsync(int userId)
     {
         var orders = await _context.Orders
-            .Include(o => o.AssignedUserProfile)
             .Include(o => o.OrderSkills)
                 .ThenInclude(os => os.Skill)
                 .ThenInclude(s => s.Translations)
+            .Include(o => o.OrderSkills)
+                .ThenInclude(os => os.Skill)
+                .ThenInclude(s => s.Specialization)
+                .ThenInclude(spec => spec.Translations)
             .Include(o => o.OrderWorkTypes)
                 .ThenInclude(owt => owt.WorkType)
                 .ThenInclude(wt => wt.Translations)
