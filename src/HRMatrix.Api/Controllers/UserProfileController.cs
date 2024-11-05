@@ -43,7 +43,7 @@ public class UserProfileController : ControllerBase
         return Ok(profile);
     }
 
-    [HttpGet("api/MyProfiles")]
+    [HttpGet("MyProfiles")]
     public async Task<IActionResult> GetMyProfiles()
     {
         var userName = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
