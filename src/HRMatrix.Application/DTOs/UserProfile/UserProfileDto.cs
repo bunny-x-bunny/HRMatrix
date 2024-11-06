@@ -22,4 +22,11 @@ public class UserProfileDto : UserProfileBaseDto
     public List<UserProfileCompetencyResponse> Competencies { get; set; }
     public string ProfilePhotoPath { get; set; }
     public string VideoPath { get; set; }
+    public int EducationScore { get; set; }
+    public int FamilyStatusScore { get; set; }
+    public int AgeScore { get; set; }
+    public int LanguageScore { get; set; }
+    public int SkillScore { get; set; }
+    public int WorkScore { get; set; }
+    public int AllScore { get; set; }
 }

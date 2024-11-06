@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HRMatrix.Application.DTOs.City;
 using HRMatrix.Application.DTOs.EducationLevel;
 using HRMatrix.Application.DTOs.Skill;
 using HRMatrix.Application.DTOs.UserProfile;
@@ -9,9 +10,11 @@ using HRMatrix.Domain.Entities;
 using HRMatrix.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using HRMatrix.Application.DTOs.Competency;
+using HRMatrix.Application.DTOs.Country;
 using HRMatrix.Application.DTOs.UserProfileCompetency;
 using HRMatrix.Application.DTOs.Specialization;
 using HRMatrix.Application.DTOs.UserProfileWorkType;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HRMatrix.Application.Services;
 
@@ -24,6 +27,139 @@ public class UserProfileService : IUserProfileService
     {
         _context = context;
         _mapper = mapper;
+    }
+
+    private int CalculateEducationScore(UserProfileDto userProfileDto)
+    {
+        if (userProfileDto.UserEducations.Any(ue => ue.EducationLevelId is 1 or 3 or 4))
+            return 10;
+        return userProfileDto.UserEducations.Any(ue => ue.EducationLevelId == 2) ? 5 : 1;
+    }
+
+    private int CalculateFamilyStatusScore(UserProfileDto userProfileDto)
+    {
+        var familyStatus = userProfileDto.FamilyStatus;
+
+        if (familyStatus == null)
+        {
+            return 1; 
+        }
+
+        if (familyStatus.Id == 1)
+        {
+            return familyStatus.NumberOfChildren >= 2 ? 10 : 5;
+        }
+        else
+        {
+            return familyStatus.NumberOfChildren == 0 ? 1 : 5;
+        }
+    }
+
+    private int CalculateAgeScore(UserProfileDto userProfileDto)
+    {
+        var currentDate = DateTime.Now;
+        var age = currentDate.Year - userProfileDto.DateOfBirth.Year;
+        
+        if (userProfileDto.DateOfBirth.Date > currentDate.AddYears(-age)) age--;
+
+        return age switch
+        {
+            >= 30 and <= 55 => 10,
+            >= 27 and <= 57 => 5,
+            _ => 1
+        };
+    }
+    private int CalculateLanguageScore(UserProfileDto userProfileDto)
+    {
+        int languageCount = userProfileDto.Languages?.Count ?? 0;
+
+        return languageCount switch
+        {
+            >= 3 => 10,
+            2 => 6,
+            1 => 3,
+            _ => 0
+        };
+    }
+
+    private int CalculateSkillScore(UserProfileDto userProfileDto)
+    {
+        if (userProfileDto.UserProfileSkills == null || userProfileDto.UserProfileSkills.Count == 0)
+            return 0;
+        
+        var totalProficiency = userProfileDto.UserProfileSkills.Sum(skill => skill.ProficiencyLevel);
+        var averageProficiency = totalProficiency / userProfileDto.UserProfileSkills.Count;
+
+        return (int)Math.Round((decimal)averageProficiency);
+    }
+
+    public async Task<List<UserProfileSuggestionDto>> SearchUserProfilesAsync(string query, int limit, int? categoryId, int? specialtyId, int? locationId, int? workTypeId)
+    {
+        var tokens = string.IsNullOrWhiteSpace(query) ? new string[0] : query.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+        var profilesQuery = _context.UserProfiles
+            .Include(up => up.FamilyStatus)
+            .ThenInclude(fs => fs.MaritalStatus)
+            .ThenInclude(ms => ms.Translations)
+            .Include(up => up.UserEducations)
+            .ThenInclude(ue => ue.EducationLevel)
+            .ThenInclude(el => el.Translations)
+            .Include(x => x.UserProfileSkills)
+            .ThenInclude(x => x.Skill)
+            .ThenInclude(x => x.Translations)
+            .Include(x => x.UserProfileSkills)
+            .ThenInclude(x => x.Skill)
+            .ThenInclude(x => x.Specialization)
+            .ThenInclude(sp => sp.Translations)
+            .Include(x => x.WorkExperiences)
+            .Include(x => x.UserProfileLanguages)
+            .ThenInclude(x => x.Language)
+            .ThenInclude(x => x.Translations)
+            .Include(x => x.UserProfileCompetencies)
+            .ThenInclude(x => x.Competency)
+                .ThenInclude(x => x.Translations)
+            .Include(x => x.City)
+                .ThenInclude(city => city.Country)
+                .ThenInclude(country => country.Translations)
+            .Include(x => x.City)
+            .ThenInclude(city => city.Translations)
+            .Include(x => x.UserProfileWorkTypes)
+            .ThenInclude(wt => wt.WorkType).AsNoTracking().Where(up =>
+            (tokens.Length == 0 || tokens.All(e =>
+                EF.Functions.Like(up.FirstName, "%" + e + "%") ||
+                EF.Functions.Like(up.LastName, "%" + e + "%")
+            )) &&
+            (categoryId == null || up.UserProfileCompetencies.Any(c => c.Competency.Id == categoryId)) &&
+            (specialtyId == null || up.UserProfileSkills.Any(s => s.Skill.Id == specialtyId)) &&
+            (locationId == null || up.CityId == locationId) &&
+            (workTypeId == null || up.UserProfileWorkTypes.Any(wt => wt.WorkType.Id == workTypeId))
+        );
+
+        var profiles = await profilesQuery
+            .Select(up => new UserProfileSuggestionDto
+            {
+                Id = up.Id,
+                FullName = $"{up.FirstName} {up.LastName}",
+                UserProfileSkills = up
+                    .UserProfileSkills.Select(s => new UserProfileSkillResponse
+                    {
+                        SkillId = s.SkillId,
+                        SkillName = s.Skill.Name,
+                        ProficiencyLevel = s.ProficiencyLevel,
+                        Translations = _mapper.Map<List<SkillTranslationDto>>(s.Skill.Translations),
+                        Specialization = new SpecializationDto
+                        {
+                            Id = s.Skill.Specialization.Id,
+                            Name = s.Skill.Specialization.Name,
+                            Translations = _mapper.Map<List<SpecializationTranslationDto>>(s.Skill.Specialization.Translations)
+                        }
+                    }).ToList(),
+                City = _mapper.Map<CityDto>(up.City),
+            })
+            .Take(limit)
+            .ToListAsync();
+
+        return profiles;
     }
 
     public async Task<List<UserProfileDto>> GetAllUserProfilesAsync()
@@ -105,6 +241,15 @@ public class UserProfileService : IUserProfileService
                     WorkTypeId = wt.WorkTypeId,
                     WorkTypeName = wt.WorkType.Name
                 }).ToList();
+            userProfile.EducationScore = CalculateEducationScore(userProfile);
+            userProfile.FamilyStatusScore = CalculateFamilyStatusScore(userProfile);
+            userProfile.AgeScore = CalculateAgeScore(userProfile);
+            userProfile.LanguageScore = CalculateLanguageScore(userProfile);
+            userProfile.SkillScore = CalculateSkillScore(userProfile);
+            userProfile.WorkScore = 3;
+            userProfile.AllScore = (int)Math.Round((decimal)((userProfile.EducationScore +
+                                                             userProfile.FamilyStatusScore + userProfile.AgeScore
+                                                             + userProfile.LanguageScore + userProfile.SkillScore + userProfile.WorkScore) / 6));
         }
 
         return userProfilesDto;
@@ -182,7 +327,16 @@ public class UserProfileService : IUserProfileService
             WorkTypeId = wt.WorkTypeId,
             WorkTypeName = wt.WorkType.Name
         }).ToList();
-
+        
+        userProfileDto.EducationScore = CalculateEducationScore(userProfileDto);
+        userProfileDto.FamilyStatusScore = CalculateFamilyStatusScore(userProfileDto);
+        userProfileDto.AgeScore = CalculateAgeScore(userProfileDto);
+        userProfileDto.LanguageScore = CalculateLanguageScore(userProfileDto);
+        userProfileDto.SkillScore = CalculateSkillScore(userProfileDto);
+        userProfileDto.WorkScore = 3;
+        userProfileDto.AllScore = (int)Math.Round((decimal)((userProfileDto.EducationScore +
+                                                             userProfileDto.FamilyStatusScore + userProfileDto.AgeScore
+                                                             + userProfileDto.LanguageScore + userProfileDto.SkillScore + userProfileDto.WorkScore) / 6));
         return userProfileDto;
     }
 
@@ -263,32 +417,7 @@ public class UserProfileService : IUserProfileService
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<UserProfileSuggestionDto>> SearchUserProfilesAsync(string query, int limit, int? categoryId, int? specialtyId, int? locationId, int? workTypeId)
-    {
-        var tokens = string.IsNullOrWhiteSpace(query) ? new string[0] : query.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
-
-        var profilesQuery = _context.UserProfiles.AsNoTracking().Where(up =>
-            (tokens.Length == 0 || tokens.All(e =>
-                EF.Functions.Like(up.FirstName, "%" + e + "%") ||
-                EF.Functions.Like(up.LastName, "%" + e + "%")
-            )) &&
-            (categoryId == null || up.UserProfileCompetencies.Any(c => c.Competency.Id == categoryId)) &&
-            (specialtyId == null || up.UserProfileSkills.Any(s => s.Skill.Id == specialtyId)) &&
-            (locationId == null || up.CityId == locationId) &&
-            (workTypeId == null || up.UserProfileWorkTypes.Any(wt => wt.WorkType.Id == workTypeId))
-        );
-
-        var profiles = await profilesQuery
-            .Select(up => new UserProfileSuggestionDto
-            {
-                Id = up.Id,
-                FullName = $"{up.FirstName} {up.LastName}"
-            })
-            .Take(limit)
-            .ToListAsync();
-
-        return profiles;
-    }
+    
 
     public async Task<List<UserProfileDto>> GetUserProfileByAspNetUserId(int id)
     {
@@ -345,6 +474,16 @@ public class UserProfileService : IUserProfileService
                     ProficiencyLevel = c.ProficiencyLevel,
                     Translations = _mapper.Map<List<CompetencyTranslationDto>>(c.Competency.Translations)
                 }).ToList();
+
+            userProfile.EducationScore = CalculateEducationScore(userProfile);
+            userProfile.FamilyStatusScore = CalculateFamilyStatusScore(userProfile);
+            userProfile.AgeScore = CalculateAgeScore(userProfile);
+            userProfile.LanguageScore = CalculateLanguageScore(userProfile);
+            userProfile.SkillScore = CalculateSkillScore(userProfile);
+            userProfile.WorkScore = 3;
+            userProfile.AllScore = (int)Math.Round((decimal)((userProfile.EducationScore +
+                                                              userProfile.FamilyStatusScore + userProfile.AgeScore
+                                                              + userProfile.LanguageScore + userProfile.SkillScore + userProfile.WorkScore) / 6));
         }
 
         return userProfilesDto;
