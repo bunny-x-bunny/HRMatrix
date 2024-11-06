@@ -127,4 +127,46 @@ public class OrdersController : ControllerBase
         var orders = await _orderService.GetFilteredOrdersAsync(categoryIds, specializationIds, workTypeIds, cityIds);
         return Ok(orders);
     }
+
+    [HttpPost("{orderId}/review")]
+    public async Task<IActionResult> AddReviewToOrder(int orderId, [FromBody] AddReviewDto reviewDto)
+    {
+        if (reviewDto == null || reviewDto.Rating < 1 || reviewDto.Rating > 5)
+        {
+            return BadRequest("Invalid review data.");
+        }
+
+        var userName = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userName))
+            return NotFound("User not found");
+
+        var user = await _userManager.FindByNameAsync(userName);
+        if (user == null)
+            return NotFound("User not found");
+
+        var reviewId = await _orderService.AddReviewToOrderAsync(orderId, user.Id, reviewDto.Rating, reviewDto.ReviewText);
+        if (reviewId == 0)
+            return NotFound("Order not found");
+
+        return CreatedAtAction(nameof(GetOrderReviews), new { orderId }, reviewId);
+    }
+
+    [HttpGet("{orderId}/reviews")]
+    public async Task<IActionResult> GetOrderReviews(int orderId)
+    {
+        var reviews = await _orderService.GetReviewsByOrderIdAsync(orderId);
+        return Ok(reviews);
+    }
+
+    [HttpDelete("reviews/{reviewId}")]
+    public async Task<IActionResult> DeleteReview(int reviewId)
+    {
+        var result = await _orderService.DeleteReviewAsync(reviewId);
+        if (!result)
+        {
+            return NotFound("Review not found.");
+        }
+
+        return NoContent();
+    }
 }

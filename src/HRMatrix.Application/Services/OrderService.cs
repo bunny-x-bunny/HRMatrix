@@ -365,4 +365,51 @@ public class OrderService : IOrderService
         await _context.SaveChangesAsync();
         return true;
     }
+
+    public async Task<int> AddReviewToOrderAsync(int orderId, int userId, int rating, string reviewText)
+    {
+        var order = await _context.Orders.FindAsync(orderId);
+        if (order == null) return 0;
+
+        var review = new OrderReview
+        {
+            OrderId = orderId,
+            UserId = userId,
+            Rating = rating,
+            ReviewText = reviewText,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _context.OrderReviews.Add(review);
+        await _context.SaveChangesAsync();
+        return review.Id;
+    }
+
+    public async Task<List<OrderReviewDto>> GetReviewsByOrderIdAsync(int orderId)
+    {
+        var reviews = await _context.OrderReviews
+            .Where(r => r.OrderId == orderId)
+            .Select(r => new OrderReviewDto
+            {
+                Id = r.Id,
+                OrderId = r.OrderId,
+                UserId = r.UserId,
+                Rating = r.Rating,
+                ReviewText = r.ReviewText,
+                CreatedAt = r.CreatedAt
+            })
+            .ToListAsync();
+
+        return reviews;
+    }
+
+    public async Task<bool> DeleteReviewAsync(int reviewId)
+    {
+        var review = await _context.OrderReviews.FindAsync(reviewId);
+        if (review == null) return false;
+
+        _context.OrderReviews.Remove(review);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }
