@@ -47,7 +47,7 @@ public class OrderService : IOrderService
         return response.Id;
     }
 
-    public async Task<List<OrderDto>> GetFilteredOrdersAsync(
+    public async Task<List<OrderDto>> GetFilteredOrdersAsync(string titleQuery = null,
     List<int> categoryIds = null,
     List<int> specializationIds = null,
     List<int> workTypeIds = null,
@@ -67,6 +67,18 @@ public class OrderService : IOrderService
             .Include(o => o.City)
                 .ThenInclude(c => c.Translations)
             .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(titleQuery))
+        {
+            var tokens = titleQuery.ToUpper().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+            if (tokens.Length > 0)
+            {
+                foreach (var token in tokens)
+                {
+                    query = query.Where(o => EF.Functions.Like(o.Title.ToUpper(), $"%{token}%"));
+                }
+            }
+        }
 
         // Фильтрация по специализациям
         if (specializationIds != null && specializationIds.Any())
