@@ -117,6 +117,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> GetOrders(
         [FromQuery] List<int> categoryIds,
         [FromQuery] List<int> specializationIds,

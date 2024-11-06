@@ -17,7 +17,7 @@ public class VersionController : ControllerBase
     [HttpGet]
     public IActionResult GetVersion()
     {
-        var version = "1.0.9";
+        var version = "1.0.12";
         return Ok(version);
     }
 
