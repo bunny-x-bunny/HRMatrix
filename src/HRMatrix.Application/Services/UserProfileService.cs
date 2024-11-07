@@ -13,6 +13,8 @@ using HRMatrix.Application.DTOs.Competency;
 using HRMatrix.Application.DTOs.UserProfileCompetency;
 using HRMatrix.Application.DTOs.Specialization;
 using HRMatrix.Application.DTOs.UserProfileWorkType;
+using HRMatrix.Application.Settings;
+using Microsoft.Extensions.Options;
 
 namespace HRMatrix.Application.Services;
 
@@ -22,10 +24,11 @@ public class UserProfileService : IUserProfileService
     private readonly IMapper _mapper;
     private readonly string _baseUrl;
 
-    public UserProfileService(HRMatrixDbContext context, IMapper mapper)
+    public UserProfileService(HRMatrixDbContext context, IMapper mapper, IOptions<AppSettings> appSettings)
     {
         _context = context;
         _mapper = mapper;
+        _baseUrl = appSettings.Value.BaseUrl;
     }
 
     private int CalculateEducationScore(UserProfileDto userProfileDto)
@@ -235,12 +238,6 @@ public class UserProfileService : IUserProfileService
         {
             // Формируем полный URL для фотографий и видео
             var profile = profiles.First(p => p.Id == userProfile.Id);
-            userProfile.ProfilePhotoPath = !string.IsNullOrEmpty(profile.ProfilePhotoPath)
-                ? $"{_baseUrl}/{profile.ProfilePhotoPath}"
-                : null;
-            userProfile.VideoPath = !string.IsNullOrEmpty(profile.VideoPath)
-                ? $"{_baseUrl}/{profile.VideoPath}"
-                : null;
             userProfile.UserEducations = profiles
                 .First(p => p.Id == userProfile.Id)
                 .UserEducations.Select(ue => new UserProfileEducationResponse

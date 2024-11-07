@@ -8,6 +8,8 @@ using HRMatrix.Persistence;
 using HRMatrix.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using HRMatrix.Application.Settings;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,7 @@ builder.Services.AddCors();
 
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -59,6 +62,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IEducationLevelService, EducationLevelService>();
 builder.Services.AddScoped<IFileStorageService, FileStorageService>();
 builder.Services.AddScoped<IMaritalStatusService, MaritalStatusService>();
+
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IUserProfileEducationService, UserProfileEducationService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
