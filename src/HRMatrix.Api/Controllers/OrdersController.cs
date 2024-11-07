@@ -118,11 +118,13 @@ public class OrdersController : ControllerBase
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> GetOrders([FromQuery] string titleQuery,
-        [FromQuery] List<int> categoryIds,
-        [FromQuery] List<int> specializationIds,
-        [FromQuery] List<int> workTypeIds,
-        [FromQuery] List<int> cityIds)
+    public async Task<IActionResult> GetOrders([FromQuery] string titleQuery=null,
+        [FromQuery] List<int> categoryIds=null,
+        [FromQuery] List<int> specializationIds = null,
+        [FromQuery] List<int> workTypeIds = null,
+        [FromQuery] List<int> cityIds = null,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10)
     {
         var orders = await _orderService.GetFilteredOrdersAsync(titleQuery, categoryIds, specializationIds, workTypeIds, cityIds);
         return Ok(orders);

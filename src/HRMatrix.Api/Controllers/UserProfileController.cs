@@ -139,7 +139,7 @@ public class UserProfileController : ControllerBase
 
     [HttpGet("search")]
     [AllowAnonymous]
-    public async Task<IActionResult> SearchUserProfiles([FromQuery] string query = null, int limit = 10, [FromQuery] int? categoryId = null, [FromQuery] int? specialtyId = null, [FromQuery] int? locationId = null, [FromQuery] int? workTypeId = null)
+    public async Task<IActionResult> SearchUserProfiles([FromQuery] string query = null, int limit = 10, [FromQuery] List<int> categoryId = null, [FromQuery] List<int> specialtyId = null, [FromQuery] List<int> locationId = null, [FromQuery] List<int> workTypeId = null)
     {
         //if (string.IsNullOrWhiteSpace(query) && categoryId == null && specialtyId == null && locationId == null && workTypeId == null)
         //{

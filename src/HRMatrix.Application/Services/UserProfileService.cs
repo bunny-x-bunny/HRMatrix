@@ -10,11 +10,9 @@ using HRMatrix.Domain.Entities;
 using HRMatrix.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using HRMatrix.Application.DTOs.Competency;
-using HRMatrix.Application.DTOs.Country;
 using HRMatrix.Application.DTOs.UserProfileCompetency;
 using HRMatrix.Application.DTOs.Specialization;
 using HRMatrix.Application.DTOs.UserProfileWorkType;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HRMatrix.Application.Services;
 
@@ -22,6 +20,7 @@ public class UserProfileService : IUserProfileService
 {
     private readonly HRMatrixDbContext _context;
     private readonly IMapper _mapper;
+    private readonly string _baseUrl;
 
     public UserProfileService(HRMatrixDbContext context, IMapper mapper)
     {
@@ -93,78 +92,19 @@ public class UserProfileService : IUserProfileService
         return (int)Math.Round((decimal)averageProficiency);
     }
 
-    public async Task<List<UserProfileSuggestionDto>> SearchUserProfilesAsync(string query, int limit, int? categoryId, int? specialtyId, int? locationId, int? workTypeId)
+    public async Task<List<UserProfileSuggestionDto>> SearchUserProfilesAsync(
+     string query = null,
+     int limit = 10,
+     List<int> categoryIds = null,
+     List<int> specialtyIds = null,
+     List<int> locationIds = null,
+     List<int> workTypeIds = null)
     {
-        var tokens = string.IsNullOrWhiteSpace(query) ? new string[0] : query.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+        var tokens = string.IsNullOrWhiteSpace(query)
+            ? new string[0]
+            : query.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
         var profilesQuery = _context.UserProfiles
-            .Include(up => up.FamilyStatus)
-            .ThenInclude(fs => fs.MaritalStatus)
-            .ThenInclude(ms => ms.Translations)
-            .Include(up => up.UserEducations)
-            .ThenInclude(ue => ue.EducationLevel)
-            .ThenInclude(el => el.Translations)
-            .Include(x => x.UserProfileSkills)
-            .ThenInclude(x => x.Skill)
-            .ThenInclude(x => x.Translations)
-            .Include(x => x.UserProfileSkills)
-            .ThenInclude(x => x.Skill)
-            .ThenInclude(x => x.Specialization)
-            .ThenInclude(sp => sp.Translations)
-            .Include(x => x.WorkExperiences)
-            .Include(x => x.UserProfileLanguages)
-            .ThenInclude(x => x.Language)
-            .ThenInclude(x => x.Translations)
-            .Include(x => x.UserProfileCompetencies)
-            .ThenInclude(x => x.Competency)
-                .ThenInclude(x => x.Translations)
-            .Include(x => x.City)
-                .ThenInclude(city => city.Country)
-                .ThenInclude(country => country.Translations)
-            .Include(x => x.City)
-            .ThenInclude(city => city.Translations)
-            .Include(x => x.UserProfileWorkTypes)
-            .ThenInclude(wt => wt.WorkType).AsNoTracking().Where(up =>
-            (tokens.Length == 0 || tokens.All(e =>
-                EF.Functions.Like(up.FirstName, "%" + e + "%") ||
-                EF.Functions.Like(up.LastName, "%" + e + "%")
-            )) &&
-            (categoryId == null || up.UserProfileCompetencies.Any(c => c.Competency.Id == categoryId)) &&
-            (specialtyId == null || up.UserProfileSkills.Any(s => s.Skill.Id == specialtyId)) &&
-            (locationId == null || up.CityId == locationId) &&
-            (workTypeId == null || up.UserProfileWorkTypes.Any(wt => wt.WorkType.Id == workTypeId))
-        );
-
-        var profiles = await profilesQuery
-            .Select(up => new UserProfileSuggestionDto
-            {
-                Id = up.Id,
-                FullName = $"{up.FirstName} {up.LastName}",
-                UserProfileSkills = up
-                    .UserProfileSkills.Select(s => new UserProfileSkillResponse
-                    {
-                        SkillId = s.SkillId,
-                        SkillName = s.Skill.Name,
-                        ProficiencyLevel = s.ProficiencyLevel,
-                        Translations = _mapper.Map<List<SkillTranslationDto>>(s.Skill.Translations),
-                        Specialization = new SpecializationDto
-                        {
-                            Id = s.Skill.Specialization.Id,
-                            Name = s.Skill.Specialization.Name,
-                            Translations = _mapper.Map<List<SpecializationTranslationDto>>(s.Skill.Specialization.Translations)
-                        }
-                    }).ToList(),
-                City = _mapper.Map<CityDto>(up.City),
-            })
-            .Take(limit)
-            .ToListAsync();
-
-        return profiles;
-    }
-
-    public async Task<List<UserProfileDto>> GetAllUserProfilesAsync()
-    {
-        var profiles = await _context.UserProfiles
             .Include(up => up.FamilyStatus)
                 .ThenInclude(fs => fs.MaritalStatus)
                 .ThenInclude(ms => ms.Translations)
@@ -173,11 +113,11 @@ public class UserProfileService : IUserProfileService
                 .ThenInclude(el => el.Translations)
             .Include(x => x.UserProfileSkills)
                 .ThenInclude(x => x.Skill)
-                    .ThenInclude(x => x.Translations)
+                .ThenInclude(x => x.Translations)
             .Include(x => x.UserProfileSkills)
                 .ThenInclude(x => x.Skill)
-                    .ThenInclude(x => x.Specialization)
-                        .ThenInclude(sp => sp.Translations)
+                .ThenInclude(x => x.Specialization)
+                .ThenInclude(sp => sp.Translations)
             .Include(x => x.WorkExperiences)
             .Include(x => x.UserProfileLanguages)
                 .ThenInclude(x => x.Language)
@@ -192,12 +132,115 @@ public class UserProfileService : IUserProfileService
                 .ThenInclude(city => city.Translations)
             .Include(x => x.UserProfileWorkTypes)
                 .ThenInclude(wt => wt.WorkType)
+            .AsNoTracking();
+
+
+        if (tokens.Length > 0)
+        {
+            foreach (var e in tokens)
+            {
+                profilesQuery = profilesQuery.Where(up =>
+                    EF.Functions.Like(up.FirstName, $"%{e}%") ||
+                    EF.Functions.Like(up.LastName, $"%{e}%"));
+            }
+        }
+
+        // Фильтрация по категориям (categoryIds)
+        if (categoryIds != null && categoryIds.Any())
+        {
+            profilesQuery = profilesQuery.Where(x => x.UserProfileSkills.Any(owt => categoryIds.Contains(owt.SkillId)));
+        }
+
+        // Фильтрация по специализациям (specialtyIds)
+        if (specialtyIds != null && specialtyIds.Any())
+        {
+            profilesQuery = profilesQuery.Where(o => o.UserProfileSkills.Any(os => specialtyIds.Contains(os.Skill.SpecializationId.Value)));
+        }
+
+        // Фильтрация по локациям (locationIds)
+        if (locationIds != null && locationIds.Any())
+        {
+            profilesQuery = profilesQuery.Where(up => locationIds.Contains(up.CityId.Value));
+        }
+
+        // Фильтрация по типам работы (workTypeIds)
+        if (workTypeIds != null && workTypeIds.Any())
+        {
+            profilesQuery = profilesQuery.Where(up =>
+                up.UserProfileWorkTypes.Any(wt => workTypeIds.Contains(wt.WorkType.Id)));
+        }
+
+        // Выполнение запроса и маппинг данных
+        var profiles = await profilesQuery
+            .Select(up => new UserProfileSuggestionDto
+            {
+                Id = up.Id,
+                FullName = $"{up.FirstName} {up.LastName}",
+                UserProfileSkills = up.UserProfileSkills.Select(s => new UserProfileSkillResponse
+                {
+                    SkillId = s.SkillId,
+                    SkillName = s.Skill.Name,
+                    ProficiencyLevel = s.ProficiencyLevel,
+                    Translations = _mapper.Map<List<SkillTranslationDto>>(s.Skill.Translations),
+                    Specialization = new SpecializationDto
+                    {
+                        Id = s.Skill.Specialization.Id,
+                        Name = s.Skill.Specialization.Name,
+                        Translations = _mapper.Map<List<SpecializationTranslationDto>>(s.Skill.Specialization.Translations)
+                    }
+                }).ToList(),
+                City = _mapper.Map<CityDto>(up.City),
+            })
+            .Take(limit)
             .ToListAsync();
+
+        return profiles;
+    }
+
+    public async Task<List<UserProfileDto>> GetAllUserProfilesAsync()
+    {
+        var profiles = _context.UserProfiles
+            .Include(up => up.FamilyStatus)
+            .ThenInclude(fs => fs.MaritalStatus)
+            .ThenInclude(ms => ms.Translations.Where(t => t.LanguageCode == "ru-RU"))
+            .Include(up => up.UserEducations)
+            .ThenInclude(ue => ue.EducationLevel)
+            .ThenInclude(el => el.Translations.Where(t => t.LanguageCode == "ru-RU"))
+            .Include(x => x.UserProfileSkills)
+            .ThenInclude(x => x.Skill)
+            .ThenInclude(x => x.Translations.Where(t => t.LanguageCode == "ru-RU"))
+            .Include(x => x.UserProfileSkills)
+            .ThenInclude(x => x.Skill)
+            .ThenInclude(x => x.Specialization)
+            .ThenInclude(sp => sp.Translations.Where(t => t.LanguageCode == "ru-RU"))
+            .Include(x => x.WorkExperiences)
+            .Include(x => x.UserProfileLanguages)
+            .ThenInclude(x => x.Language)
+            .ThenInclude(x => x.Translations.Where(t => t.LanguageCode == "ru-RU"))
+            .Include(x => x.UserProfileCompetencies)
+            .ThenInclude(x => x.Competency)
+            .ThenInclude(x => x.Translations.Where(t => t.LanguageCode == "ru-RU"))
+            .Include(x => x.City)
+            .ThenInclude(city => city.Country)
+            .ThenInclude(country => country.Translations.Where(t => t.LanguageCode == "ru-RU"))
+            .Include(x => x.City)
+            .ThenInclude(city => city.Translations.Where(t => t.LanguageCode == "ru-RU"))
+            .Include(x => x.UserProfileWorkTypes)
+            .ThenInclude(wt => wt.WorkType)
+            .AsNoTracking().ToList();
 
         var userProfilesDto = _mapper.Map<List<UserProfileDto>>(profiles);
 
         foreach (var userProfile in userProfilesDto)
         {
+            // Формируем полный URL для фотографий и видео
+            var profile = profiles.First(p => p.Id == userProfile.Id);
+            userProfile.ProfilePhotoPath = !string.IsNullOrEmpty(profile.ProfilePhotoPath)
+                ? $"{_baseUrl}/{profile.ProfilePhotoPath}"
+                : null;
+            userProfile.VideoPath = !string.IsNullOrEmpty(profile.VideoPath)
+                ? $"{_baseUrl}/{profile.VideoPath}"
+                : null;
             userProfile.UserEducations = profiles
                 .First(p => p.Id == userProfile.Id)
                 .UserEducations.Select(ue => new UserProfileEducationResponse
@@ -340,7 +383,6 @@ public class UserProfileService : IUserProfileService
         return userProfileDto;
     }
 
-
     public async Task<int> CreateUserProfileAsync(CreateUserProfileDto userProfileDto, int userId)
     {
         var userProfile = _mapper.Map<UserProfile>(userProfileDto);
@@ -416,9 +458,7 @@ public class UserProfileService : IUserProfileService
         profile.VideoPath = videoFileName;
         await _context.SaveChangesAsync();
     }
-
     
-
     public async Task<List<UserProfileDto>> GetUserProfileByAspNetUserId(int id)
     {
         var profiles = await _context.UserProfiles

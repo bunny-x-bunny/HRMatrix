@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HRMatrix.Application.DTOs.City;
+using HRMatrix.Application.DTOs.Common;
 using HRMatrix.Application.DTOs.Order;
 using HRMatrix.Application.DTOs.Skill;
 using HRMatrix.Application.DTOs.Specialization;
@@ -47,11 +48,13 @@ public class OrderService : IOrderService
         return response.Id;
     }
 
-    public async Task<List<OrderDto>> GetFilteredOrdersAsync(string titleQuery = null,
-    List<int> categoryIds = null,
-    List<int> specializationIds = null,
-    List<int> workTypeIds = null,
-    List<int> cityIds = null)
+    public async Task<PagedResult<OrderDto>> GetFilteredOrdersAsync(string titleQuery = null,
+                    List<int> categoryIds = null,
+                    List<int> specializationIds = null,
+                    List<int> workTypeIds = null,
+                    List<int> cityIds = null,
+                    int pageNumber = 1,
+                    int pageSize = 10)
     {
         var query = _context.Orders
             .Include(o => o.OrderSkills)
@@ -71,34 +74,38 @@ public class OrderService : IOrderService
         if (!string.IsNullOrWhiteSpace(titleQuery))
         {
             var tokens = titleQuery.ToUpper().Split(" ", StringSplitOptions.RemoveEmptyEntries);
-            if (tokens.Length > 0)
+            foreach (var token in tokens)
             {
-                foreach (var token in tokens)
-                {
-                    query = query.Where(o => EF.Functions.Like(o.Title.ToUpper(), $"%{token}%"));
-                }
+                query = query.Where(o => EF.Functions.Like(o.Title.ToUpper(), $"%{token}%"));
             }
         }
 
-        // Фильтрация по специализациям
         if (specializationIds != null && specializationIds.Any())
         {
             query = query.Where(o => o.OrderSkills.Any(os => specializationIds.Contains(os.Skill.SpecializationId.Value)));
         }
 
-        // Фильтрация по типам работы
         if (workTypeIds != null && workTypeIds.Any())
         {
             query = query.Where(o => o.OrderWorkTypes.Any(owt => workTypeIds.Contains(owt.WorkTypeId)));
         }
 
-        // Фильтрация по городам
+        if (categoryIds != null && categoryIds.Any())
+        {
+            query = query.Where(x => x.OrderSkills.Any(owt => categoryIds.Contains(owt.SkillId)));
+        }
+
         if (cityIds != null && cityIds.Any())
         {
             query = query.Where(o => cityIds.Contains(o.CityId.Value));
         }
 
-        // Выполняем запрос и вручную маппим результат
+        // Получаем общее количество записей
+        int totalCount = await query.CountAsync();
+
+        // Применяем пагинацию
+        query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
         var orders = await query.ToListAsync();
 
         var orderDtos = orders.Select(order => new OrderDto
@@ -159,7 +166,7 @@ public class OrderService : IOrderService
             }).ToList()
         }).ToList();
 
-        return orderDtos;
+        return new PagedResult<OrderDto>(orderDtos, totalCount);
     }
 
 
