@@ -92,15 +92,25 @@ public class UserProfileController : ControllerBase
     {
         var photoFileName = string.Empty;
         var videoFileName = string.Empty;
+        var gifUrl = string.Empty;
+
         if (profilePhoto != null)
+        {
             photoFileName = await _fileStorageService.UploadFileAsync(profilePhoto, "profile-photos");
+        }
 
         if (profileVideo != null)
+        {
             videoFileName = await _fileStorageService.UploadFileAsync(profileVideo, "profile-videos");
+
+            // Создаем GIF из первых 4 секунд видео и загружаем его
+            var gifFilePath = await _fileStorageService.CreateGifFromVideo(videoFileName, "/var/www/uploads/profile-gifs");
+            gifUrl = await _fileStorageService.UploadGifAsync(gifFilePath, "profile-gifs");
+        }
 
         await _userProfileService.UpdateProfileDocuments(profileId, photoFileName, videoFileName);
 
-        return Ok(new { Message = "Files uploaded successfully." });
+        return Ok(new { Message = "Files uploaded successfully.", GifUrl = gifUrl });
     }
 
     [HttpPut]
@@ -139,14 +149,17 @@ public class UserProfileController : ControllerBase
 
     [HttpGet("search")]
     [AllowAnonymous]
-    public async Task<IActionResult> SearchUserProfiles([FromQuery] string query = null, int limit = 10, [FromQuery] List<int> categoryId = null, [FromQuery] List<int> specialtyId = null, [FromQuery] List<int> locationId = null, [FromQuery] List<int> workTypeId = null)
+    public async Task<IActionResult> SearchUserProfiles(
+        [FromQuery] string query = null,
+        int limit = 10,
+        [FromQuery] List<int> categoryId = null,
+        [FromQuery] List<int> specialtyId = null,
+        [FromQuery] List<int> locationId = null,
+        [FromQuery] List<int> workTypeId = null,
+        int page = 1,
+        int pageSize = 10)
     {
-        //if (string.IsNullOrWhiteSpace(query) && categoryId == null && specialtyId == null && locationId == null && workTypeId == null)
-        //{
-        //    return BadRequest("At least one search parameter must be provided.");
-        //}
-
-        var profiles = await _userProfileService.SearchUserProfilesAsync(query, limit, categoryId, specialtyId, locationId, workTypeId);
-        return Ok(profiles);
+        var result = await _userProfileService.SearchUserProfilesAsync(query, limit, categoryId, specialtyId, locationId, workTypeId, page, pageSize);
+        return Ok(result);
     }
 }

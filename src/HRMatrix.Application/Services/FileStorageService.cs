@@ -57,7 +57,43 @@ public class FileStorageService : IFileStorageService
         return fileUrl;
     }
 
+    public async Task<string> CreateGifFromVideo(string videoFilePath, string outputFolder)
+    {
+        var gifFileName = $"{Guid.NewGuid()}.gif";
+        var gifFilePath = Path.Combine(outputFolder, gifFileName);
+        
+        var ffmpegArgs = $"-t 4 -i \"{videoFilePath}\" -vf \"fps=10,scale=320:-1\" -gifflags +transdiff \"{gifFilePath}\"";
 
+        var process = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = "ffmpeg",
+                Arguments = ffmpegArgs,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        process.Start();
+        await process.WaitForExitAsync();
+        
+        if (File.Exists(gifFilePath))
+        {
+            return gifFilePath;
+        }
+
+        throw new Exception("Ошибка при создании GIF из видео.");
+    }
+
+    public async Task<string> UploadGifAsync(string gifFilePath, string folderName)
+    {
+        var destinationPath = Path.Combine(_storagePath, folderName, Path.GetFileName(gifFilePath));
+        File.Copy(gifFilePath, destinationPath);
+        return $"{_baseUrl}/{folderName}/{Path.GetFileName(gifFilePath)}";
+    }
 
     public Task DeleteFileAsync(string filePath)
     {

@@ -16,7 +16,7 @@ public static class AddServices
         services.AddDbContext<HRMatrixDbContext>(options =>
             options.UseSqlServer(connectionString,
                 builder => builder.MigrationsAssembly(typeof(HRMatrixDbContext).Assembly.FullName)
-                    .EnableRetryOnFailure(10)));
+                    .EnableRetryOnFailure(10, TimeSpan.FromSeconds(15), null)));
 
         services
             .AddIdentity<ApplicationUser, ApplicationRole>()

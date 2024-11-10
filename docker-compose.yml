@@ -8,17 +8,18 @@ services:
       - "5000:8080"
     depends_on:
       - db
+      - ffmpeg_converter
     volumes:
       - /var/www/uploads:/app/uploads
     networks:
       - hrmatrix-network
     labels:
-      - "com.centurylinklabs.watchtower.enable=true"  # Добавлена метка для Watchtower
+      - "com.centurylinklabs.watchtower.enable=true"
 
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sql_server
-    restart: unless-stopped 
+    restart: unless-stopped
     environment:
       SA_PASSWORD: "QWEasdXZC756"
       ACCEPT_EULA: "Y"
@@ -28,6 +29,15 @@ services:
       - dbdata:/var/opt/mssql
     networks:
       - hrmatrix-network
+
+  ffmpeg_converter:
+    image: jrottenberg/ffmpeg:latest
+    container_name: ffmpeg_converter
+    networks:
+      - hrmatrix-network
+    volumes:
+      - /var/www/uploads:/app/uploads
+    entrypoint: sh -c "while true; do sleep 1000; done"
 
   watchtower:
     image: containrrr/watchtower

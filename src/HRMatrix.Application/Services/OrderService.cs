@@ -48,13 +48,14 @@ public class OrderService : IOrderService
         return response.Id;
     }
 
-    public async Task<PagedResult<OrderDto>> GetFilteredOrdersAsync(string titleQuery = null,
-                    List<int> categoryIds = null,
-                    List<int> specializationIds = null,
-                    List<int> workTypeIds = null,
-                    List<int> cityIds = null,
-                    int pageNumber = 1,
-                    int pageSize = 10)
+    public async Task<PaginatedResult<OrderDto>> GetFilteredOrdersAsync(
+    string titleQuery = null,
+    List<int> categoryIds = null,
+    List<int> specializationIds = null,
+    List<int> workTypeIds = null,
+    List<int> cityIds = null,
+    int pageNumber = 1,
+    int pageSize = 10)
     {
         var query = _context.Orders
             .Include(o => o.OrderSkills)
@@ -69,7 +70,7 @@ public class OrderService : IOrderService
                 .ThenInclude(wt => wt.Translations)
             .Include(o => o.City)
                 .ThenInclude(c => c.Translations)
-            .AsQueryable();
+            .AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(titleQuery))
         {
@@ -92,7 +93,7 @@ public class OrderService : IOrderService
 
         if (categoryIds != null && categoryIds.Any())
         {
-            query = query.Where(x => x.OrderSkills.Any(owt => categoryIds.Contains(owt.SkillId)));
+            query = query.Where(o => o.OrderSkills.Any(os => categoryIds.Contains(os.SkillId)));
         }
 
         if (cityIds != null && cityIds.Any())
@@ -100,76 +101,79 @@ public class OrderService : IOrderService
             query = query.Where(o => cityIds.Contains(o.CityId.Value));
         }
 
-        // Получаем общее количество записей
-        int totalCount = await query.CountAsync();
+        var totalItems = await query.CountAsync();
 
-        // Применяем пагинацию
-        query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
-
-        var orders = await query.ToListAsync();
-
-        var orderDtos = orders.Select(order => new OrderDto
-        {
-            Id = order.Id,
-            Title = order.Title,
-            PaymentAmount = order.PaymentAmount,
-            Description = order.Description,
-            CustomerEmail = order.CustomerEmail,
-            CustomerPhone = order.CustomerPhone,
-            CreatedAt = order.CreatedAt,
-            Status = order.Status,
-            CreatedByUserId = order.CreatedByUserId,
-            AssignedUserProfileId = order.AssignedUserProfileId,
-            City = order.City != null ? new CityDto
+        var orders = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(order => new OrderDto
             {
-                Id = order.City.Id,
-                Name = order.City.Name,
-                Translations = order.City.Translations.Select(t => new CityTranslationDto
+                Id = order.Id,
+                Title = order.Title,
+                PaymentAmount = order.PaymentAmount,
+                Description = order.Description,
+                CustomerEmail = order.CustomerEmail,
+                CustomerPhone = order.CustomerPhone,
+                CreatedAt = order.CreatedAt,
+                Status = order.Status,
+                CreatedByUserId = order.CreatedByUserId,
+                AssignedUserProfileId = order.AssignedUserProfileId,
+                City = order.City != null ? new CityDto
                 {
-                    Id = t.Id,
-                    Name = t.Name,
-                    LanguageCode = t.LanguageCode
-                }).ToList()
-            } : null,
-            Skills = order.OrderSkills.Select(os => new SkillDto
-            {
-                Id = os.Skill.Id,
-                Name = os.Skill.Name,
-                Translations = os.Skill.Translations.Select(t => new SkillTranslationDto
-                {
-                    Id = t.Id,
-                    Name = t.Name,
-                    LanguageCode = t.LanguageCode
-                }).ToList(),
-                Specialization = new SpecializationDto
-                {
-                    Id = os.Skill.Specialization.Id,
-                    Name = os.Skill.Specialization.Name,
-                    Translations = os.Skill.Specialization.Translations.Select(st => new SpecializationTranslationDto
+                    Id = order.City.Id,
+                    Name = order.City.Name,
+                    Translations = order.City.Translations.Select(t => new CityTranslationDto
                     {
-                        Id = st.Id,
-                        Name = st.Name,
-                        LanguageCode = st.LanguageCode
+                        Id = t.Id,
+                        Name = t.Name,
+                        LanguageCode = t.LanguageCode
                     }).ToList()
-                }
-            }).ToList(),
-            WorkTypes = order.OrderWorkTypes.Select(owt => new WorkTypeDto
-            {
-                Id = owt.WorkType.Id,
-                Name = owt.WorkType.Name,
-                Translations = owt.WorkType.Translations.Select(t => new WorkTypeTranslationDto
+                } : null,
+                Skills = order.OrderSkills.Select(os => new SkillDto
                 {
-                    Id = t.Id,
-                    Name = t.Name,
-                    LanguageCode = t.LanguageCode
+                    Id = os.Skill.Id,
+                    Name = os.Skill.Name,
+                    Translations = os.Skill.Translations.Select(t => new SkillTranslationDto
+                    {
+                        Id = t.Id,
+                        Name = t.Name,
+                        LanguageCode = t.LanguageCode
+                    }).ToList(),
+                    Specialization = os.Skill.Specialization != null ? new SpecializationDto
+                    {
+                        Id = os.Skill.Specialization.Id,
+                        Name = os.Skill.Specialization.Name,
+                        Translations = os.Skill.Specialization.Translations.Select(st => new SpecializationTranslationDto
+                        {
+                            Id = st.Id,
+                            Name = st.Name,
+                            LanguageCode = st.LanguageCode
+                        }).ToList()
+                    } : null
+                }).ToList(),
+                WorkTypes = order.OrderWorkTypes.Select(owt => new WorkTypeDto
+                {
+                    Id = owt.WorkType.Id,
+                    Name = owt.WorkType.Name,
+                    Translations = owt.WorkType.Translations.Select(t => new WorkTypeTranslationDto
+                    {
+                        Id = t.Id,
+                        Name = t.Name,
+                        LanguageCode = t.LanguageCode
+                    }).ToList()
                 }).ToList()
-            }).ToList()
-        }).ToList();
+            })
+            .ToListAsync();
 
-        return new PagedResult<OrderDto>(orderDtos, totalCount);
+        return new PaginatedResult<OrderDto>
+        {
+            Items = orders,
+            TotalItems = totalItems,
+            Page = pageNumber,
+            PageSize = pageSize,
+            TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize)
+        };
     }
-
-
 
     public async Task<List<OrderDto>> GetOrdersByUserIdAsync(int userId)
     {
@@ -235,6 +239,85 @@ public class OrderService : IOrderService
                 }
             }).ToList(),
             WorkTypes = order.OrderWorkTypes.Select(owt => new WorkTypeDto
+            {
+                Id = owt.WorkType.Id,
+                Name = owt.WorkType.Name,
+                Translations = owt.WorkType.Translations.Select(t => new WorkTypeTranslationDto
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    LanguageCode = t.LanguageCode
+                }).ToList()
+            }).ToList()
+        }).ToList();
+
+        return orderDtos;
+    }
+
+    public async Task<List<OrderDto>> GetRespondedOrdersByUserIdAsync(int userId)
+    {
+        var orders = await _context.OrderResponses.Include(x=>x.Order)
+            .Include(o => o.Order.OrderSkills)
+                .ThenInclude(os => os.Skill)
+                .ThenInclude(s => s.Translations)
+            .Include(o => o.Order.OrderSkills)
+                .ThenInclude(os => os.Skill)
+                .ThenInclude(s => s.Specialization)
+                .ThenInclude(spec => spec.Translations)
+            .Include(o => o.Order.OrderWorkTypes)
+                .ThenInclude(owt => owt.WorkType)
+                .ThenInclude(wt => wt.Translations)
+            .Include(o => o.Order.City)
+                .ThenInclude(c => c.Translations)
+            .Where(o => o.UserId == userId)
+            .ToListAsync();
+
+        var orderDtos = orders.Select(order => new OrderDto
+        {
+            Id = order.Id,
+            Title = order.Order.Title,
+            PaymentAmount = order.Order.PaymentAmount,
+            Description = order.Order.Description,
+            CustomerEmail = order.Order.CustomerEmail,
+            CustomerPhone = order.Order.CustomerPhone,
+            CreatedAt = order.CreatedAt,
+            Status = order.Order.Status,
+            CreatedByUserId = order.Order.CreatedByUserId,
+            AssignedUserProfileId = order.Order.AssignedUserProfileId,
+            City = order.Order.City != null ? new CityDto
+            {
+                Id = order.Order.City.Id,
+                Name = order.Order.City.Name,
+                Translations = order.Order.City.Translations.Select(t => new CityTranslationDto
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    LanguageCode = t.LanguageCode
+                }).ToList()
+            } : null,
+            Skills = order.Order.OrderSkills.Select(os => new SkillDto
+            {
+                Id = os.Skill.Id,
+                Name = os.Skill.Name,
+                Translations = os.Skill.Translations.Select(t => new SkillTranslationDto
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    LanguageCode = t.LanguageCode
+                }).ToList(),
+                Specialization = new SpecializationDto
+                {
+                    Id = os.Skill.Specialization.Id,
+                    Name = os.Skill.Specialization.Name,
+                    Translations = os.Skill.Specialization.Translations.Select(st => new SpecializationTranslationDto
+                    {
+                        Id = st.Id,
+                        Name = st.Name,
+                        LanguageCode = st.LanguageCode
+                    }).ToList()
+                }
+            }).ToList(),
+            WorkTypes = order.Order.OrderWorkTypes.Select(owt => new WorkTypeDto
             {
                 Id = owt.WorkType.Id,
                 Name = owt.WorkType.Name,

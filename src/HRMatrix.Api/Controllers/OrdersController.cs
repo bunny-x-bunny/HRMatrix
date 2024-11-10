@@ -38,6 +38,20 @@ public class OrdersController : ControllerBase
         return Ok(orders);
     }
 
+    [HttpGet("my-responded")]
+    public async Task<IActionResult> GetMyOrderResponded()
+    {
+        var userName = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userName))
+            return NotFound("User not found");
+
+        var user = await _userManager.FindByNameAsync(userName);
+        if (user == null)
+            return NotFound("User not found");
+        var reviews = await _orderService.GetRespondedOrdersByUserIdAsync(user.Id);
+        return Ok(reviews);
+    }
+
     [HttpPost("{orderId}/respond")]
     public async Task<IActionResult> RespondToOrder(int orderId)
     {
@@ -118,15 +132,23 @@ public class OrdersController : ControllerBase
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> GetOrders([FromQuery] string titleQuery=null,
-        [FromQuery] List<int> categoryIds=null,
+    public async Task<IActionResult> GetOrders(
+        [FromQuery] string titleQuery = null,
+        [FromQuery] List<int> categoryIds = null,
         [FromQuery] List<int> specializationIds = null,
         [FromQuery] List<int> workTypeIds = null,
         [FromQuery] List<int> cityIds = null,
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 10)
     {
-        var orders = await _orderService.GetFilteredOrdersAsync(titleQuery, categoryIds, specializationIds, workTypeIds, cityIds);
+        var orders = await _orderService.GetFilteredOrdersAsync(
+            titleQuery,
+            categoryIds,
+            specializationIds,
+            workTypeIds,
+            cityIds,
+            pageNumber,
+            pageSize);
         return Ok(orders);
     }
 

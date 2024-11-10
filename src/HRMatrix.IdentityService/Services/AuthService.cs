@@ -27,7 +27,9 @@ public class AuthService : IAuthService
         var user = new ApplicationUser
         {
             UserName = registerDto.Username,
-            Email = registerDto.Email
+            Email = registerDto.Email,
+            FirstName = registerDto.FirstName,
+            LastName = registerDto.LastName,
         };
 
         var result = await _userManager.CreateAsync(user, registerDto.Password);

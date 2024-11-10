@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HRMatrix.Application.DTOs.City;
+using HRMatrix.Application.DTOs.Common;
 using HRMatrix.Application.DTOs.EducationLevel;
 using HRMatrix.Application.DTOs.Skill;
 using HRMatrix.Application.DTOs.UserProfile;
@@ -95,13 +96,15 @@ public class UserProfileService : IUserProfileService
         return (int)Math.Round((decimal)averageProficiency);
     }
 
-    public async Task<List<UserProfileSuggestionDto>> SearchUserProfilesAsync(
-     string query = null,
-     int limit = 10,
-     List<int> categoryIds = null,
-     List<int> specialtyIds = null,
-     List<int> locationIds = null,
-     List<int> workTypeIds = null)
+    public async Task<PaginatedResult<UserProfileSuggestionDto>> SearchUserProfilesAsync(
+    string query = null,
+    int limit = 10,
+    List<int> categoryIds = null,
+    List<int> specialtyIds = null,
+    List<int> locationIds = null,
+    List<int> workTypeIds = null,
+    int page = 1,
+    int pageSize = 10)
     {
         var tokens = string.IsNullOrWhiteSpace(query)
             ? new string[0]
@@ -137,7 +140,7 @@ public class UserProfileService : IUserProfileService
                 .ThenInclude(wt => wt.WorkType)
             .AsNoTracking();
 
-
+        // Filter by search tokens
         if (tokens.Length > 0)
         {
             foreach (var e in tokens)
@@ -148,33 +151,35 @@ public class UserProfileService : IUserProfileService
             }
         }
 
-        // Фильтрация по категориям (categoryIds)
+        // Apply additional filters
         if (categoryIds != null && categoryIds.Any())
         {
             profilesQuery = profilesQuery.Where(x => x.UserProfileSkills.Any(owt => categoryIds.Contains(owt.SkillId)));
         }
 
-        // Фильтрация по специализациям (specialtyIds)
         if (specialtyIds != null && specialtyIds.Any())
         {
             profilesQuery = profilesQuery.Where(o => o.UserProfileSkills.Any(os => specialtyIds.Contains(os.Skill.SpecializationId.Value)));
         }
 
-        // Фильтрация по локациям (locationIds)
         if (locationIds != null && locationIds.Any())
         {
             profilesQuery = profilesQuery.Where(up => locationIds.Contains(up.CityId.Value));
         }
 
-        // Фильтрация по типам работы (workTypeIds)
         if (workTypeIds != null && workTypeIds.Any())
         {
             profilesQuery = profilesQuery.Where(up =>
                 up.UserProfileWorkTypes.Any(wt => workTypeIds.Contains(wt.WorkType.Id)));
         }
 
-        // Выполнение запроса и маппинг данных
+        // Get total count before applying pagination
+        var totalItems = await profilesQuery.CountAsync();
+
+        // Apply pagination
         var profiles = await profilesQuery
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .Select(up => new UserProfileSuggestionDto
             {
                 Id = up.Id,
@@ -194,10 +199,16 @@ public class UserProfileService : IUserProfileService
                 }).ToList(),
                 City = _mapper.Map<CityDto>(up.City),
             })
-            .Take(limit)
             .ToListAsync();
 
-        return profiles;
+        return new PaginatedResult<UserProfileSuggestionDto>
+        {
+            Items = profiles,
+            TotalItems = totalItems,
+            Page = page,
+            PageSize = pageSize,
+            TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize)
+        };
     }
 
     public async Task<List<UserProfileDto>> GetAllUserProfilesAsync()
