@@ -19,8 +19,6 @@ FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 
-ENV ASPNETCORE_ENVIRONMENT=Staging
-
 ENTRYPOINT ["dotnet", "HRMatrix.Api.dll"]
 
 
