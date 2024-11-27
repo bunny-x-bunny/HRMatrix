@@ -21,7 +21,7 @@ COPY --from=build /app/publish .
 
 ENTRYPOINT ["dotnet", "HRMatrix.Api.dll"]
 
-
+ 
 
 #PS C:\Reps\HRMatrix\src\HRMatrix.Api> cd C:\Reps\HRMatrix
 #docker build -t hommel5957/hrmatrix:latest_dev -f ./src/HRMatrix.Api/Dockerfile .
