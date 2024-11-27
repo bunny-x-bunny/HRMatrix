@@ -1,5 +1,6 @@
 ﻿using HRMatrix.Application.DTOs.Order;
 using HRMatrix.Application.Services.Interfaces;
+using HRMatrix.Domain.Enums;
 using HRMatrix.IdentityService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -50,6 +51,16 @@ public class OrdersController : ControllerBase
             return NotFound("User not found");
         var reviews = await _orderService.GetRespondedOrdersByUserIdAsync(user.Id);
         return Ok(reviews);
+    }
+
+    [HttpPut("responses/{responseId}/status")]
+    public async Task<IActionResult> UpdateResponseStatus(int responseId, [FromBody] ResponseStatus status)
+    {
+        var updated = await _orderService.UpdateResponseStatusAsync(responseId, status);
+        if (!updated)
+            return NotFound("Response not found");
+
+        return NoContent();
     }
 
     [HttpPost("{orderId}/respond")]

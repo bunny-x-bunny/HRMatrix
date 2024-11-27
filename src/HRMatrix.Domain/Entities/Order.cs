@@ -37,4 +37,5 @@ public class Order
     public City City { get; set; }
 
     public ICollection<OrderWorkType> OrderWorkTypes { get; set; }
+    public ICollection<OrderResponse> OrderResponses { get; set; }
 }
