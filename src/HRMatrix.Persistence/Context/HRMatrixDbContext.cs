@@ -66,6 +66,8 @@ namespace HRMatrix.Persistence.Contexts
 
         public DbSet<UserProfileWorkType> UserProfileWorkTypes { get; set; }
 
+        public DbSet<RoleRequest> RoleRequests { get; set; }
+
         public HRMatrixDbContext(DbContextOptions<HRMatrixDbContext> options) : base(options)
         {
         }

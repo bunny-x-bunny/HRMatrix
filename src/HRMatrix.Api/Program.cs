@@ -2,14 +2,12 @@
 using HRMatrix.Application.Services.Directions;
 using HRMatrix.Application.Services.Interfaces.Directions;
 using HRMatrix.Application.Services.Interfaces;
-using HRMatrix.Domain.Entities;
 using HRMatrix.IdentityService;
 using HRMatrix.Persistence;
 using HRMatrix.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using HRMatrix.Application.Settings;
-using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,7 +75,7 @@ builder.Services.AddScoped<ISpecializationService, SpecializationService>();
 builder.Services.AddScoped<IWorkTypeService, WorkTypeService>();
 builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<ICityService, CityService>();
-
+builder.Services.AddScoped<IRoleRequestService, RoleRequestService>();
 
 #endregion
 
