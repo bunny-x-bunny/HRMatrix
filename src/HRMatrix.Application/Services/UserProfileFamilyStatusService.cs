@@ -42,7 +42,7 @@ public class UserProfileFamilyStatusService : IUserProfileFamilyStatusService
         return familyStatus.Id;
     }
 
-    public async Task<bool> UpdateFamilyStatusForUserProfileAsync(UpdateFamilyStatusDto familyStatusDto, UserProfile user) {
+    public async Task<bool> UpdateFamilyStatusForUserProfileAsync(UpdateFamilyStatusDto familyStatusDto, UserProfile user, bool withSave = false) {
         var familyStatus = await _context.FamilyStatuses
             .FirstOrDefaultAsync(fs => fs.UserProfileId == user.Id);
 
@@ -55,11 +55,12 @@ public class UserProfileFamilyStatusService : IUserProfileFamilyStatusService
         familyStatus.MarriagePeriods = familyStatusDto.MarriagePeriods;
         familyStatus.NumberOfChildren = familyStatusDto.NumberOfChildren;
 
-        await _context.SaveChangesAsync();
+        if (withSave)
+            await _context.SaveChangesAsync();
         return true;
     }
 
-    public async Task<bool> DeleteFamilyStatusForUserProfileAsync(UserProfile user) {
+    public async Task<bool> DeleteFamilyStatusForUserProfileAsync(UserProfile user, bool withSave = false) {
         var familyStatus = await _context.FamilyStatuses
             .FirstOrDefaultAsync(fs => fs.UserProfileId == user.Id);
 
@@ -68,7 +69,8 @@ public class UserProfileFamilyStatusService : IUserProfileFamilyStatusService
         }
 
         _context.FamilyStatuses.Remove(familyStatus);
-        await _context.SaveChangesAsync();
+        if (withSave)
+            await _context.SaveChangesAsync();
         return true;
     }
 }
