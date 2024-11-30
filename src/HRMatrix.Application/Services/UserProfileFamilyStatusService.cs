@@ -27,7 +27,7 @@ public class UserProfileFamilyStatusService : IUserProfileFamilyStatusService
     //    return _mapper.Map<List<UpdateFamilyStatusDto>>(statuses);
     //}
 
-    public async Task<int> CreateFamilyStatusForUserProfileAsync(CreateFamilyStatusDto familyStatusDto, UserProfile user) {
+    public async Task<int> CreateFamilyStatusForUserProfileAsync(CreateFamilyStatusDto familyStatusDto, UserProfile user, bool withSave = false) {
         var familyStatus = new FamilyStatus {
             UserProfile = user,
             MaritalStatusId = familyStatusDto.MaritalStatusId,
@@ -37,7 +37,8 @@ public class UserProfileFamilyStatusService : IUserProfileFamilyStatusService
         };
 
         _context.FamilyStatuses.Add(familyStatus);
-        await _context.SaveChangesAsync();
+        if(withSave)
+            await _context.SaveChangesAsync();
         return familyStatus.Id;
     }
 
