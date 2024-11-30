@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using HRMatrix.Application.DTOs.EducationLevel;
+﻿using HRMatrix.Application.DTOs.EducationLevel;
 using HRMatrix.Application.DTOs.UserProfileEducation;
 using HRMatrix.Application.Services.Interfaces;
 using HRMatrix.Domain.Entities;
@@ -11,12 +10,10 @@ namespace HRMatrix.Application.Services;
 public class UserProfileEducationService : IUserProfileEducationService
 {
     private readonly HRMatrixDbContext _context;
-    private readonly IMapper _mapper;
 
-    public UserProfileEducationService(HRMatrixDbContext context, IMapper mapper)
+    public UserProfileEducationService(HRMatrixDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<UserProfileEducationListResponse> GetUserProfileEducationsAsync(int userProfileId)
@@ -40,14 +37,18 @@ public class UserProfileEducationService : IUserProfileEducationService
                 EducationLevelId = education.EducationLevelId,
                 EducationLevelName = education.EducationLevel.Name,
                 Quantity = education.Quantity,
-                Translations = _mapper.Map<List<EducationLevelTranslationDto>>(education.EducationLevel.Translations)
+                Translations = education.EducationLevel.Translations.Select(t => new EducationLevelTranslationDto {
+                    Id = t.Id,
+                    LanguageCode = t.LanguageCode,
+                    Name = t.Name
+                }).ToList()
             }).ToList()
         };
 
         return userProfileEducationListDto;
     }
     
-    public async Task<UserProfileEducationResponse> CreateUserProfileEducationAsync(CreateUserProfileEducationRequest educationRequest)
+    public async Task<UserProfileEducationResponse> CreateUserProfileEducationAsync(CreateUserProfileEducationRequest educationRequest, bool withSave = false)
     {
         var userProfile = await _context.UserProfiles
             .Include(up => up.UserEducations)
@@ -74,7 +75,8 @@ public class UserProfileEducationService : IUserProfileEducationService
         };
 
         userProfile.UserEducations.Add(newEducation);
-        await _context.SaveChangesAsync();
+        if (withSave)
+            await _context.SaveChangesAsync();
         
         var educationLevel = await _context.EducationLevels
             .Include(el => el.Translations)
@@ -85,11 +87,15 @@ public class UserProfileEducationService : IUserProfileEducationService
             EducationLevelId = educationLevel.Id,
             EducationLevelName = educationLevel.Name,
             Quantity = newEducation.Quantity,
-            Translations = _mapper.Map<List<EducationLevelTranslationDto>>(educationLevel.Translations)
+            Translations = educationLevel.Translations.Select(t => new EducationLevelTranslationDto {
+                Id = t.Id,
+                LanguageCode = t.LanguageCode,
+                Name = t.Name
+            }).ToList()
         };
     }
     
-    public async Task<UserProfileEducationListResponse> CreateUserProfileEducationsAsync(int userProfileId, List<UserEducationEntryRequest> educationRequests)
+    public async Task<UserProfileEducationListResponse?> CreateUserProfileEducationsAsync(int userProfileId, List<UserEducationEntryRequest> educationRequests, bool withSave = false)
     {
         var userProfile = await _context.UserProfiles
             .Include(up => up.UserEducations)
@@ -120,12 +126,15 @@ public class UserProfileEducationService : IUserProfileEducationService
             userProfile.UserEducations.Add(newEducation);
         }
 
-        await _context.SaveChangesAsync();
-
-        return await GetUserProfileEducationsAsync(userProfileId);
+        if (withSave) {
+            await _context.SaveChangesAsync();
+            return await GetUserProfileEducationsAsync(userProfileId);
+        } else {
+            return null;
+        }
     }
 
-    public async Task<UserProfileEducationListResponse> UpdateUserProfileEducationsAsync(UpdateUserProfileEducationRequest updateRequest)
+    public async Task<UserProfileEducationListResponse?> UpdateUserProfileEducationsAsync(UpdateUserProfileEducationRequest updateRequest, bool withSave = false)
     {
         var userProfile = await _context.UserProfiles
             .Include(up => up.UserEducations)
@@ -150,8 +159,11 @@ public class UserProfileEducationService : IUserProfileEducationService
             userProfile.UserEducations.Add(newEducation);
         }
 
-        await _context.SaveChangesAsync();
-        
-        return await GetUserProfileEducationsAsync(updateRequest.UserProfileId);
+        if (withSave) {
+            await _context.SaveChangesAsync();
+            return await GetUserProfileEducationsAsync(updateRequest.UserProfileId);
+        } else {
+            return null;
+        }
     }
 }

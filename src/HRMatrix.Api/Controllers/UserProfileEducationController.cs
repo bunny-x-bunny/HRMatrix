@@ -38,7 +38,7 @@ public class UserProfileEducationController : ControllerBase
 
         try
         {
-            var createdEducation = await _userProfileEducationService.CreateUserProfileEducationAsync(educationRequest);
+            var createdEducation = await _userProfileEducationService.CreateUserProfileEducationAsync(educationRequest, true);
             return CreatedAtAction(nameof(GetUserProfileEducations), new { userProfileId = educationRequest.UserProfileId }, createdEducation);
         }
         catch (Exception ex)
@@ -57,7 +57,7 @@ public class UserProfileEducationController : ControllerBase
 
         try
         {
-            var createdEducations = await _userProfileEducationService.CreateUserProfileEducationsAsync(educationRequest.UserProfileId, educationRequest.Educations);
+            var createdEducations = await _userProfileEducationService.CreateUserProfileEducationsAsync(educationRequest.UserProfileId, educationRequest.Educations, true);
             return CreatedAtAction(nameof(GetUserProfileEducations), new { userProfileId = educationRequest.UserProfileId }, createdEducations);
         }
         catch (Exception ex)
@@ -76,7 +76,7 @@ public class UserProfileEducationController : ControllerBase
 
         try
         {
-            var updatedEducations = await _userProfileEducationService.UpdateUserProfileEducationsAsync(updateRequest);
+            var updatedEducations = await _userProfileEducationService.UpdateUserProfileEducationsAsync(updateRequest, true);
             return Ok(updatedEducations);
         }
         catch (Exception ex)
