@@ -16,6 +16,7 @@ using HRMatrix.Application.DTOs.Specialization;
 using HRMatrix.Application.DTOs.UserProfileWorkType;
 using HRMatrix.Application.Settings;
 using Microsoft.Extensions.Options;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HRMatrix.Application.Services;
 
@@ -486,6 +487,10 @@ public class UserProfileService : IUserProfileService
             .Include(x => x.UserProfileCompetencies)
                 .ThenInclude(x => x.Competency)
                 .ThenInclude(x => x.Translations)
+            .Include(x => x.City)
+            .Include(x => x.UserProfileWorkTypes)
+                .ThenInclude(x => x.WorkType)
+                .ThenInclude(x=>x.Translations)
             .Where(x=>x.AspNetUserId == id)
             .ToListAsync();
 
@@ -521,6 +526,14 @@ public class UserProfileService : IUserProfileService
                     CompetencyName = c.Competency.Name,
                     ProficiencyLevel = c.ProficiencyLevel,
                     Translations = _mapper.Map<List<CompetencyTranslationDto>>(c.Competency.Translations)
+                }).ToList();
+
+            userProfile.WorkTypes = profiles
+                .First(p => p.Id == userProfile.Id)
+                .UserProfileWorkTypes.Select(wt => new UserProfileWorkTypeResponse
+                {
+                    WorkTypeId = wt.WorkTypeId,
+                    WorkTypeName = wt.WorkType.Name
                 }).ToList();
 
             userProfile.EducationScore = CalculateEducationScore(userProfile);

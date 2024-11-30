@@ -2,6 +2,7 @@
 using HRMatrix.IdentityService.DTOs;
 using HRMatrix.IdentityService.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -43,11 +44,13 @@ public class AuthService : IAuthService
     
     public async Task<AuthResultDto> LoginAsync(LoginDto loginDto)
     {
-        var user = await _userManager.FindByNameAsync(loginDto.Username);
+        var user = await _userManager.FindByNameAsync(loginDto.Username)
+                   ?? await _userManager.FindByEmailAsync(loginDto.Username)
+                   ?? await FindByPhoneNumberAsync(loginDto.Username);
+
+
         if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
-        {
             return null;
-        }
 
         var userRoles = await _userManager.GetRolesAsync(user);
         var tokens = _jwtTokenGenerator.GenerateTokens(user, userRoles);
@@ -58,28 +61,25 @@ public class AuthService : IAuthService
             RefreshToken = tokens.RefreshToken
         };
     }
-    
+
+    private async Task<ApplicationUser?> FindByPhoneNumberAsync(string phoneNumber) 
+        => await _userManager.Users.FirstOrDefaultAsync(user => user.PhoneNumber == phoneNumber);
+
     public async Task<AuthResultDto> RefreshTokenAsync(RefreshTokenRequest request)
     {
         if (string.IsNullOrEmpty(request.RefreshToken))
-        {
             return null;
-        }
-        
+
         var refreshTokenPrincipal = GetPrincipalFromExpiredToken(request.RefreshToken);
         var userName = refreshTokenPrincipal?.Identity?.Name;
 
         if (string.IsNullOrEmpty(userName))
-        {
             return null;
-        }
 
         var user = await _userManager.FindByNameAsync(userName);
         if (user == null)
-        {
             return null;
-        }
-        
+
         var userRoles = await _userManager.GetRolesAsync(user);
         var tokens = _jwtTokenGenerator.GenerateTokens(user, userRoles);
 

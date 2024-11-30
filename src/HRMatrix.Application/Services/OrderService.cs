@@ -1,10 +1,18 @@
 ﻿using AutoMapper;
 using HRMatrix.Application.DTOs.City;
 using HRMatrix.Application.DTOs.Common;
+using HRMatrix.Application.DTOs.Competency;
+using HRMatrix.Application.DTOs.EducationLevel;
 using HRMatrix.Application.DTOs.Order;
 using HRMatrix.Application.DTOs.Skill;
 using HRMatrix.Application.DTOs.Specialization;
+using HRMatrix.Application.DTOs.UserProfile;
+using HRMatrix.Application.DTOs.UserProfileCompetency;
+using HRMatrix.Application.DTOs.UserProfileEducation;
+using HRMatrix.Application.DTOs.UserProfileSkills;
+using HRMatrix.Application.DTOs.UserProfileWorkType;
 using HRMatrix.Application.DTOs.WorkType;
+using HRMatrix.Application.Extensions;
 using HRMatrix.Application.Services.Interfaces;
 using HRMatrix.Domain.Entities;
 using HRMatrix.Domain.Enums;
@@ -28,14 +36,14 @@ public class OrderService : IOrderService
     {
         var order = await _context.Orders.FindAsync(orderId);
         if (order == null) return 0;
-        
+
         var existingResponse = await _context.OrderResponses
             .FirstOrDefaultAsync(r => r.OrderId == orderId && r.UserId == userId);
         if (existingResponse != null)
         {
             return existingResponse.Id;
         }
-        
+
         var response = new OrderResponse
         {
             OrderId = orderId,
@@ -49,27 +57,27 @@ public class OrderService : IOrderService
     }
 
     public async Task<PaginatedResult<OrderDto>> GetFilteredOrdersAsync(
-    string titleQuery = null,
-    List<int> categoryIds = null,
-    List<int> specializationIds = null,
-    List<int> workTypeIds = null,
-    List<int> cityIds = null,
-    int pageNumber = 1,
-    int pageSize = 10)
+        string titleQuery = null,
+        List<int> categoryIds = null,
+        List<int> specializationIds = null,
+        List<int> workTypeIds = null,
+        List<int> cityIds = null,
+        int pageNumber = 1,
+        int pageSize = 10)
     {
         var query = _context.Orders
             .Include(o => o.OrderSkills)
-                .ThenInclude(os => os.Skill)
-                .ThenInclude(s => s.Translations)
+            .ThenInclude(os => os.Skill)
+            .ThenInclude(s => s.Translations)
             .Include(o => o.OrderSkills)
-                .ThenInclude(os => os.Skill)
-                .ThenInclude(s => s.Specialization)
-                .ThenInclude(spec => spec.Translations)
+            .ThenInclude(os => os.Skill)
+            .ThenInclude(s => s.Specialization)
+            .ThenInclude(spec => spec.Translations)
             .Include(o => o.OrderWorkTypes)
-                .ThenInclude(owt => owt.WorkType)
-                .ThenInclude(wt => wt.Translations)
+            .ThenInclude(owt => owt.WorkType)
+            .ThenInclude(wt => wt.Translations)
             .Include(o => o.City)
-                .ThenInclude(c => c.Translations)
+            .ThenInclude(c => c.Translations)
             .AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(titleQuery))
@@ -83,7 +91,8 @@ public class OrderService : IOrderService
 
         if (specializationIds != null && specializationIds.Any())
         {
-            query = query.Where(o => o.OrderSkills.Any(os => specializationIds.Contains(os.Skill.SpecializationId.Value)));
+            query = query.Where(o =>
+                o.OrderSkills.Any(os => specializationIds.Contains(os.Skill.SpecializationId.Value)));
         }
 
         if (workTypeIds != null && workTypeIds.Any())
@@ -118,17 +127,19 @@ public class OrderService : IOrderService
                 Status = order.Status,
                 CreatedByUserId = order.CreatedByUserId,
                 AssignedUserProfileId = order.AssignedUserProfileId,
-                City = order.City != null ? new CityDto
-                {
-                    Id = order.City.Id,
-                    Name = order.City.Name,
-                    Translations = order.City.Translations.Select(t => new CityTranslationDto
+                City = order.City != null
+                    ? new CityDto
                     {
-                        Id = t.Id,
-                        Name = t.Name,
-                        LanguageCode = t.LanguageCode
-                    }).ToList()
-                } : null,
+                        Id = order.City.Id,
+                        Name = order.City.Name,
+                        Translations = order.City.Translations.Select(t => new CityTranslationDto
+                        {
+                            Id = t.Id,
+                            Name = t.Name,
+                            LanguageCode = t.LanguageCode
+                        }).ToList()
+                    }
+                    : null,
                 Skills = order.OrderSkills.Select(os => new SkillDto
                 {
                     Id = os.Skill.Id,
@@ -139,17 +150,20 @@ public class OrderService : IOrderService
                         Name = t.Name,
                         LanguageCode = t.LanguageCode
                     }).ToList(),
-                    Specialization = os.Skill.Specialization != null ? new SpecializationDto
-                    {
-                        Id = os.Skill.Specialization.Id,
-                        Name = os.Skill.Specialization.Name,
-                        Translations = os.Skill.Specialization.Translations.Select(st => new SpecializationTranslationDto
+                    Specialization = os.Skill.Specialization != null
+                        ? new SpecializationDto
                         {
-                            Id = st.Id,
-                            Name = st.Name,
-                            LanguageCode = st.LanguageCode
-                        }).ToList()
-                    } : null
+                            Id = os.Skill.Specialization.Id,
+                            Name = os.Skill.Specialization.Name,
+                            Translations = os.Skill.Specialization.Translations.Select(st =>
+                                new SpecializationTranslationDto
+                                {
+                                    Id = st.Id,
+                                    Name = st.Name,
+                                    LanguageCode = st.LanguageCode
+                                }).ToList()
+                        }
+                        : null
                 }).ToList(),
                 WorkTypes = order.OrderWorkTypes.Select(owt => new WorkTypeDto
                 {
@@ -179,17 +193,17 @@ public class OrderService : IOrderService
     {
         var orders = await _context.Orders
             .Include(o => o.OrderSkills)
-                .ThenInclude(os => os.Skill)
-                .ThenInclude(s => s.Translations)
+            .ThenInclude(os => os.Skill)
+            .ThenInclude(s => s.Translations)
             .Include(o => o.OrderSkills)
-                .ThenInclude(os => os.Skill)
-                .ThenInclude(s => s.Specialization)
-                .ThenInclude(spec => spec.Translations)
+            .ThenInclude(os => os.Skill)
+            .ThenInclude(s => s.Specialization)
+            .ThenInclude(spec => spec.Translations)
             .Include(o => o.OrderWorkTypes)
-                .ThenInclude(owt => owt.WorkType)
-                .ThenInclude(wt => wt.Translations)
+            .ThenInclude(owt => owt.WorkType)
+            .ThenInclude(wt => wt.Translations)
             .Include(o => o.City)
-                .ThenInclude(c => c.Translations)
+            .ThenInclude(c => c.Translations)
             .Where(o => o.CreatedByUserId == userId)
             .ToListAsync();
 
@@ -205,17 +219,19 @@ public class OrderService : IOrderService
             Status = order.Status,
             CreatedByUserId = order.CreatedByUserId,
             AssignedUserProfileId = order.AssignedUserProfileId,
-            City = order.City != null ? new CityDto
-            {
-                Id = order.City.Id,
-                Name = order.City.Name,
-                Translations = order.City.Translations.Select(t => new CityTranslationDto
+            City = order.City != null
+                ? new CityDto
                 {
-                    Id = t.Id,
-                    Name = t.Name,
-                    LanguageCode = t.LanguageCode
-                }).ToList()
-            } : null,
+                    Id = order.City.Id,
+                    Name = order.City.Name,
+                    Translations = order.City.Translations.Select(t => new CityTranslationDto
+                    {
+                        Id = t.Id,
+                        Name = t.Name,
+                        LanguageCode = t.LanguageCode
+                    }).ToList()
+                }
+                : null,
             Skills = order.OrderSkills.Select(os => new SkillDto
             {
                 Id = os.Skill.Id,
@@ -256,98 +272,88 @@ public class OrderService : IOrderService
 
     public async Task<List<OrderDto>> GetRespondedOrdersByUserIdAsync(int userId)
     {
-        var orders = await _context.OrderResponses.Include(x=>x.Order)
-            .Include(o => o.Order.OrderSkills)
-                .ThenInclude(os => os.Skill)
-                .ThenInclude(s => s.Translations)
-            .Include(o => o.Order.OrderSkills)
-                .ThenInclude(os => os.Skill)
-                .ThenInclude(s => s.Specialization)
-                .ThenInclude(spec => spec.Translations)
-            .Include(o => o.Order.OrderWorkTypes)
-                .ThenInclude(owt => owt.WorkType)
-                .ThenInclude(wt => wt.Translations)
-            .Include(o => o.Order.City)
-                .ThenInclude(c => c.Translations)
-            .Where(o => o.UserId == userId)
+        var orders = await _context.Orders
+            .Include(o => o.OrderResponses)
+            .ThenInclude(r => r.UserId) // Загружаем пользователя, который оставил отклик
+            .Include(o => o.OrderSkills)
+            .ThenInclude(os => os.Skill)
+            .Include(o => o.OrderWorkTypes)
+            .ThenInclude(owt => owt.WorkType)
+            .Include(o => o.City)
+            .Where(o => o.OrderResponses.Any(r => r.UserId == userId))
             .ToListAsync();
 
         var orderDtos = orders.Select(order => new OrderDto
         {
             Id = order.Id,
-            Title = order.Order.Title,
-            PaymentAmount = order.Order.PaymentAmount,
-            Description = order.Order.Description,
-            CustomerEmail = order.Order.CustomerEmail,
-            CustomerPhone = order.Order.CustomerPhone,
+            Title = order.Title,
+            ExpectedCompletionDate = order.ExpectedCompletionDate!.Value,
+            PaymentAmount = order.PaymentAmount,
+            Description = order.Description,
+            CustomerEmail = order.CustomerEmail,
+            CustomerPhone = order.CustomerPhone,
             CreatedAt = order.CreatedAt,
-            Status = order.Order.Status,
-            CreatedByUserId = order.Order.CreatedByUserId,
-            AssignedUserProfileId = order.Order.AssignedUserProfileId,
-            City = order.Order.City != null ? new CityDto
-            {
-                Id = order.Order.City.Id,
-                Name = order.Order.City.Name,
-                Translations = order.Order.City.Translations.Select(t => new CityTranslationDto
+            Status = order.Status,
+            CreatedByUserId = order.CreatedByUserId,
+            AssignedUserProfileId = order.AssignedUserProfileId,
+            City = order.City != null
+                ? new CityDto
                 {
-                    Id = t.Id,
-                    Name = t.Name,
-                    LanguageCode = t.LanguageCode
-                }).ToList()
-            } : null,
-            Skills = order.Order.OrderSkills.Select(os => new SkillDto
+                    Id = order.City.Id,
+                    Name = order.City.Name
+                }
+                : null,
+            Skills = order.OrderSkills.Select(os => new SkillDto
             {
                 Id = os.Skill.Id,
-                Name = os.Skill.Name,
-                Translations = os.Skill.Translations.Select(t => new SkillTranslationDto
-                {
-                    Id = t.Id,
-                    Name = t.Name,
-                    LanguageCode = t.LanguageCode
-                }).ToList(),
-                Specialization = new SpecializationDto
-                {
-                    Id = os.Skill.Specialization.Id,
-                    Name = os.Skill.Specialization.Name,
-                    Translations = os.Skill.Specialization.Translations.Select(st => new SpecializationTranslationDto
-                    {
-                        Id = st.Id,
-                        Name = st.Name,
-                        LanguageCode = st.LanguageCode
-                    }).ToList()
-                }
+                Name = os.Skill.Name
             }).ToList(),
-            WorkTypes = order.Order.OrderWorkTypes.Select(owt => new WorkTypeDto
+            WorkTypes = order.OrderWorkTypes.Select(owt => new WorkTypeDto
             {
                 Id = owt.WorkType.Id,
-                Name = owt.WorkType.Name,
-                Translations = owt.WorkType.Translations.Select(t => new WorkTypeTranslationDto
-                {
-                    Id = t.Id,
-                    Name = t.Name,
-                    LanguageCode = t.LanguageCode
-                }).ToList()
+                Name = owt.WorkType.Name
+            }).ToList(),
+
+            Responses = order.OrderResponses.Select(response => new ResponseDto
+            {
+                Id = response.Id,
+                UserId = response.UserId,
+                Status = response.Status,
+                StatusName = response.Status.GetDisplayName(),
+                CreatedAt = response.CreatedAt
             }).ToList()
         }).ToList();
 
         return orderDtos;
     }
 
+
+
+    public async Task<bool> UpdateResponseStatusAsync(int responseId, ResponseStatus status)
+    {
+        var response = await _context.OrderResponses.FindAsync(responseId);
+        if (response == null) return false;
+
+        response.Status = status;
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     public async Task<OrderDto> GetOrderByIdAsync(int id)
     {
         var order = await _context.Orders
             .Include(o => o.OrderSkills)
-                .ThenInclude(os => os.Skill)
-                .ThenInclude(s => s.Translations)
+            .ThenInclude(os => os.Skill)
+            .ThenInclude(s => s.Translations)
             .Include(o => o.OrderSkills)
-                .ThenInclude(os => os.Skill)
-                .ThenInclude(s => s.Specialization)
-                .ThenInclude(spec => spec.Translations)
+            .ThenInclude(os => os.Skill)
+            .ThenInclude(s => s.Specialization)
+            .ThenInclude(spec => spec.Translations)
             .Include(o => o.OrderWorkTypes)
-                .ThenInclude(owt => owt.WorkType)
-                .ThenInclude(wt => wt.Translations)
+            .ThenInclude(owt => owt.WorkType)
+            .ThenInclude(wt => wt.Translations)
             .Include(o => o.City)
-                .ThenInclude(c => c.Translations)
+            .ThenInclude(c => c.Translations)
             .FirstOrDefaultAsync(o => o.Id == id);
 
         if (order == null) return null;
@@ -513,5 +519,71 @@ public class OrderService : IOrderService
         _context.OrderReviews.Remove(review);
         await _context.SaveChangesAsync();
         return true;
+    }
+
+    private int CalculateEducationScore(UserProfileDto userProfileDto)
+    {
+        if (userProfileDto.UserEducations.Any(ue => ue.EducationLevelId is 1 or 3 or 4))
+            return 10;
+        return userProfileDto.UserEducations.Any(ue => ue.EducationLevelId == 2) ? 5 : 1;
+    }
+
+    private int CalculateFamilyStatusScore(UserProfileDto userProfileDto)
+    {
+        var familyStatus = userProfileDto.FamilyStatus;
+
+        if (familyStatus == null)
+        {
+            return 1;
+        }
+
+        if (familyStatus.Id == 1)
+        {
+            return familyStatus.NumberOfChildren >= 2 ? 10 : 5;
+        }
+        else
+        {
+            return familyStatus.NumberOfChildren == 0 ? 1 : 5;
+        }
+    }
+
+    private int CalculateAgeScore(UserProfileDto userProfileDto)
+    {
+        var currentDate = DateTime.Now;
+        var age = currentDate.Year - userProfileDto.DateOfBirth.Year;
+
+        if (userProfileDto.DateOfBirth.Date > currentDate.AddYears(-age)) age--;
+
+        return age switch
+        {
+            >= 30 and <= 55 => 10,
+            >= 27 and <= 57 => 5,
+            _ => 1
+        };
+    }
+
+    private int CalculateLanguageScore(UserProfileDto userProfileDto)
+    {
+        int languageCount = userProfileDto.Languages?.Count ?? 0;
+
+        return languageCount switch
+        {
+            >= 3 => 10,
+            2 => 6,
+            1 => 3,
+            _ => 0
+        };
+    }
+
+    private int CalculateSkillScore(UserProfileDto userProfileDto)
+    {
+        if (userProfileDto.UserProfileSkills == null || userProfileDto.UserProfileSkills.Count == 0)
+            return 0;
+
+        var totalProficiency = userProfileDto.UserProfileSkills.Sum(skill => skill.ProficiencyLevel);
+        var averageProficiency = totalProficiency / userProfileDto.UserProfileSkills.Count;
+
+        return (int)Math.Round((decimal)averageProficiency);
+
     }
 }

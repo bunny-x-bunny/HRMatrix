@@ -46,6 +46,10 @@ public class UserProfileController : ControllerBase
     [HttpGet("MyProfiles")]
     public async Task<IActionResult> GetMyProfiles()
     {
+        if (!User.Identity!.IsAuthenticated)
+        {
+            return Unauthorized("Token has expired or is invalid");
+        }
         var userName = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userName))
             return NotFound("User not found");
@@ -72,6 +76,10 @@ public class UserProfileController : ControllerBase
             return BadRequest("Invalid profile data.");
         }
 
+        if (!User.Identity!.IsAuthenticated)
+        {
+            return Unauthorized("Token has expired or is invalid");
+        }
         var userName = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userName))
             return NotFound("User not found");
@@ -117,6 +125,10 @@ public class UserProfileController : ControllerBase
     [Authorize]
     public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserProfileDto userProfileDto)
     {
+        if (!User.Identity!.IsAuthenticated)
+        {
+            return Unauthorized("Token has expired or is invalid");
+        }
         var userName = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userName))
             return NotFound("User not found");

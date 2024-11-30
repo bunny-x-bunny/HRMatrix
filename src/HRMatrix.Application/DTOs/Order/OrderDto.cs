@@ -21,4 +21,5 @@ public class OrderDto
     public CityDto City { get; set; }
     public List<SkillDto> Skills { get; set; }
     public List<WorkTypeDto> WorkTypes { get; set; }
+    public List<ResponseDto> Responses { get; set; }
 }
