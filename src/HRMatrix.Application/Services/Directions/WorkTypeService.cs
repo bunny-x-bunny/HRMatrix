@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using HRMatrix.Application.DTOs.WorkType;
+﻿using HRMatrix.Application.DTOs.WorkType;
 using HRMatrix.Application.Services.Interfaces.Directions;
 using HRMatrix.Domain.Entities;
 using HRMatrix.Persistence.Contexts;
@@ -10,12 +9,10 @@ namespace HRMatrix.Application.Services.Directions;
 public class WorkTypeService : IWorkTypeService
 {
     private readonly HRMatrixDbContext _context;
-    private readonly IMapper _mapper;
 
-    public WorkTypeService(HRMatrixDbContext context, IMapper mapper)
+    public WorkTypeService(HRMatrixDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<List<WorkTypeDto>> GetAllWorkTypesAsync()
@@ -23,7 +20,15 @@ public class WorkTypeService : IWorkTypeService
         var workTypes = await _context.WorkTypes
             .Include(wt => wt.Translations)
             .ToListAsync();
-        return _mapper.Map<List<WorkTypeDto>>(workTypes);
+        return workTypes.Select(wt => new WorkTypeDto {
+            Id = wt.Id,
+            Name = wt.Name,
+            Translations = wt.Translations.Select(t => new WorkTypeTranslationDto {
+                Id = t.Id,
+                Name = t.Name,
+                LanguageCode = t.LanguageCode
+            }).ToList()
+        }).ToList();
     }
 
     public async Task<WorkTypeDto> GetWorkTypeByIdAsync(int id)
@@ -31,18 +36,29 @@ public class WorkTypeService : IWorkTypeService
         var workType = await _context.WorkTypes
             .Include(wt => wt.Translations)
             .FirstOrDefaultAsync(wt => wt.Id == id);
-        return _mapper.Map<WorkTypeDto>(workType);
+        if (workType == null)
+            throw new Exception("WorkType not found");
+
+        return new WorkTypeDto {
+            Id = workType.Id,
+            Name = workType.Name,
+            Translations = workType.Translations.Select(t => new WorkTypeTranslationDto {
+                Id = t.Id,
+                Name = t.Name,
+                LanguageCode = t.LanguageCode
+            }).ToList()
+        };
     }
 
     public async Task<int> CreateWorkTypeAsync(CreateWorkTypeDto workTypeDto)
     {
-        var workType = _mapper.Map<WorkType>(workTypeDto);
-
-        workType.Translations = workTypeDto.Translations.Select(translation => new WorkTypeTranslation
-        {
-            Name = translation.Name,
-            LanguageCode = translation.LanguageCode
-        }).ToList();
+        var workType = new WorkType {
+            Name = workTypeDto.Name,
+            Translations = workTypeDto.Translations.Select(translation => new WorkTypeTranslation {
+                Name = translation.Name,
+                LanguageCode = translation.LanguageCode
+            }).ToList()
+        };
 
         _context.WorkTypes.Add(workType);
         await _context.SaveChangesAsync();
