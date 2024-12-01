@@ -23,14 +23,14 @@ public class UserProfileSkillsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> UpsertUserProfileSkills([FromBody] CreateUserProfileSkillsRequest skillsRequest)
     {
-        var userProfileId = await _userProfileSkillService.UpsertUserProfileSkillsAsync(skillsRequest);
+        var userProfileId = await _userProfileSkillService.UpsertUserProfileSkillsAsync(skillsRequest, true);
         return Ok(userProfileId);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUserProfileSkill(int id)
     {
-        var result = await _userProfileSkillService.DeleteUserProfileSkillAsync(id);
+        var result = await _userProfileSkillService.DeleteUserProfileSkillAsync(id, true);
         return result ? NoContent() : NotFound();
     }
 }

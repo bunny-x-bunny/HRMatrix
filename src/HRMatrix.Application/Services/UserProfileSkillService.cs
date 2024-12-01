@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using HRMatrix.Application.DTOs.Skill;
+﻿using HRMatrix.Application.DTOs.Skill;
 using HRMatrix.Application.DTOs.UserProfileSkills;
 using HRMatrix.Domain.Entities;
 using HRMatrix.Persistence.Contexts;
@@ -10,12 +9,10 @@ namespace HRMatrix.Application.Services;
 public class UserProfileSkillService : IUserProfileSkillService
 {
     private readonly HRMatrixDbContext _context;
-    private readonly IMapper _mapper;
 
-    public UserProfileSkillService(HRMatrixDbContext context, IMapper mapper)
+    public UserProfileSkillService(HRMatrixDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<UserProfileSkillListResponse> GetUserProfileSkillsAsync(int userProfileId)
@@ -31,7 +28,11 @@ public class UserProfileSkillService : IUserProfileSkillService
             SkillId = upSkill.SkillId,
             SkillName = upSkill.Skill.Name,
             ProficiencyLevel = upSkill.ProficiencyLevel,
-            Translations = _mapper.Map<List<SkillTranslationDto>>(upSkill.Skill.Translations)
+            Translations = upSkill.Skill.Translations.Select(t => new SkillTranslationDto {
+                Id = t.Id,
+                LanguageCode = t.LanguageCode,
+                Name = t.Name
+            }).ToList()
         }).ToList();
 
         return new UserProfileSkillListResponse
@@ -41,7 +42,7 @@ public class UserProfileSkillService : IUserProfileSkillService
         };
     }
 
-    public async Task<int> UpsertUserProfileSkillsAsync(CreateUserProfileSkillsRequest skillsRequest)
+    public async Task<int> UpsertUserProfileSkillsAsync(CreateUserProfileSkillsRequest skillsRequest, bool withSave = false)
     {
         var userProfile = await _context.UserProfiles.FindAsync(skillsRequest.UserProfileId);
 
@@ -62,19 +63,21 @@ public class UserProfileSkillService : IUserProfileSkillService
             ProficiencyLevel = skill.ProficiencyLevel
         }).ToList();
 
-        await _context.UserProfileSkills.AddRangeAsync(newSkills);
-        await _context.SaveChangesAsync();
+        _context.UserProfileSkills.AddRange(newSkills);
+        if (withSave)
+            await _context.SaveChangesAsync();
 
         return skillsRequest.UserProfileId;
     }
 
-    public async Task<bool> DeleteUserProfileSkillAsync(int id)
+    public async Task<bool> DeleteUserProfileSkillAsync(int id, bool withSave = false)
     {
         var skill = await _context.UserProfileSkills.FindAsync(id);
         if (skill == null) return false;
 
         _context.UserProfileSkills.Remove(skill);
-        await _context.SaveChangesAsync();
+        if (withSave)
+            await _context.SaveChangesAsync();
         return true;
     }
 }
