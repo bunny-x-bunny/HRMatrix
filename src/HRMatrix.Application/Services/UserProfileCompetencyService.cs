@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using HRMatrix.Application.DTOs.Competency;
+﻿using HRMatrix.Application.DTOs.Competency;
 using HRMatrix.Application.DTOs.UserProfileCompetency;
 using HRMatrix.Application.Services.Interfaces;
 using HRMatrix.Persistence.Contexts;
@@ -11,12 +10,10 @@ namespace HRMatrix.Application.Services
     public class UserProfileCompetencyService : IUserProfileCompetencyService
     {
         private readonly HRMatrixDbContext _context;
-        private readonly IMapper _mapper;
 
-        public UserProfileCompetencyService(HRMatrixDbContext context, IMapper mapper)
+        public UserProfileCompetencyService(HRMatrixDbContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         public async Task<UserProfileCompetencyListResponse> GetUserProfileCompetenciesAsync(int userProfileId)
@@ -27,12 +24,15 @@ namespace HRMatrix.Application.Services
                 .Where(up => up.UserProfileId == userProfileId)
                 .ToListAsync();
 
-            var competencyResponses = userProfileCompetencies.Select(upCompetency => new UserProfileCompetencyResponse
-            {
+            var competencyResponses = userProfileCompetencies.Select(upCompetency => new UserProfileCompetencyResponse {
                 CompetencyId = upCompetency.CompetencyId,
                 CompetencyName = upCompetency.Competency.Name,
                 ProficiencyLevel = upCompetency.ProficiencyLevel,
-                Translations = _mapper.Map<List<CompetencyTranslationDto>>(upCompetency.Competency.Translations)
+                Translations = upCompetency.Competency.Translations.Select(t => new CompetencyTranslationDto {
+                    Id = t.Id,
+                    LanguageCode = t.LanguageCode,
+                    Name = t.Name
+                }).ToList()
             }).ToList();
 
             return new UserProfileCompetencyListResponse
@@ -42,7 +42,7 @@ namespace HRMatrix.Application.Services
             };
         }
 
-        public async Task<int> UpsertUserProfileCompetenciesAsync(CreateUserProfileCompetenciesRequest competenciesRequest)
+        public async Task<int> UpsertUserProfileCompetenciesAsync(CreateUserProfileCompetenciesRequest competenciesRequest, bool withSave = false)
         {
             var userProfile = await _context.UserProfiles.FindAsync(competenciesRequest.UserProfileId);
 
@@ -63,19 +63,21 @@ namespace HRMatrix.Application.Services
                 ProficiencyLevel = competency.ProficiencyLevel
             }).ToList();
 
-            await _context.UserProfileCompetencies.AddRangeAsync(newCompetencies);
-            await _context.SaveChangesAsync();
+            _context.UserProfileCompetencies.AddRange(newCompetencies);
+            if (withSave)
+                await _context.SaveChangesAsync();
 
             return competenciesRequest.UserProfileId;
         }
 
-        public async Task<bool> DeleteUserProfileCompetencyAsync(int id)
+        public async Task<bool> DeleteUserProfileCompetencyAsync(int id, bool withSave = false)
         {
             var competency = await _context.UserProfileCompetencies.FindAsync(id);
             if (competency == null) return false;
 
             _context.UserProfileCompetencies.Remove(competency);
-            await _context.SaveChangesAsync();
+            if (withSave)
+                await _context.SaveChangesAsync();
             return true;
         }
     }

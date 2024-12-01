@@ -25,14 +25,14 @@ public class UserProfileCompetenciesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> UpsertUserProfileCompetencies([FromBody] CreateUserProfileCompetenciesRequest competenciesRequest)
     {
-        var userProfileId = await _userProfileCompetencyService.UpsertUserProfileCompetenciesAsync(competenciesRequest);
+        var userProfileId = await _userProfileCompetencyService.UpsertUserProfileCompetenciesAsync(competenciesRequest, true);
         return Ok(userProfileId);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUserProfileCompetency(int id)
     {
-        var result = await _userProfileCompetencyService.DeleteUserProfileCompetencyAsync(id);
+        var result = await _userProfileCompetencyService.DeleteUserProfileCompetencyAsync(id, true);
         return result ? NoContent() : NotFound();
     }
 }
