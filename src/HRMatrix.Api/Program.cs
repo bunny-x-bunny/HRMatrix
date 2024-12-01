@@ -69,6 +69,7 @@ builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<IUserProfileFamilyStatusService, UserProfileFamilyStatusService>();
 builder.Services.AddScoped<IUserProfileSkillService, UserProfileSkillService>();
 builder.Services.AddScoped<IUserProfileWorkExperienceService, UserProfileWorkExperienceService>();
+builder.Services.AddScoped<IUserProfileWorkTypeService, UserProfileWorkTypeService>();
 builder.Services.AddScoped<ILanguageService, LanguageService>();
 builder.Services.AddScoped<IUserProfileLanguageService, UserProfileLanguageService>();
 builder.Services.AddScoped<ICompetencyService, CompetencyService>();
