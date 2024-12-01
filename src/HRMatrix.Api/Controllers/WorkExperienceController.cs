@@ -9,9 +9,9 @@ namespace HRMatrix.Api.Controllers
     [Route("api/[controller]")]
     public class WorkExperienceController : ControllerBase
     {
-        private readonly IWorkExperienceService _workExperienceService;
+        private readonly IUserProfileWorkExperienceService _workExperienceService;
 
-        public WorkExperienceController(IWorkExperienceService workExperienceService)
+        public WorkExperienceController(IUserProfileWorkExperienceService workExperienceService)
         {
             _workExperienceService = workExperienceService;
         }
@@ -26,14 +26,14 @@ namespace HRMatrix.Api.Controllers
         [HttpPost("work-experiences")]
         public async Task<IActionResult> AddOrUpdateWorkExperience([FromBody] CreateWorkExperienceDto workExperienceDto)
         {
-            var workExperienceId = await _workExperienceService.AddOrUpdateWorkExperienceAsync(workExperienceDto);
+            var workExperienceId = await _workExperienceService.AddOrUpdateWorkExperienceAsync(workExperienceDto, true);
             return Ok(workExperienceId);
         }
 
         [HttpDelete("work-experiences/{id}")]
         public async Task<IActionResult> DeleteWorkExperience(int id)
         {
-            var result = await _workExperienceService.DeleteWorkExperienceAsync(id);
+            var result = await _workExperienceService.DeleteWorkExperienceAsync(id, true);
             if (!result) return NotFound();
             return NoContent();
         }

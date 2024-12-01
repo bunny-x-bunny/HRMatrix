@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using HRMatrix.Application.DTOs.WorkExperiences;
+﻿using HRMatrix.Application.DTOs.WorkExperiences;
 using HRMatrix.Application.Services.Interfaces;
 using HRMatrix.Domain.Entities;
 using HRMatrix.Persistence.Contexts;
@@ -7,15 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HRMatrix.Application.Services
 {
-    public class WorkExperienceService : IWorkExperienceService
-    {
+    public class UserProfileWorkExperienceService : IUserProfileWorkExperienceService {
         private readonly HRMatrixDbContext _context;
-        private readonly IMapper _mapper;
 
-        public WorkExperienceService(HRMatrixDbContext context, IMapper mapper)
+        public UserProfileWorkExperienceService(HRMatrixDbContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         public async Task<List<WorkExperienceResponseDto>> GetWorkExperiencesAsync(int userProfileId)
@@ -24,12 +20,26 @@ namespace HRMatrix.Application.Services
                 .Where(we => we.UserProfileId == userProfileId)
                 .ToListAsync();
 
-            return _mapper.Map<List<WorkExperienceResponseDto>>(workExperiences);
+            return workExperiences.Select(we => new WorkExperienceResponseDto {
+                Achievements = we.Achievements,
+                CompanyName = we.CompanyName,
+                EndDate = we.EndDate,
+                Id = we.Id,
+                Position = we.Position,
+                StartDate = we.StartDate
+            }).ToList();
         }
 
-        public async Task<int> AddOrUpdateWorkExperienceAsync(CreateWorkExperienceDto workExperienceDto)
+        public async Task<int> AddOrUpdateWorkExperienceAsync(CreateWorkExperienceDto workExperienceDto, bool withSave = false)
         {
-            var workExperience = _mapper.Map<WorkExperience>(workExperienceDto);
+            var workExperience = new WorkExperience {
+                UserProfileId = workExperienceDto.UserProfileId,
+                CompanyName = workExperienceDto.CompanyName,
+                Position = workExperienceDto.Position,
+                StartDate = workExperienceDto.StartDate,
+                EndDate = workExperienceDto.EndDate,
+                Achievements = workExperienceDto.Achievements
+            };
             var userProfileId = workExperienceDto.UserProfileId;
             workExperience.UserProfileId = userProfileId;
 
@@ -48,17 +58,19 @@ namespace HRMatrix.Application.Services
                 _context.WorkExperiences.Add(workExperience);
             }
 
-            await _context.SaveChangesAsync();
+            if(withSave)
+                await _context.SaveChangesAsync();
             return workExperience.Id;
         }
 
-        public async Task<bool> DeleteWorkExperienceAsync(int id)
+        public async Task<bool> DeleteWorkExperienceAsync(int id, bool withSave = false)
         {
             var workExperience = await _context.WorkExperiences.FindAsync(id);
             if (workExperience == null) return false;
 
             _context.WorkExperiences.Remove(workExperience);
-            await _context.SaveChangesAsync();
+            if(withSave)
+                await _context.SaveChangesAsync();
             return true;
         }
     }
