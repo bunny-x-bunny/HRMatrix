@@ -16,16 +16,18 @@ public class UserProfileEducationController : ControllerBase
     }
     
     [HttpGet("{userProfileId}")]
+    [Obsolete("Unimplemented", true)]
     public async Task<IActionResult> GetUserProfileEducations(int userProfileId)
     {
-        var userProfileEducations = await _userProfileEducationService.GetUserProfileEducationsAsync(userProfileId);
+        //var userProfileEducations = await _userProfileEducationService.GetUserProfileEducationsAsync(userProfileId);
 
-        if (userProfileEducations == null)
-        {
-            return NotFound($"User profile with ID {userProfileId} not found or no education data.");
-        }
+        //if (userProfileEducations == null)
+        //{
+        //    return NotFound($"User profile with ID {userProfileId} not found or no education data.");
+        //}
 
-        return Ok(userProfileEducations);
+        //return Ok(userProfileEducations);
+        throw new NotImplementedException();
     }
     
     [HttpPost("single")]

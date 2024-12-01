@@ -14,21 +14,21 @@ namespace HRMatrix.Application.Services
             _context = context;
         }
 
-        public async Task<List<WorkExperienceResponseDto>> GetWorkExperiencesAsync(int userProfileId)
-        {
-            var workExperiences = await _context.WorkExperiences
-                .Where(we => we.UserProfileId == userProfileId)
-                .ToListAsync();
+        //public async Task<List<WorkExperienceResponseDto>> GetWorkExperiencesAsync(int userProfileId)
+        //{
+        //    var workExperiences = await _context.WorkExperiences
+        //        .Where(we => we.UserProfileId == userProfileId)
+        //        .ToListAsync();
 
-            return workExperiences.Select(we => new WorkExperienceResponseDto {
-                Achievements = we.Achievements,
-                CompanyName = we.CompanyName,
-                EndDate = we.EndDate,
-                Id = we.Id,
-                Position = we.Position,
-                StartDate = we.StartDate
-            }).ToList();
-        }
+        //    return workExperiences.Select(we => new WorkExperienceResponseDto {
+        //        Achievements = we.Achievements,
+        //        CompanyName = we.CompanyName,
+        //        EndDate = we.EndDate,
+        //        Id = we.Id,
+        //        Position = we.Position,
+        //        StartDate = we.StartDate
+        //    }).ToList();
+        //}
 
         public async Task<int> AddOrUpdateWorkExperienceAsync(CreateWorkExperienceDto workExperienceDto, bool withSave = false)
         {

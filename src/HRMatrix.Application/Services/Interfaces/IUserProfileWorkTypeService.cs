@@ -6,7 +6,7 @@ namespace HRMatrix.Application.Services.Interfaces
 {
     public interface IUserProfileWorkTypeService
     {
-        Task<List<UserProfileWorkTypeResponse>> GetUserProfileWorkTypes(UserProfile user);
+        //Task<List<UserProfileWorkTypeResponse>> GetUserProfileWorkTypes(UserProfile user);
         Task<int> CreateUserProfileWorkType(CreateUserProfileWorkTypeRequest workTypeDto, UserProfile user, bool withSave = false);
         Task<List<int>> UpsertUserProfileWorkTypes(CreateUserProfileWorkTypesRequest workTypesDto, bool withSave = false);
         Task<bool> DeleteUserProfileWorkType(int userProfileWorkTypeId, bool withSave = false);

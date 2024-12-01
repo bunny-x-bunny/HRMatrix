@@ -15,32 +15,32 @@ public class UserProfileSkillService : IUserProfileSkillService
         _context = context;
     }
 
-    public async Task<UserProfileSkillListResponse> GetUserProfileSkillsAsync(int userProfileId)
-    {
-        var userProfileSkills = await _context.UserProfileSkills
-            .Include(up => up.Skill)
-            .Include(up => up.Skill.Translations)
-            .Where(up => up.UserProfileId == userProfileId)
-            .ToListAsync();
+    //public async Task<UserProfileSkillListResponse> GetUserProfileSkillsAsync(int userProfileId)
+    //{
+    //    var userProfileSkills = await _context.UserProfileSkills
+    //        .Include(up => up.Skill)
+    //        .Include(up => up.Skill.Translations)
+    //        .Where(up => up.UserProfileId == userProfileId)
+    //        .ToListAsync();
 
-        var skillResponses = userProfileSkills.Select(upSkill => new UserProfileSkillResponse
-        {
-            SkillId = upSkill.SkillId,
-            SkillName = upSkill.Skill.Name,
-            ProficiencyLevel = upSkill.ProficiencyLevel,
-            Translations = upSkill.Skill.Translations.Select(t => new SkillTranslationDto {
-                Id = t.Id,
-                LanguageCode = t.LanguageCode,
-                Name = t.Name
-            }).ToList()
-        }).ToList();
+    //    var skillResponses = userProfileSkills.Select(upSkill => new UserProfileSkillResponse
+    //    {
+    //        SkillId = upSkill.SkillId,
+    //        SkillName = upSkill.Skill.Name,
+    //        ProficiencyLevel = upSkill.ProficiencyLevel,
+    //        Translations = upSkill.Skill.Translations.Select(t => new SkillTranslationDto {
+    //            Id = t.Id,
+    //            LanguageCode = t.LanguageCode,
+    //            Name = t.Name
+    //        }).ToList()
+    //    }).ToList();
 
-        return new UserProfileSkillListResponse
-        {
-            UserProfileId = userProfileId,
-            Skills = skillResponses
-        };
-    }
+    //    return new UserProfileSkillListResponse
+    //    {
+    //        UserProfileId = userProfileId,
+    //        Skills = skillResponses
+    //    };
+    //}
 
     public async Task<int> UpsertUserProfileSkillsAsync(CreateUserProfileSkillsRequest skillsRequest, bool withSave = false)
     {

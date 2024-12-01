@@ -15,40 +15,40 @@ public class WorkTypeService : IWorkTypeService
         _context = context;
     }
 
-    public async Task<List<WorkTypeDto>> GetAllWorkTypesAsync()
-    {
-        var workTypes = await _context.WorkTypes
-            .Include(wt => wt.Translations)
-            .ToListAsync();
-        return workTypes.Select(wt => new WorkTypeDto {
-            Id = wt.Id,
-            Name = wt.Name,
-            Translations = wt.Translations.Select(t => new WorkTypeTranslationDto {
-                Id = t.Id,
-                Name = t.Name,
-                LanguageCode = t.LanguageCode
-            }).ToList()
-        }).ToList();
-    }
+    //public async Task<List<WorkTypeDto>> GetAllWorkTypesAsync()
+    //{
+    //    var workTypes = await _context.WorkTypes
+    //        .Include(wt => wt.Translations)
+    //        .ToListAsync();
+    //    return workTypes.Select(wt => new WorkTypeDto {
+    //        Id = wt.Id,
+    //        Name = wt.Name,
+    //        Translations = wt.Translations.Select(t => new WorkTypeTranslationDto {
+    //            Id = t.Id,
+    //            Name = t.Name,
+    //            LanguageCode = t.LanguageCode
+    //        }).ToList()
+    //    }).ToList();
+    //}
 
-    public async Task<WorkTypeDto> GetWorkTypeByIdAsync(int id)
-    {
-        var workType = await _context.WorkTypes
-            .Include(wt => wt.Translations)
-            .FirstOrDefaultAsync(wt => wt.Id == id);
-        if (workType == null)
-            throw new Exception("WorkType not found");
+    //public async Task<WorkTypeDto> GetWorkTypeByIdAsync(int id)
+    //{
+    //    var workType = await _context.WorkTypes
+    //        .Include(wt => wt.Translations)
+    //        .FirstOrDefaultAsync(wt => wt.Id == id);
+    //    if (workType == null)
+    //        throw new Exception("WorkType not found");
 
-        return new WorkTypeDto {
-            Id = workType.Id,
-            Name = workType.Name,
-            Translations = workType.Translations.Select(t => new WorkTypeTranslationDto {
-                Id = t.Id,
-                Name = t.Name,
-                LanguageCode = t.LanguageCode
-            }).ToList()
-        };
-    }
+    //    return new WorkTypeDto {
+    //        Id = workType.Id,
+    //        Name = workType.Name,
+    //        Translations = workType.Translations.Select(t => new WorkTypeTranslationDto {
+    //            Id = t.Id,
+    //            Name = t.Name,
+    //            LanguageCode = t.LanguageCode
+    //        }).ToList()
+    //    };
+    //}
 
     public async Task<int> CreateWorkTypeAsync(CreateWorkTypeDto workTypeDto)
     {

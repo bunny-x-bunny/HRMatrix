@@ -16,21 +16,25 @@ public class WorkTypesController : ControllerBase
     }
 
     [HttpGet]
+    [Obsolete("Unimplemented", true)]
     public async Task<IActionResult> GetAllWorkTypes()
     {
-        var workTypes = await _workTypeService.GetAllWorkTypesAsync();
-        return Ok(workTypes);
+        //var workTypes = await _workTypeService.GetAllWorkTypesAsync();
+        //return Ok(workTypes);
+        throw new NotImplementedException();
     }
 
     [HttpGet("{id}")]
+    [Obsolete("Unimplemented", true)]
     public async Task<IActionResult> GetWorkTypeById(int id)
     {
-        var workType = await _workTypeService.GetWorkTypeByIdAsync(id);
-        if (workType == null)
-        {
-            return NotFound();
-        }
-        return Ok(workType);
+        //var workType = await _workTypeService.GetWorkTypeByIdAsync(id);
+        //if (workType == null)
+        //{
+        //    return NotFound();
+        //}
+        //return Ok(workType);
+        throw new NotImplementedException();
     }
 
     [HttpPost]

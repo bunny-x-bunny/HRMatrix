@@ -13,16 +13,16 @@ namespace HRMatrix.Application.Services
             _context = context;
         }
 
-        public async Task<List<UserProfileWorkTypeResponse>> GetUserProfileWorkTypes(UserProfile user) {
-            var userProfileWorkTypes = await _context.UserProfileWorkTypes
-                .Include(wt => wt.WorkType)
-                .Where(wt => wt.UserProfileId == user.Id)
-                .ToListAsync();
-            return userProfileWorkTypes.Select(wt => new UserProfileWorkTypeResponse {
-                WorkTypeId = wt.WorkTypeId,
-                WorkTypeName = wt.WorkType.Name
-            }).ToList();
-        }
+        //public async Task<List<UserProfileWorkTypeResponse>> GetUserProfileWorkTypes(UserProfile user) {
+        //    var userProfileWorkTypes = await _context.UserProfileWorkTypes
+        //        .Include(wt => wt.WorkType)
+        //        .Where(wt => wt.UserProfileId == user.Id)
+        //        .ToListAsync();
+        //    return userProfileWorkTypes.Select(wt => new UserProfileWorkTypeResponse {
+        //        WorkTypeId = wt.WorkTypeId,
+        //        WorkTypeName = wt.WorkType.Name
+        //    }).ToList();
+        //}
 
         public async Task<int> CreateUserProfileWorkType(CreateUserProfileWorkTypeRequest workTypeDto, UserProfile user, bool withSave = false) {
             var workType = new UserProfileWorkType {

@@ -18,34 +18,35 @@ public class UserProfileEducationService : IUserProfileEducationService
 
     public async Task<UserProfileEducationListResponse> GetUserProfileEducationsAsync(int userProfileId)
     {
-        var userProfile = await _context.UserProfiles
-            .Include(up => up.UserEducations)
-            .ThenInclude(ue => ue.EducationLevel)
-            .ThenInclude(el => el.Translations)
-            .FirstOrDefaultAsync(up => up.Id == userProfileId);
+        //    var userProfile = await _context.UserProfiles
+        //        .Include(up => up.UserEducations)
+        //        .ThenInclude(ue => ue.EducationLevel)
+        //        .ThenInclude(el => el.Translations)
+        //        .FirstOrDefaultAsync(up => up.Id == userProfileId);
 
-        if (userProfile == null)
-        {
-            return null;
-        }
-        
-        var userProfileEducationListDto = new UserProfileEducationListResponse
-        {
-            UserProfileId = userProfile.Id,
-            Educations = userProfile.UserEducations.Select(education => new UserProfileEducationResponse
-            {
-                EducationLevelId = education.EducationLevelId,
-                EducationLevelName = education.EducationLevel.Name,
-                Quantity = education.Quantity,
-                Translations = education.EducationLevel.Translations.Select(t => new EducationLevelTranslationDto {
-                    Id = t.Id,
-                    LanguageCode = t.LanguageCode,
-                    Name = t.Name
-                }).ToList()
-            }).ToList()
-        };
+        //    if (userProfile == null)
+        //    {
+        //        return null;
+        //    }
 
-        return userProfileEducationListDto;
+        //    var userProfileEducationListDto = new UserProfileEducationListResponse
+        //    {
+        //        UserProfileId = userProfile.Id,
+        //        Educations = userProfile.UserEducations.Select(education => new UserProfileEducationResponse
+        //        {
+        //            EducationLevelId = education.EducationLevelId,
+        //            EducationLevelName = education.EducationLevel.Name,
+        //            Quantity = education.Quantity,
+        //            Translations = education.EducationLevel.Translations.Select(t => new EducationLevelTranslationDto {
+        //                Id = t.Id,
+        //                LanguageCode = t.LanguageCode,
+        //                Name = t.Name
+        //            }).ToList()
+        //        }).ToList()
+        //    };
+
+        //    return userProfileEducationListDto;
+        throw new NotImplementedException("Unimplemented: GetUserProfileEducationsAsync");
     }
     
     public async Task<UserProfileEducationResponse> CreateUserProfileEducationAsync(CreateUserProfileEducationRequest educationRequest, bool withSave = false)

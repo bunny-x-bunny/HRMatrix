@@ -16,10 +16,11 @@ public class UserProfileCompetenciesController : ControllerBase
     }
 
     [HttpGet("{userProfileId}")]
-    public async Task<IActionResult> GetUserProfileCompetencies(int userProfileId)
-    {
-        var competencies = await _userProfileCompetencyService.GetUserProfileCompetenciesAsync(userProfileId);
-        return Ok(competencies);
+    [Obsolete("Unimplemented", true)]
+    public async Task<IActionResult> GetUserProfileCompetencies(int userProfileId) {
+        //var competencies = await _userProfileCompetencyService.GetUserProfileCompetenciesAsync(userProfileId);
+        //return Ok(competencies);
+        throw new NotImplementedException();
     }
 
     [HttpPost]

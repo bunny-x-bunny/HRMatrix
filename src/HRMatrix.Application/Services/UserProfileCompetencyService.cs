@@ -16,31 +16,31 @@ namespace HRMatrix.Application.Services
             _context = context;
         }
 
-        public async Task<UserProfileCompetencyListResponse> GetUserProfileCompetenciesAsync(int userProfileId)
-        {
-            var userProfileCompetencies = await _context.UserProfileCompetencies
-                .Include(up => up.Competency)
-                .Include(up => up.Competency.Translations)
-                .Where(up => up.UserProfileId == userProfileId)
-                .ToListAsync();
+        //public async Task<UserProfileCompetencyListResponse> GetUserProfileCompetenciesAsync(int userProfileId)
+        //{
+        //    var userProfileCompetencies = await _context.UserProfileCompetencies
+        //        .Include(up => up.Competency)
+        //        .Include(up => up.Competency.Translations)
+        //        .Where(up => up.UserProfileId == userProfileId)
+        //        .ToListAsync();
 
-            var competencyResponses = userProfileCompetencies.Select(upCompetency => new UserProfileCompetencyResponse {
-                CompetencyId = upCompetency.CompetencyId,
-                CompetencyName = upCompetency.Competency.Name,
-                ProficiencyLevel = upCompetency.ProficiencyLevel,
-                Translations = upCompetency.Competency.Translations.Select(t => new CompetencyTranslationDto {
-                    Id = t.Id,
-                    LanguageCode = t.LanguageCode,
-                    Name = t.Name
-                }).ToList()
-            }).ToList();
+        //    var competencyResponses = userProfileCompetencies.Select(upCompetency => new UserProfileCompetencyResponse {
+        //        CompetencyId = upCompetency.CompetencyId,
+        //        CompetencyName = upCompetency.Competency.Name,
+        //        ProficiencyLevel = upCompetency.ProficiencyLevel,
+        //        Translations = upCompetency.Competency.Translations.Select(t => new CompetencyTranslationDto {
+        //            Id = t.Id,
+        //            LanguageCode = t.LanguageCode,
+        //            Name = t.Name
+        //        }).ToList()
+        //    }).ToList();
 
-            return new UserProfileCompetencyListResponse
-            {
-                UserProfileId = userProfileId,
-                Competencies = competencyResponses
-            };
-        }
+        //    return new UserProfileCompetencyListResponse
+        //    {
+        //        UserProfileId = userProfileId,
+        //        Competencies = competencyResponses
+        //    };
+        //}
 
         public async Task<int> UpsertUserProfileCompetenciesAsync(CreateUserProfileCompetenciesRequest competenciesRequest, bool withSave = false)
         {

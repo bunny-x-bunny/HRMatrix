@@ -17,10 +17,12 @@ namespace HRMatrix.Api.Controllers
         }
 
         [HttpGet("{userProfileId}/work-experiences")]
+        [Obsolete("Unimplemented", true)]
         public async Task<IActionResult> GetWorkExperiences(int userProfileId)
         {
-            var workExperiences = await _workExperienceService.GetWorkExperiencesAsync(userProfileId);
-            return Ok(workExperiences);
+            //var workExperiences = await _workExperienceService.GetWorkExperiencesAsync(userProfileId);
+            //return Ok(workExperiences);
+            throw new NotImplementedException();
         }
 
         [HttpPost("work-experiences")]
