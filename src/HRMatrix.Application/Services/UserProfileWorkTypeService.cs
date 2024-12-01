@@ -13,7 +13,7 @@ namespace HRMatrix.Application.Services
             _context = context;
         }
 
-        public async Task<List<UserProfileWorkTypeResponse>> GetAllWorkTypesForUserProfileAsync(UserProfile user) {
+        public async Task<List<UserProfileWorkTypeResponse>> GetUserProfileWorkTypes(UserProfile user) {
             var userProfileWorkTypes = await _context.UserProfileWorkTypes
                 .Include(wt => wt.WorkType)
                 .Where(wt => wt.UserProfileId == user.Id)
@@ -24,7 +24,7 @@ namespace HRMatrix.Application.Services
             }).ToList();
         }
 
-        public async Task<int> CreateWorkTypeForUserProfileAsync(CreateUserProfileWorkTypeRequest workTypeDto, UserProfile user, bool withSave = false) {
+        public async Task<int> CreateUserProfileWorkType(CreateUserProfileWorkTypeRequest workTypeDto, UserProfile user, bool withSave = false) {
             var workType = new UserProfileWorkType {
                 UserProfileId = user.Id,
                 WorkTypeId = workTypeDto.WorkTypeId
@@ -35,7 +35,7 @@ namespace HRMatrix.Application.Services
             return workType.Id;
         }
 
-        public async Task<List<int>> UpsertWorkTypesForUserProfileAsync(CreateUserProfileWorkTypesRequest workTypesDto, bool withSave = false) {
+        public async Task<List<int>> UpsertUserProfileWorkTypes(CreateUserProfileWorkTypesRequest workTypesDto, bool withSave = false) {
             var userProfile = await _context.UserProfiles.FindAsync(workTypesDto.UserProfileId);
             if (userProfile == null) {
                 throw new Exception($"User profile with ID {workTypesDto.UserProfileId} not found.");
@@ -57,11 +57,11 @@ namespace HRMatrix.Application.Services
                 await _context.SaveChangesAsync();
                 return userProfile.UserProfileWorkTypes.Select(wt => wt.Id).ToList();
             } else {
-                return [];
+                return Enumerable.Empty<int>().ToList();
             }
         }
 
-        public async Task<bool> DeleteWorkTypeForUserProfileAsync(int userProfileWorkTypeId, bool withSave = false) {
+        public async Task<bool> DeleteUserProfileWorkType(int userProfileWorkTypeId, bool withSave = false) {
             var workType = await _context.UserProfileWorkTypes.FindAsync(userProfileWorkTypeId);
             if (workType == null) return false;
 
