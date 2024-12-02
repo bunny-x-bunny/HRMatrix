@@ -4,6 +4,7 @@ using HRMatrix.Application.Services.Interfaces;
 using HRMatrix.Domain.Entities;
 using HRMatrix.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.ObjectModel;
 
 namespace HRMatrix.Application.Services;
 
@@ -96,20 +97,13 @@ public class UserProfileEducationService : IUserProfileEducationService
         };
     }
     
-    public async Task<UserProfileEducationListResponse?> CreateUserProfileEducationsAsync(int userProfileId, List<UserEducationEntryRequest> educationRequests, bool withSave = false)
+    public async Task<UserProfileEducationListResponse?> CreateUserProfileEducationsAsync(List<UserEducationEntryRequest> educationRequests, UserProfile user, bool withSave = false)
     {
-        var userProfile = await _context.UserProfiles
-            .Include(up => up.UserEducations)
-            .FirstOrDefaultAsync(up => up.Id == userProfileId);
-
-        if (userProfile == null)
-        {
-            throw new Exception($"User profile with ID {userProfileId} not found.");
-        }
-
+        if (user.UserEducations == null)
+            user.UserEducations = new List<UserProfileEducation>();
         foreach (var educationRequest in educationRequests)
         {
-            var existingEducation = userProfile.UserEducations
+            var existingEducation = user.UserEducations
                 .FirstOrDefault(ue => ue.EducationLevelId == educationRequest.EducationLevelId);
 
             if (existingEducation != null)
@@ -119,50 +113,36 @@ public class UserProfileEducationService : IUserProfileEducationService
 
             var newEducation = new UserProfileEducation
             {
-                UserProfileId = userProfileId,
                 EducationLevelId = educationRequest.EducationLevelId,
                 Quantity = educationRequest.Quantity
             };
 
-            userProfile.UserEducations.Add(newEducation);
+            user.UserEducations.Add(newEducation);
         }
 
         if (withSave) {
             await _context.SaveChangesAsync();
-            return await GetUserProfileEducationsAsync(userProfileId);
+            return await GetUserProfileEducationsAsync(user.Id);
         } else {
             return null;
         }
     }
 
-    public async Task<UserProfileEducationListResponse?> UpdateUserProfileEducationsAsync(UpdateUserProfileEducationRequest updateRequest, bool withSave = false)
+    public async Task<UserProfileEducationListResponse?> UpdateUserProfileEducationsAsync(List<UserEducationEntryRequest> educationRequests, UserProfile user, bool withSave = false)
     {
-        var userProfile = await _context.UserProfiles
-            .Include(up => up.UserEducations)
-            .FirstOrDefaultAsync(up => up.Id == updateRequest.UserProfileId);
+        var existingEducations = await _context.UserProfileEducations
+            .Where(ue => ue.UserProfileId == user.Id)
+            .ToListAsync();
+        _context.UserProfileEducations.RemoveRange(existingEducations);
 
-        if (userProfile == null)
-        {
-            throw new Exception($"User profile with ID {updateRequest.UserProfileId} not found.");
-        }
-        
-        _context.UserProfileEducations.RemoveRange(userProfile.UserEducations);
-        
-        foreach (var educationRequest in updateRequest.Educations)
-        {
-            var newEducation = new UserProfileEducation
-            {
-                UserProfileId = updateRequest.UserProfileId,
-                EducationLevelId = educationRequest.EducationLevelId,
-                Quantity = educationRequest.Quantity
-            };
-
-            userProfile.UserEducations.Add(newEducation);
-        }
+        user.UserEducations = educationRequests.Select(e => new UserProfileEducation {
+            EducationLevelId = e.EducationLevelId,
+            Quantity = e.Quantity
+        }).ToList();
 
         if (withSave) {
             await _context.SaveChangesAsync();
-            return await GetUserProfileEducationsAsync(updateRequest.UserProfileId);
+            return await GetUserProfileEducationsAsync(user.Id);
         } else {
             return null;
         }

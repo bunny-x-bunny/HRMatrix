@@ -42,31 +42,24 @@ public class UserProfileLanguageService : IUserProfileLanguageService
         };
     }
 
-    public async Task<int> UpsertUserProfileLanguagesAsync(CreateUserProfileLanguagesRequest languagesRequest)
+    public async Task<int> UpsertUserProfileLanguagesAsync(List<CreateUserProfileLanguageRequest> languagesRequest, UserProfile user, bool withSave = false)
     {
-        var userProfile = await _context.UserProfiles.FindAsync(languagesRequest.UserProfileId);
-
-        if (userProfile == null)
-        {
-            throw new Exception($"User profile with ID {languagesRequest.UserProfileId} not found.");
+        if (user.Id != 0) {
+            var existingLanguages = await _context.UserProfileLanguages
+                .Where(up => up.UserProfileId == user.Id)
+                .ToListAsync();
+            _context.UserProfileLanguages.RemoveRange(existingLanguages);
         }
 
-        var existingLanguages = await _context.UserProfileLanguages
-            .Where(up => up.UserProfileId == languagesRequest.UserProfileId)
-            .ToListAsync();
-        _context.UserProfileLanguages.RemoveRange(existingLanguages);
-
-        var newLanguages = languagesRequest.Languages.Select(language => new UserProfileLanguage
-        {
-            UserProfileId = languagesRequest.UserProfileId,
+        user.UserProfileLanguages = languagesRequest.Select(language => new UserProfileLanguage {
             LanguageId = language.LanguageId,
             ProficiencyLevel = language.ProficiencyLevel
         }).ToList();
 
-        await _context.UserProfileLanguages.AddRangeAsync(newLanguages);
-        await _context.SaveChangesAsync();
+        if (withSave)
+            await _context.SaveChangesAsync();
 
-        return languagesRequest.UserProfileId;
+        return user.Id;
     }
 
     public async Task<bool> DeleteUserProfileLanguageAsync(int id)

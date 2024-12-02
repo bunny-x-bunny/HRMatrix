@@ -24,10 +24,12 @@ public class UserProfileCompetenciesController : ControllerBase
     }
 
     [HttpPost]
+    [Obsolete("Unimplemented", true)]
     public async Task<IActionResult> UpsertUserProfileCompetencies([FromBody] CreateUserProfileCompetenciesRequest competenciesRequest)
     {
-        var userProfileId = await _userProfileCompetencyService.UpsertUserProfileCompetenciesAsync(competenciesRequest, true);
-        return Ok(userProfileId);
+        //var userProfileId = await _userProfileCompetencyService.UpsertUserProfileCompetenciesAsync(competenciesRequest.Competencies, userProfile, true);
+        //return Ok(userProfile.Id);
+        throw new NotImplementedException();
     }
 
     [HttpDelete("{id}")]

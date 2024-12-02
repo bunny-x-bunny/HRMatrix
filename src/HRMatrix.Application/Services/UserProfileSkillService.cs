@@ -42,32 +42,24 @@ public class UserProfileSkillService : IUserProfileSkillService
     //    };
     //}
 
-    public async Task<int> UpsertUserProfileSkillsAsync(CreateUserProfileSkillsRequest skillsRequest, bool withSave = false)
+    public async Task<int> UpsertUserProfileSkillsAsync(List<CreateUserProfileSkillRequest> skillsRequest, UserProfile user, bool withSave = false)
     {
-        var userProfile = await _context.UserProfiles.FindAsync(skillsRequest.UserProfileId);
-
-        if (userProfile == null)
-        {
-            throw new Exception($"User profile with ID {skillsRequest.UserProfileId} not found.");
+        if (user.Id != 0) {
+            var existingSkills = await _context.UserProfileSkills
+                .Where(up => up.UserProfileId == user.Id)
+                .ToListAsync();
+            _context.UserProfileSkills.RemoveRange(existingSkills);
         }
             
-        var existingSkills = await _context.UserProfileSkills
-            .Where(up => up.UserProfileId == skillsRequest.UserProfileId)
-            .ToListAsync();
-        _context.UserProfileSkills.RemoveRange(existingSkills);
-            
-        var newSkills = skillsRequest.Skills.Select(skill => new UserProfileSkill
-        {
-            UserProfileId = skillsRequest.UserProfileId,
+        user.UserProfileSkills = skillsRequest.Select(skill => new UserProfileSkill {
             SkillId = skill.SkillId,
             ProficiencyLevel = skill.ProficiencyLevel
         }).ToList();
 
-        _context.UserProfileSkills.AddRange(newSkills);
         if (withSave)
             await _context.SaveChangesAsync();
 
-        return skillsRequest.UserProfileId;
+        return user.Id;
     }
 
     public async Task<bool> DeleteUserProfileSkillAsync(int id, bool withSave = false)

@@ -42,32 +42,24 @@ namespace HRMatrix.Application.Services
         //    };
         //}
 
-        public async Task<int> UpsertUserProfileCompetenciesAsync(CreateUserProfileCompetenciesRequest competenciesRequest, bool withSave = false)
+        public async Task<int> UpsertUserProfileCompetenciesAsync(List<CreateUserProfileCompetencyRequest> competenciesRequest, UserProfile user, bool withSave = false)
         {
-            var userProfile = await _context.UserProfiles.FindAsync(competenciesRequest.UserProfileId);
-
-            if (userProfile == null)
-            {
-                throw new Exception($"User profile with ID {competenciesRequest.UserProfileId} not found.");
+            if (user.Id != 0) {
+                var existingCompetencies = await _context.UserProfileCompetencies
+                    .Where(up => up.UserProfileId == user.Id)
+                    .ToListAsync();
+                _context.UserProfileCompetencies.RemoveRange(existingCompetencies);
             }
 
-            var existingCompetencies = await _context.UserProfileCompetencies
-                .Where(up => up.UserProfileId == competenciesRequest.UserProfileId)
-                .ToListAsync();
-            _context.UserProfileCompetencies.RemoveRange(existingCompetencies);
-
-            var newCompetencies = competenciesRequest.Competencies.Select(competency => new UserProfileCompetency
-            {
-                UserProfileId = competenciesRequest.UserProfileId,
+            user.UserProfileCompetencies = competenciesRequest.Select(competency => new UserProfileCompetency {
                 CompetencyId = competency.CompetencyId,
                 ProficiencyLevel = competency.ProficiencyLevel
             }).ToList();
 
-            _context.UserProfileCompetencies.AddRange(newCompetencies);
             if (withSave)
                 await _context.SaveChangesAsync();
 
-            return competenciesRequest.UserProfileId;
+            return user.Id;
         }
 
         public async Task<bool> DeleteUserProfileCompetencyAsync(int id, bool withSave = false)

@@ -50,40 +50,44 @@ public class UserProfileEducationController : ControllerBase
     }
     
     [HttpPost("multiple")]
+    [Obsolete("Unimplemented", true)]
     public async Task<IActionResult> CreateUserProfileEducations([FromBody] CreateMultipleUserProfileEducationRequest educationRequest)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        //if (!ModelState.IsValid)
+        //{
+        //    return BadRequest(ModelState);
+        //}
 
-        try
-        {
-            var createdEducations = await _userProfileEducationService.CreateUserProfileEducationsAsync(educationRequest.UserProfileId, educationRequest.Educations, true);
-            return CreatedAtAction(nameof(GetUserProfileEducations), new { userProfileId = educationRequest.UserProfileId }, createdEducations);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Message = ex.Message });
-        }
+        //try
+        //{
+        //    var createdEducations = await _userProfileEducationService.CreateUserProfileEducationsAsync(educationRequest.Educations, userProfile, true);
+        //    return CreatedAtAction(nameof(GetUserProfileEducations), new { userProfileId = educationRequest.UserProfileId }, createdEducations);
+        //}
+        //catch (Exception ex)
+        //{
+        //    return BadRequest(new { Message = ex.Message });
+        //}
+        throw new NotImplementedException();
     }
     
     [HttpPost("update")]
+    [Obsolete("Unimplemented", true)]
     public async Task<IActionResult> UpdateUserProfileEducations([FromBody] UpdateUserProfileEducationRequest updateRequest)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        //if (!ModelState.IsValid)
+        //{
+        //    return BadRequest(ModelState);
+        //}
 
-        try
-        {
-            var updatedEducations = await _userProfileEducationService.UpdateUserProfileEducationsAsync(updateRequest, true);
-            return Ok(updatedEducations);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Message = ex.Message });
-        }
+        //try
+        //{
+        //    var updatedEducations = await _userProfileEducationService.UpdateUserProfileEducationsAsync(updateRequest.Educations, userProfile, true);
+        //    return Ok(updatedEducations);
+        //}
+        //catch (Exception ex)
+        //{
+        //    return BadRequest(new { Message = ex.Message });
+        //}
+        throw new NotImplementedException();
     }
 }

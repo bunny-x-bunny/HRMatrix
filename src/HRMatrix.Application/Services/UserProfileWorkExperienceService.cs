@@ -63,6 +63,25 @@ namespace HRMatrix.Application.Services
             return workExperience.Id;
         }
 
+        public async Task<int> UpsertWorkExperiencesAsync(List<CreateWorkExperienceNoIdDto> workExperiencesDto, UserProfile user, bool withSave = false) {
+            var existingWorkExperiences = await _context.WorkExperiences
+                .Where(we => we.UserProfileId == user.Id)
+                .ToListAsync();
+            _context.WorkExperiences.RemoveRange(existingWorkExperiences);
+
+            var workExperiences = workExperiencesDto.Select(we => new WorkExperience {
+                CompanyName = we.CompanyName,
+                Position = we.Position,
+                StartDate = we.StartDate,
+                EndDate = we.EndDate,
+                Achievements = we.Achievements
+            }).ToList();
+            user.WorkExperiences = workExperiences;
+            if (withSave)
+                await _context.SaveChangesAsync();
+            return user.Id;
+        }
+
         public async Task<bool> DeleteWorkExperienceAsync(int id, bool withSave = false)
         {
             var workExperience = await _context.WorkExperiences.FindAsync(id);

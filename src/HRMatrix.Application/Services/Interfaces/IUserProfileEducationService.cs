@@ -9,7 +9,7 @@ public interface IUserProfileEducationService
 
     Task<UserProfileEducationResponse> CreateUserProfileEducationAsync(CreateUserProfileEducationRequest educationRequest, bool withSave = false);
     
-    Task<UserProfileEducationListResponse?> CreateUserProfileEducationsAsync(int userProfileId, List<UserEducationEntryRequest> educationRequests, bool withSave = false);
+    Task<UserProfileEducationListResponse?> CreateUserProfileEducationsAsync(List<UserEducationEntryRequest> educationRequests, UserProfile user, bool withSave = false);
 
-    Task<UserProfileEducationListResponse?> UpdateUserProfileEducationsAsync(UpdateUserProfileEducationRequest updateRequest, bool withSave = false);
+    Task<UserProfileEducationListResponse?> UpdateUserProfileEducationsAsync(List<UserEducationEntryRequest> educationRequests, UserProfile user, bool withSave = false);
 }

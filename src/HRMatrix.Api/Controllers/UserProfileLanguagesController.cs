@@ -23,10 +23,12 @@ namespace HRMatrix.Api.Controllers
         }
 
         [HttpPost]
+        [Obsolete("Uimplemented", true)]
         public async Task<IActionResult> UpsertUserProfileLanguages([FromBody] CreateUserProfileLanguagesRequest languagesRequest)
         {
-            var userProfileId = await _userProfileLanguageService.UpsertUserProfileLanguagesAsync(languagesRequest);
-            return Ok(userProfileId);
+            //var userProfileId = await _userProfileLanguageService.UpsertUserProfileLanguagesAsync(languagesRequest.Languages, userProfile, true);
+            //return Ok(userProfileId);
+            throw new NotImplementedException();
         }
 
         [HttpDelete("{id}")]

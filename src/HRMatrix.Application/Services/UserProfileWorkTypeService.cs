@@ -35,27 +35,21 @@ namespace HRMatrix.Application.Services
             return workType.Id;
         }
 
-        public async Task<List<int>> UpsertUserProfileWorkTypes(CreateUserProfileWorkTypesRequest workTypesDto, bool withSave = false) {
-            var userProfile = await _context.UserProfiles.FindAsync(workTypesDto.UserProfileId);
-            if (userProfile == null) {
-                throw new Exception($"User profile with ID {workTypesDto.UserProfileId} not found.");
+        public async Task<List<int>> UpsertUserProfileWorkTypes(List<CreateUserProfileWorkTypeRequest> workTypesDto, UserProfile user, bool withSave = false) {
+            if (user.Id != 0) {
+                var existingWorkTypes = await _context.UserProfileWorkTypes
+                    .Where(wt => wt.UserProfileId == user.Id)
+                    .ToListAsync();
+                _context.UserProfileWorkTypes.RemoveRange(existingWorkTypes);
             }
 
-            var existingWorkTypes = await _context.UserProfileWorkTypes
-                .Where(wt => wt.UserProfileId == workTypesDto.UserProfileId)
-                .ToListAsync();
-            _context.UserProfileWorkTypes.RemoveRange(existingWorkTypes);
-
-            var newWorkTypes = workTypesDto.WorkTypes.Select(wt => new UserProfileWorkType {
-                UserProfileId = workTypesDto.UserProfileId,
+            user.UserProfileWorkTypes = workTypesDto.Select(wt => new UserProfileWorkType {
                 WorkTypeId = wt.WorkTypeId,
             }).ToList();
 
-            _context.UserProfileWorkTypes.AddRange(newWorkTypes);
-
             if (withSave) {
                 await _context.SaveChangesAsync();
-                return userProfile.UserProfileWorkTypes.Select(wt => wt.Id).ToList();
+                return user.UserProfileWorkTypes.Select(wt => wt.Id).ToList();
             } else {
                 return Enumerable.Empty<int>().ToList();
             }

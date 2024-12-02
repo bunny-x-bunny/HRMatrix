@@ -16,7 +16,6 @@ using HRMatrix.Application.DTOs.Specialization;
 using HRMatrix.Application.DTOs.UserProfileWorkType;
 using HRMatrix.Application.Settings;
 using Microsoft.Extensions.Options;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HRMatrix.Application.Services;
 
@@ -24,13 +23,36 @@ public class UserProfileService : IUserProfileService
 {
     private readonly HRMatrixDbContext _context;
     private readonly IMapper _mapper;
+    private readonly IUserProfileFamilyStatusService _userProfileFamilyStatusService;
+    private readonly IUserProfileEducationService _userProfileEducationService;
+    private readonly IUserProfileSkillService _userProfileSkillService;
+    private readonly IUserProfileWorkExperienceService _userProfileWorkExperienceService;
+    private readonly IUserProfileLanguageService _userProfileLanguageService;
+    private readonly IUserProfileWorkTypeService _userProfileWorkTypeService;
+    private readonly IUserProfileCompetencyService _userProfileCompetencyService;
     private readonly string _baseUrl;
 
-    public UserProfileService(HRMatrixDbContext context, IMapper mapper, IOptions<AppSettings> appSettings)
-    {
+    public UserProfileService(
+        HRMatrixDbContext context,
+        IMapper mapper,
+        IUserProfileFamilyStatusService userProfileFamilyStatusService,
+        IUserProfileEducationService userProfileEducationService,
+        IOptions<AppSettings> appSettings,
+        IUserProfileSkillService userProfileSkillService,
+        IUserProfileWorkExperienceService userProfileWorkExperienceService,
+        IUserProfileLanguageService userProfileLanguageService,
+        IUserProfileWorkTypeService userProfileWorkTypeService,
+        IUserProfileCompetencyService userProfileCompetencyService) {
         _context = context;
         _mapper = mapper;
+        _userProfileFamilyStatusService = userProfileFamilyStatusService;
+        _userProfileEducationService = userProfileEducationService;
         _baseUrl = appSettings.Value.BaseUrl;
+        _userProfileSkillService = userProfileSkillService;
+        _userProfileWorkExperienceService = userProfileWorkExperienceService;
+        _userProfileLanguageService = userProfileLanguageService;
+        _userProfileWorkTypeService = userProfileWorkTypeService;
+        _userProfileCompetencyService = userProfileCompetencyService;
     }
 
     private int CalculateEducationScore(UserProfileDto userProfileDto)
@@ -394,8 +416,23 @@ public class UserProfileService : IUserProfileService
 
     public async Task<int> CreateUserProfileAsync(CreateUserProfileDto userProfileDto, int userId)
     {
-        var userProfile = _mapper.Map<UserProfile>(userProfileDto);
-        userProfile.AspNetUserId = userId;
+        var userProfile = new UserProfile {
+            FirstName = userProfileDto.FirstName,
+            LastName = userProfileDto.LastName,
+            DateOfBirth = userProfileDto.DateOfBirth,
+            Iq = userProfileDto.Iq,
+            Eq = userProfileDto.Eq,
+            CityId = userProfileDto.CityId,
+            AspNetUserId = userId
+        };
+        await _userProfileFamilyStatusService.CreateFamilyStatusForUserProfileAsync(userProfileDto.FamilyStatus, userProfile);
+        await _userProfileEducationService.CreateUserProfileEducationsAsync(userProfileDto.UserEducations, userProfile);
+        await _userProfileSkillService.UpsertUserProfileSkillsAsync(userProfileDto.UserProfileSkills, userProfile);
+        await _userProfileWorkExperienceService.UpsertWorkExperiencesAsync(userProfileDto.WorkExperiences, userProfile);
+        await _userProfileLanguageService.UpsertUserProfileLanguagesAsync(userProfileDto.Languages, userProfile);
+        await _userProfileWorkTypeService.UpsertUserProfileWorkTypes(userProfileDto.WorkTypes, userProfile);
+        await _userProfileCompetencyService.UpsertUserProfileCompetenciesAsync(userProfileDto.Competencies, userProfile);
+
         _context.UserProfiles.Add(userProfile);
         await _context.SaveChangesAsync();
         return userProfile.Id;
@@ -403,46 +440,28 @@ public class UserProfileService : IUserProfileService
 
     public async Task<UserProfileDto> UpdateUserProfileAsync(UpdateUserProfileDto userProfileDto, int userId)
     {
-        var userProfile = await _context.UserProfiles
-            .Include(up => up.FamilyStatus)
-                .ThenInclude(fs => fs.MaritalStatus)
-            .Include(up => up.UserEducations)
-                .ThenInclude(ue => ue.EducationLevel)
-            .Include(x => x.UserProfileSkills)
-                .ThenInclude(x => x.Skill)
-            .Include(x => x.WorkExperiences)
-            .Include(x => x.UserProfileLanguages)
-                .ThenInclude(x => x.Language)
-            .Include(x => x.UserProfileCompetencies)
-                .ThenInclude(x => x.Competency)
-            .Include(x => x.City)
-            .Include(x => x.UserProfileWorkTypes)
-                .ThenInclude(x => x.WorkType)
-            .FirstOrDefaultAsync(up => up.Id == userProfileDto.Id);
-
+        var userProfile = await _context.UserProfiles.FindAsync(userProfileDto.Id);
         if (userProfile == null)
             return null;
 
-        _mapper.Map(userProfileDto, userProfile);
+        userProfile.FirstName = userProfileDto.FirstName;
+        userProfile.LastName = userProfileDto.LastName;
+        userProfile.DateOfBirth = userProfileDto.DateOfBirth;
+        userProfile.Iq = userProfileDto.Iq;
+        userProfile.Eq = userProfileDto.Eq;
+        userProfile.CityId = userProfileDto.CityId;
 
-        userProfile.UserEducations.Clear();
-        userProfile.UserProfileSkills.Clear();
-        userProfile.WorkExperiences.Clear();
-        userProfile.UserProfileLanguages.Clear();
-        userProfile.UserProfileCompetencies.Clear();
-        userProfile.UserProfileWorkTypes.Clear();
-
-        _mapper.Map(userProfileDto.UserEducations, userProfile.UserEducations);
-        _mapper.Map(userProfileDto.UserProfileSkills, userProfile.UserProfileSkills);
-        _mapper.Map(userProfileDto.WorkExperiences, userProfile.WorkExperiences);
-        _mapper.Map(userProfileDto.Languages, userProfile.UserProfileLanguages);
-        _mapper.Map(userProfileDto.Competencies, userProfile.UserProfileCompetencies);
-        _mapper.Map(userProfileDto.WorkTypes, userProfile.UserProfileWorkTypes);
+        await _userProfileFamilyStatusService.UpdateFamilyStatusForUserProfileAsync(userProfileDto.FamilyStatus, userProfile);
+        await _userProfileEducationService.UpdateUserProfileEducationsAsync(userProfileDto.UserEducations, userProfile);
+        await _userProfileSkillService.UpsertUserProfileSkillsAsync(userProfileDto.UserProfileSkills, userProfile);
+        await _userProfileWorkExperienceService.UpsertWorkExperiencesAsync(userProfileDto.WorkExperiences, userProfile);
+        await _userProfileLanguageService.UpsertUserProfileLanguagesAsync(userProfileDto.Languages, userProfile);
+        await _userProfileWorkTypeService.UpsertUserProfileWorkTypes(userProfileDto.WorkTypes, userProfile);
+        await _userProfileCompetencyService.UpsertUserProfileCompetenciesAsync(userProfileDto.Competencies, userProfile);
 
         await _context.SaveChangesAsync();
 
-        var updatedProfile = await GetUserProfileByIdAsync(userProfile.Id);
-        return updatedProfile;
+        return await GetUserProfileByIdAsync(userProfile.Id);
     }
 
     public async Task<bool> DeleteUserProfileAsync(int id)
