@@ -428,7 +428,7 @@ public class UserProfileService : IUserProfileService
         await _userProfileFamilyStatusService.CreateFamilyStatusForUserProfileAsync(userProfileDto.FamilyStatus, userProfile);
         await _userProfileEducationService.CreateUserProfileEducationsAsync(userProfileDto.UserEducations, userProfile);
         await _userProfileSkillService.UpsertUserProfileSkillsAsync(userProfileDto.UserProfileSkills, userProfile);
-        await _userProfileWorkExperienceService.UpsertWorkExperiencesAsync(userProfileDto.WorkExperiences, userProfile);
+        await _userProfileWorkExperienceService.AddWorkExperiencesAsync(userProfileDto.WorkExperiences, userProfile);
         await _userProfileLanguageService.UpsertUserProfileLanguagesAsync(userProfileDto.Languages, userProfile);
         await _userProfileWorkTypeService.UpsertUserProfileWorkTypes(userProfileDto.WorkTypes, userProfile);
         await _userProfileCompetencyService.UpsertUserProfileCompetenciesAsync(userProfileDto.Competencies, userProfile);
@@ -454,7 +454,7 @@ public class UserProfileService : IUserProfileService
         await _userProfileFamilyStatusService.UpdateFamilyStatusForUserProfileAsync(userProfileDto.FamilyStatus, userProfile);
         await _userProfileEducationService.UpdateUserProfileEducationsAsync(userProfileDto.UserEducations, userProfile);
         await _userProfileSkillService.UpsertUserProfileSkillsAsync(userProfileDto.UserProfileSkills, userProfile);
-        await _userProfileWorkExperienceService.UpsertWorkExperiencesAsync(userProfileDto.WorkExperiences, userProfile);
+        await _userProfileWorkExperienceService.UpdateExperiencesAsync(userProfileDto.WorkExperiences, userProfile);
         await _userProfileLanguageService.UpsertUserProfileLanguagesAsync(userProfileDto.Languages, userProfile);
         await _userProfileWorkTypeService.UpsertUserProfileWorkTypes(userProfileDto.WorkTypes, userProfile);
         await _userProfileCompetencyService.UpsertUserProfileCompetenciesAsync(userProfileDto.Competencies, userProfile);

@@ -63,12 +63,7 @@ namespace HRMatrix.Application.Services
             return workExperience.Id;
         }
 
-        public async Task<int> UpsertWorkExperiencesAsync(List<CreateWorkExperienceNoIdDto> workExperiencesDto, UserProfile user, bool withSave = false) {
-            var existingWorkExperiences = await _context.WorkExperiences
-                .Where(we => we.UserProfileId == user.Id)
-                .ToListAsync();
-            _context.WorkExperiences.RemoveRange(existingWorkExperiences);
-
+        public async Task<int> AddWorkExperiencesAsync(List<CreateWorkExperienceNoIdDto> workExperiencesDto, UserProfile user, bool withSave = false) {
             var workExperiences = workExperiencesDto.Select(we => new WorkExperience {
                 CompanyName = we.CompanyName,
                 Position = we.Position,
@@ -77,6 +72,37 @@ namespace HRMatrix.Application.Services
                 Achievements = we.Achievements
             }).ToList();
             user.WorkExperiences = workExperiences;
+            if (withSave)
+                await _context.SaveChangesAsync();
+            return user.Id;
+        }
+
+        public async Task<int> UpdateExperiencesAsync(List<CreateWorkExperienceNoIdDto> workExperiencesDto, UserProfile user, bool withSave = false) {
+            var existingWorkExperiences = await _context.WorkExperiences
+                .Where(we => we.UserProfileId == user.Id)
+                .ToListAsync();
+
+            foreach (var we in workExperiencesDto)
+            {
+                var workExperience = new WorkExperience {
+                    UserProfileId = user.Id,
+                    CompanyName = we.CompanyName,
+                    Position = we.Position,
+                    StartDate = we.StartDate,
+                    EndDate = we.EndDate,
+                    Achievements = we.Achievements
+                };
+                var existingExperience = existingWorkExperiences.Find(we => we.CompanyName == workExperience.CompanyName);
+                if (existingExperience != null) {
+                    existingExperience.Position = workExperience.Position;
+                    existingExperience.StartDate = workExperience.StartDate;
+                    existingExperience.EndDate = workExperience.EndDate;
+                    existingExperience.Achievements = workExperience.Achievements;
+                }
+                else {
+                    _context.WorkExperiences.Add(workExperience);
+                }
+            }
             if (withSave)
                 await _context.SaveChangesAsync();
             return user.Id;
