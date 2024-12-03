@@ -35,13 +35,25 @@ namespace HRMatrix.Application.Services
             return workType.Id;
         }
 
-        public async Task<List<int>> UpsertUserProfileWorkTypes(List<CreateUserProfileWorkTypeRequest> workTypesDto, UserProfile user, bool withSave = false) {
-            if (user.Id != 0) {
-                var existingWorkTypes = await _context.UserProfileWorkTypes
-                    .Where(wt => wt.UserProfileId == user.Id)
-                    .ToListAsync();
-                _context.UserProfileWorkTypes.RemoveRange(existingWorkTypes);
+        public async Task<List<int>> CreateUserProfileWorkTypes(List<CreateUserProfileWorkTypeRequest> workTypesDto, UserProfile user, bool withSave = false) {
+            user.UserProfileWorkTypes = workTypesDto.Select(wt => new UserProfileWorkType {
+                WorkTypeId = wt.WorkTypeId,
+            }).ToList();
+
+            if (withSave) {
+                await _context.SaveChangesAsync();
+                return user.UserProfileWorkTypes.Select(wt => wt.Id).ToList();
             }
+            else {
+                return Enumerable.Empty<int>().ToList();
+            }
+        }
+
+        public async Task<List<int>> UpdateUserProfileWorkTypes(List<CreateUserProfileWorkTypeRequest> workTypesDto, UserProfile user, bool withSave = false) {
+            var existingWorkTypes = await _context.UserProfileWorkTypes
+                .Where(wt => wt.UserProfileId == user.Id)
+                .ToListAsync();
+            _context.UserProfileWorkTypes.RemoveRange(existingWorkTypes);
 
             user.UserProfileWorkTypes = workTypesDto.Select(wt => new UserProfileWorkType {
                 WorkTypeId = wt.WorkTypeId,

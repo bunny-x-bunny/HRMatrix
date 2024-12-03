@@ -419,8 +419,8 @@ public class OrderService : IOrderService
         if (orderDto.CityId.HasValue)
             order.CityId = orderDto.CityId.Value;
 
-        await _skillService.UpsertOrderSkillsAsync(orderDto.SkillIds, order);
-        await _workTypeService.UpsertOrderWorkTypes(orderDto.WorkTypeIds, order);
+        await _skillService.CreateOrderSkillsAsync(orderDto.SkillIds, order);
+        await _workTypeService.CreateOrderWorkTypes(orderDto.WorkTypeIds, order);
 
         _context.Orders.Add(order);
         await _context.SaveChangesAsync();
@@ -445,8 +445,8 @@ public class OrderService : IOrderService
         if (orderDto.CityId.HasValue)
             order.CityId = orderDto.CityId.Value;
 
-        await _skillService.UpsertOrderSkillsAsync(orderDto.SkillIds, order);
-        await _workTypeService.UpsertOrderWorkTypes(orderDto.WorkTypeIds, order);
+        await _skillService.UpdateOrderSkillsAsync(orderDto.SkillIds, order);
+        await _workTypeService.UpdateOrderWorkTypes(orderDto.WorkTypeIds, order);
 
         await _context.SaveChangesAsync();
         return order.Id;

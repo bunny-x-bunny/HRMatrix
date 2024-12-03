@@ -12,13 +12,23 @@ public class OrderSkillService : IOrderSkillService {
         _context = context;
     }
 
-    public async Task<int> UpsertOrderSkillsAsync(List<int> skillIds, Order order, bool withSave = false) {
-        if (order.Id != 0) {
-            var existingSkills = await _context.OrderSkill
-                .Where(os => os.OrderId == order.Id)
-                .ToListAsync();
-            _context.OrderSkill.RemoveRange(existingSkills);
-        }
+    public async Task<int> CreateOrderSkillsAsync(List<int> skillIds, Order order, bool withSave = false) {
+        order.OrderSkills = skillIds.Select(skillId => new OrderSkill {
+            OrderId = order.Id,
+            SkillId = skillId
+        }).ToList();
+
+        if (withSave)
+            await _context.SaveChangesAsync();
+
+        return order.Id;
+    }
+
+    public async Task<int> UpdateOrderSkillsAsync(List<int> skillIds, Order order, bool withSave = false) {
+        var existingSkills = await _context.OrderSkill
+            .Where(os => os.OrderId == order.Id)
+            .ToListAsync();
+        _context.OrderSkill.RemoveRange(existingSkills);
 
         order.OrderSkills = skillIds.Select(skillId => new OrderSkill {
             OrderId = order.Id,

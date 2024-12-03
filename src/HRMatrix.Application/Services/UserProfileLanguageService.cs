@@ -42,14 +42,24 @@ public class UserProfileLanguageService : IUserProfileLanguageService
         };
     }
 
-    public async Task<int> UpsertUserProfileLanguagesAsync(List<CreateUserProfileLanguageRequest> languagesRequest, UserProfile user, bool withSave = false)
+    public async Task<int> CreateUserProfileLanguagesAsync(List<CreateUserProfileLanguageRequest> languagesRequest, UserProfile user, bool withSave = false) {
+        user.UserProfileLanguages = languagesRequest.Select(language => new UserProfileLanguage {
+            LanguageId = language.LanguageId,
+            ProficiencyLevel = language.ProficiencyLevel
+        }).ToList();
+
+        if (withSave)
+            await _context.SaveChangesAsync();
+
+        return user.Id;
+    }
+
+    public async Task<int> UpdateUserProfileLanguagesAsync(List<CreateUserProfileLanguageRequest> languagesRequest, UserProfile user, bool withSave = false)
     {
-        if (user.Id != 0) {
-            var existingLanguages = await _context.UserProfileLanguages
-                .Where(up => up.UserProfileId == user.Id)
-                .ToListAsync();
-            _context.UserProfileLanguages.RemoveRange(existingLanguages);
-        }
+        var existingLanguages = await _context.UserProfileLanguages
+            .Where(up => up.UserProfileId == user.Id)
+            .ToListAsync();
+        _context.UserProfileLanguages.RemoveRange(existingLanguages);
 
         user.UserProfileLanguages = languagesRequest.Select(language => new UserProfileLanguage {
             LanguageId = language.LanguageId,

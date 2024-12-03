@@ -42,14 +42,24 @@ public class UserProfileSkillService : IUserProfileSkillService
     //    };
     //}
 
-    public async Task<int> UpsertUserProfileSkillsAsync(List<CreateUserProfileSkillRequest> skillsRequest, UserProfile user, bool withSave = false)
+    public async Task<int> CreateUserProfileSkillsAsync(List<CreateUserProfileSkillRequest> skillsRequest, UserProfile user, bool withSave = false) {
+        user.UserProfileSkills = skillsRequest.Select(skill => new UserProfileSkill {
+            SkillId = skill.SkillId,
+            ProficiencyLevel = skill.ProficiencyLevel
+        }).ToList();
+
+        if (withSave)
+            await _context.SaveChangesAsync();
+
+        return user.Id;
+    }
+
+    public async Task<int> UpdateUserProfileSkillsAsync(List<CreateUserProfileSkillRequest> skillsRequest, UserProfile user, bool withSave = false)
     {
-        if (user.Id != 0) {
-            var existingSkills = await _context.UserProfileSkills
-                .Where(up => up.UserProfileId == user.Id)
-                .ToListAsync();
-            _context.UserProfileSkills.RemoveRange(existingSkills);
-        }
+        var existingSkills = await _context.UserProfileSkills
+            .Where(up => up.UserProfileId == user.Id)
+            .ToListAsync();
+        _context.UserProfileSkills.RemoveRange(existingSkills);
             
         user.UserProfileSkills = skillsRequest.Select(skill => new UserProfileSkill {
             SkillId = skill.SkillId,

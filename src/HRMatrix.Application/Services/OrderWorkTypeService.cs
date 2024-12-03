@@ -26,13 +26,26 @@ namespace HRMatrix.Application.Services {
             return workType.Id;
         }
 
-        public async Task<List<int>> UpsertOrderWorkTypes(List<int> workTypes, Order order, bool withSave = false) {
-            if (order.Id != 0) {
-                var existingWorkTypes = await _context.OrderWorkTypes
-                    .Where(wt => wt.OrderId == order.Id)
-                    .ToListAsync();
-                _context.OrderWorkTypes.RemoveRange(existingWorkTypes);
+        public async Task<List<int>> CreateOrderWorkTypes(List<int> workTypes, Order order, bool withSave = false) {
+            order.OrderWorkTypes = workTypes.Select(wt => new OrderWorkType {
+                OrderId = order.Id,
+                WorkTypeId = wt,
+            }).ToList();
+
+            if (withSave) {
+                await _context.SaveChangesAsync();
+                return order.OrderWorkTypes.Select(wt => wt.Id).ToList();
             }
+            else {
+                return Enumerable.Empty<int>().ToList();
+            }
+        }
+
+        public async Task<List<int>> UpdateOrderWorkTypes(List<int> workTypes, Order order, bool withSave = false) {
+            var existingWorkTypes = await _context.OrderWorkTypes
+                .Where(wt => wt.OrderId == order.Id)
+                .ToListAsync();
+            _context.OrderWorkTypes.RemoveRange(existingWorkTypes);
 
             order.OrderWorkTypes = workTypes.Select(wt => new OrderWorkType {
                 OrderId = order.Id,

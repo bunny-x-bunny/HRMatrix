@@ -42,14 +42,24 @@ namespace HRMatrix.Application.Services
         //    };
         //}
 
-        public async Task<int> UpsertUserProfileCompetenciesAsync(List<CreateUserProfileCompetencyRequest> competenciesRequest, UserProfile user, bool withSave = false)
+        public async Task<int> CreateUserProfileCompetencies(List<CreateUserProfileCompetencyRequest> competenciesRequest, UserProfile user, bool withSave = false) {
+            user.UserProfileCompetencies = competenciesRequest.Select(competency => new UserProfileCompetency {
+                CompetencyId = competency.CompetencyId,
+                ProficiencyLevel = competency.ProficiencyLevel
+            }).ToList();
+
+            if (withSave)
+                await _context.SaveChangesAsync();
+
+            return user.Id;
+        }
+
+        public async Task<int> UpdateUserProfileCompetencies(List<CreateUserProfileCompetencyRequest> competenciesRequest, UserProfile user, bool withSave = false)
         {
-            if (user.Id != 0) {
-                var existingCompetencies = await _context.UserProfileCompetencies
-                    .Where(up => up.UserProfileId == user.Id)
-                    .ToListAsync();
-                _context.UserProfileCompetencies.RemoveRange(existingCompetencies);
-            }
+            var existingCompetencies = await _context.UserProfileCompetencies
+                .Where(up => up.UserProfileId == user.Id)
+                .ToListAsync();
+            _context.UserProfileCompetencies.RemoveRange(existingCompetencies);
 
             user.UserProfileCompetencies = competenciesRequest.Select(competency => new UserProfileCompetency {
                 CompetencyId = competency.CompetencyId,
@@ -62,7 +72,7 @@ namespace HRMatrix.Application.Services
             return user.Id;
         }
 
-        public async Task<bool> DeleteUserProfileCompetencyAsync(int id, bool withSave = false)
+        public async Task<bool> DeleteUserProfileCompetency(int id, bool withSave = false)
         {
             var competency = await _context.UserProfileCompetencies.FindAsync(id);
             if (competency == null) return false;

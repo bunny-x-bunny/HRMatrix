@@ -35,7 +35,7 @@ public class UserProfileCompetenciesController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUserProfileCompetency(int id)
     {
-        var result = await _userProfileCompetencyService.DeleteUserProfileCompetencyAsync(id, true);
+        var result = await _userProfileCompetencyService.DeleteUserProfileCompetency(id, true);
         return result ? NoContent() : NotFound();
     }
 }
