@@ -75,6 +75,10 @@ builder.Services.AddScoped<IUserProfileLanguageService, UserProfileLanguageServi
 builder.Services.AddScoped<ICompetencyService, CompetencyService>();
 builder.Services.AddScoped<IUserProfileCompetencyService, UserProfileCompetencyService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IOrderSkillService, OrderSkillService>();
+builder.Services.AddScoped<IOrderResponseService, OrderResponseService>();
+builder.Services.AddScoped<IOrderReviewService, OrderReviewService>();
+builder.Services.AddScoped<IOrderWorkTypeService, OrderWorkTypeService>();
 builder.Services.AddScoped<ISpecializationService, SpecializationService>();
 builder.Services.AddScoped<IWorkTypeService, WorkTypeService>();
 builder.Services.AddScoped<ICountryService, CountryService>();

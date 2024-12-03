@@ -11,13 +11,16 @@ using HRMatrix.Application.DTOs.UserProfileCompetency;
 using HRMatrix.Application.DTOs.UserProfileEducation;
 using HRMatrix.Application.DTOs.UserProfileSkills;
 using HRMatrix.Application.DTOs.UserProfileWorkType;
+using HRMatrix.Application.DTOs.OrderReview;
 using HRMatrix.Application.DTOs.WorkType;
+using HRMatrix.Application.DTOs.OrderResponse;
 using HRMatrix.Application.Extensions;
 using HRMatrix.Application.Services.Interfaces;
 using HRMatrix.Domain.Entities;
 using HRMatrix.Domain.Enums;
 using HRMatrix.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace HRMatrix.Application.Services;
 
@@ -25,35 +28,34 @@ public class OrderService : IOrderService
 {
     private readonly HRMatrixDbContext _context;
     private readonly IMapper _mapper;
+    private readonly IOrderResponseService _responseService;
+    private readonly IOrderReviewService _reviewService;
+    private readonly IOrderWorkTypeService _workTypeService;
+    private readonly IOrderSkillService _skillService;
 
-    public OrderService(HRMatrixDbContext context, IMapper mapper)
-    {
+    public OrderService(
+        HRMatrixDbContext context,
+        IMapper mapper,
+        IOrderResponseService responseService,
+        IOrderSkillService skillService,
+        IOrderWorkTypeService workTypeService,
+        IOrderReviewService reviewService) {
         _context = context;
         _mapper = mapper;
+        _responseService = responseService;
+        _skillService = skillService;
+        _workTypeService = workTypeService;
+        _reviewService = reviewService;
     }
 
     public async Task<int> RespondToOrderAsync(int orderId, int userId)
     {
         var order = await _context.Orders.FindAsync(orderId);
-        if (order == null) return 0;
-
-        var existingResponse = await _context.OrderResponses
-            .FirstOrDefaultAsync(r => r.OrderId == orderId && r.UserId == userId);
-        if (existingResponse != null)
-        {
-            return existingResponse.Id;
-        }
-
-        var response = new OrderResponse
-        {
-            OrderId = orderId,
-            UserId = userId,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        _context.OrderResponses.Add(response);
-        await _context.SaveChangesAsync();
-        return response.Id;
+        if (order == null)
+            throw new Exception($"Order with ID {orderId} not found.");
+        return await _responseService.CreateOrderResponse(new CreateOrderResponseRequest {
+            UserId = userId
+        }, order, true);
     }
 
     public async Task<PaginatedResult<OrderDto>> GetFilteredOrdersAsync(
@@ -327,18 +329,6 @@ public class OrderService : IOrderService
         return orderDtos;
     }
 
-
-
-    public async Task<bool> UpdateResponseStatusAsync(int responseId, ResponseStatus status)
-    {
-        var response = await _context.OrderResponses.FindAsync(responseId);
-        if (response == null) return false;
-
-        response.Status = status;
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
     public async Task<OrderDto> GetOrderByIdAsync(int id)
     {
         var order = await _context.Orders
@@ -413,25 +403,24 @@ public class OrderService : IOrderService
 
     public async Task<int> CreateOrderAsync(CreateOrderDto orderDto, int createdByUserId)
     {
-        var order = _mapper.Map<Order>(orderDto);
-        order.CreatedByUserId = createdByUserId;
-        order.CreatedAt = DateTime.UtcNow;
-        order.Status = OrderStatus.Pending;
-
-        order.OrderSkills = orderDto.SkillIds.Select(skillId => new OrderSkill
-        {
-            SkillId = skillId
-        }).ToList();
-
-        order.OrderWorkTypes = orderDto.WorkTypeIds.Select(workTypeId => new OrderWorkType
-        {
-            WorkTypeId = workTypeId
-        }).ToList();
+        var order = new Order {
+            Title = orderDto.Title,
+            ExpectedCompletionDate = orderDto.ExpectedCompletionDate,
+            PaymentAmount = orderDto.PaymentAmount,
+            Description = orderDto.Description,
+            CustomerEmail = orderDto.CustomerEmail,
+            CustomerPhone = orderDto.CustomerPhone,
+            AssignedUserProfileId = orderDto.AssignedUserProfileId,
+            CreatedByUserId = createdByUserId,
+            CreatedAt = DateTime.UtcNow,
+            Status = OrderStatus.Pending
+        };
 
         if (orderDto.CityId.HasValue)
-        {
             order.CityId = orderDto.CityId.Value;
-        }
+
+        await _skillService.UpsertOrderSkillsAsync(orderDto.SkillIds, order);
+        await _workTypeService.UpsertOrderWorkTypes(orderDto.WorkTypeIds, order);
 
         _context.Orders.Add(order);
         await _context.SaveChangesAsync();
@@ -441,24 +430,23 @@ public class OrderService : IOrderService
     public async Task<int> UpdateOrderAsync(UpdateOrderDto orderDto)
     {
         var order = await _context.Orders
-            .Include(o => o.OrderSkills)
-            .Include(o => o.OrderWorkTypes)
             .FirstOrDefaultAsync(o => o.Id == orderDto.Id);
 
         if (order == null) return 0;
 
-        _mapper.Map(orderDto, order);
-
-        order.OrderSkills.Clear();
-        foreach (var skillId in orderDto.SkillIds)
-            order.OrderSkills.Add(new OrderSkill { SkillId = skillId });
-
-        order.OrderWorkTypes.Clear();
-        foreach (var workTypeId in orderDto.WorkTypeIds)
-            order.OrderWorkTypes.Add(new OrderWorkType { WorkTypeId = workTypeId });
+        order.Title = orderDto.Title;
+        order.ExpectedCompletionDate = orderDto.ExpectedCompletionDate;
+        order.PaymentAmount = orderDto.PaymentAmount;
+        order.Description = orderDto.Description;
+        order.CustomerEmail = orderDto.CustomerEmail;
+        order.CustomerPhone = orderDto.CustomerPhone;
+        order.Status = orderDto.Status;
 
         if (orderDto.CityId.HasValue)
             order.CityId = orderDto.CityId.Value;
+
+        await _skillService.UpsertOrderSkillsAsync(orderDto.SkillIds, order);
+        await _workTypeService.UpsertOrderWorkTypes(orderDto.WorkTypeIds, order);
 
         await _context.SaveChangesAsync();
         return order.Id;
@@ -477,20 +465,14 @@ public class OrderService : IOrderService
     public async Task<int> AddReviewToOrderAsync(int orderId, int userId, int rating, string reviewText)
     {
         var order = await _context.Orders.FindAsync(orderId);
-        if (order == null) return 0;
+        if (order == null)
+            throw new Exception($"Order with ID {orderId} not found.");
 
-        var review = new OrderReview
-        {
-            OrderId = orderId,
-            UserId = userId,
-            Rating = rating,
-            ReviewText = reviewText,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        _context.OrderReviews.Add(review);
-        await _context.SaveChangesAsync();
-        return review.Id;
+        return await _reviewService.CreateOrderReview(new CreateOrderReviewRequest {
+            rating = rating,
+            reviewText = reviewText,
+            userId = userId
+        }, order, true);
     }
 
     public async Task<List<OrderReviewDto>> GetReviewsByOrderIdAsync(int orderId)
@@ -509,16 +491,6 @@ public class OrderService : IOrderService
             .ToListAsync();
 
         return reviews;
-    }
-
-    public async Task<bool> DeleteReviewAsync(int reviewId)
-    {
-        var review = await _context.OrderReviews.FindAsync(reviewId);
-        if (review == null) return false;
-
-        _context.OrderReviews.Remove(review);
-        await _context.SaveChangesAsync();
-        return true;
     }
 
     private int CalculateEducationScore(UserProfileDto userProfileDto)

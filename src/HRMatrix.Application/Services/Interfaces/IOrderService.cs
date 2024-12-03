@@ -27,8 +27,4 @@ public interface IOrderService
     Task<int> AddReviewToOrderAsync(int orderId, int userId, int rating, string reviewText);
 
     Task<List<OrderReviewDto>> GetReviewsByOrderIdAsync(int orderId);
-
-    Task<bool> DeleteReviewAsync(int reviewId);
-
-    Task<bool> UpdateResponseStatusAsync(int responseId, ResponseStatus status);
 }

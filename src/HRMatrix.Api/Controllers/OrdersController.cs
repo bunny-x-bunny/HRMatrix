@@ -15,12 +15,19 @@ namespace HRMatrix.Api.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly IOrderService _orderService;
+    private readonly IOrderResponseService _responseService;
+    private readonly IOrderReviewService _reviewService;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public OrdersController(IOrderService orderService, UserManager<ApplicationUser> userManager)
-    {
+    public OrdersController(
+        IOrderService orderService,
+        IOrderResponseService responseService,
+        UserManager<ApplicationUser> userManager,
+        IOrderReviewService reviewService) {
         _orderService = orderService;
+        _responseService = responseService;
         _userManager = userManager;
+        _reviewService = reviewService;
     }
 
 
@@ -56,7 +63,7 @@ public class OrdersController : ControllerBase
     [HttpPut("responses/{responseId}/status")]
     public async Task<IActionResult> UpdateResponseStatus(int responseId, [FromBody] ResponseStatus status)
     {
-        var updated = await _orderService.UpdateResponseStatusAsync(responseId, status);
+        var updated = await _responseService.UpdateResponseStatus(responseId, status, true);
         if (!updated)
             return NotFound("Response not found");
 
@@ -196,7 +203,7 @@ public class OrdersController : ControllerBase
     [HttpDelete("reviews/{reviewId}")]
     public async Task<IActionResult> DeleteReview(int reviewId)
     {
-        var result = await _orderService.DeleteReviewAsync(reviewId);
+        var result = await _reviewService.DeleteOrderReview(reviewId, true);
         if (!result)
         {
             return NotFound("Review not found.");

@@ -26,23 +26,18 @@ namespace HRMatrix.Application.Services {
             return workType.Id;
         }
 
-        public async Task<List<int>> UpsertOrderWorkTypes(CreateOrderWorkTypesRequest workTypesDto, bool withSave = false) {
-            var order = await _context.Orders.FindAsync(workTypesDto.orderId);
-            if (order == null) {
-                throw new Exception($"Order with ID {workTypesDto.orderId} not found.");
+        public async Task<List<int>> UpsertOrderWorkTypes(List<int> workTypes, Order order, bool withSave = false) {
+            if (order.Id != 0) {
+                var existingWorkTypes = await _context.OrderWorkTypes
+                    .Where(wt => wt.OrderId == order.Id)
+                    .ToListAsync();
+                _context.OrderWorkTypes.RemoveRange(existingWorkTypes);
             }
 
-            var existingWorkTypes = await _context.OrderWorkTypes
-                .Where(wt => wt.OrderId == workTypesDto.orderId)
-                .ToListAsync();
-            _context.OrderWorkTypes.RemoveRange(existingWorkTypes);
-
-            var newWorkTypes = workTypesDto.WorkTypes.Select(wt => new OrderWorkType {
-                OrderId = workTypesDto.orderId,
-                WorkTypeId = wt.WorkTypeId,
+            order.OrderWorkTypes = workTypes.Select(wt => new OrderWorkType {
+                OrderId = order.Id,
+                WorkTypeId = wt,
             }).ToList();
-
-            _context.OrderWorkTypes.AddRange(newWorkTypes);
 
             if (withSave) {
                 await _context.SaveChangesAsync();
